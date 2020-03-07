@@ -1,0 +1,213 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ABS	create_rand.c	/^#  undef ABS$/;"	d	file:
+ABS	create_rand.c	/^#define ABS(/;"	d	file:
+ARCHIVER	Makefile	/^ARCHIVER = ar$/;"	m
+ARFLAGS	Makefile	/^ARFLAGS = r$/;"	m
+CC	Makefile	/^CC ?= gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -O3 -Wall -std=c99 $/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = -I..\/sparse_matrix_converter -I..\/bebop_util -I.$/;"	m
+DICTCOUNT_T_MAX	dict.h	/^#define DICTCOUNT_T_MAX /;"	d
+DICT_DEPTH_MAX	dict.c	/^#define DICT_DEPTH_MAX /;"	d	file:
+DICT_H	dict.h	/^#define DICT_H$/;"	d
+DICT_IMPLEMENTATION	dict.c	/^#define DICT_IMPLEMENTATION$/;"	d	file:
+FREE_DICT	main.c	/^#define FREE_DICT(/;"	d	file:
+GETTIMEOFDAY_IN_SYS_TIME_H	config.h	/^#define GETTIMEOFDAY_IN_SYS_TIME_H /;"	d
+HAVE_COMPLEX_H	config.h	/^#define HAVE_COMPLEX_H /;"	d
+HAVE_ERRNO_H	config.h	/^#define HAVE_ERRNO_H /;"	d
+HAVE_INTTYPES_H	config.h	/^#define HAVE_INTTYPES_H /;"	d
+HAVE_MALLOC	config.h	/^#define HAVE_MALLOC /;"	d
+HAVE_MATH_H	config.h	/^#define HAVE_MATH_H /;"	d
+HAVE_MEMORY_H	config.h	/^#define HAVE_MEMORY_H /;"	d
+HAVE_REALLOC	config.h	/^#define HAVE_REALLOC /;"	d
+HAVE_STDDEF_H	config.h	/^#define HAVE_STDDEF_H /;"	d
+HAVE_STDINT_H	config.h	/^#define HAVE_STDINT_H /;"	d
+HAVE_STDIO_H	config.h	/^#define HAVE_STDIO_H /;"	d
+HAVE_STDLIB_H	config.h	/^#define HAVE_STDLIB_H /;"	d
+HAVE_STRINGS_H	config.h	/^#define HAVE_STRINGS_H /;"	d
+HAVE_STRING_H	config.h	/^#define HAVE_STRING_H /;"	d
+HAVE_SYS_STAT_H	config.h	/^#define HAVE_SYS_STAT_H /;"	d
+HAVE_SYS_TYPES_H	config.h	/^#define HAVE_SYS_TYPES_H /;"	d
+HAVE_UNISTD_H	config.h	/^#define HAVE_UNISTD_H /;"	d
+HAVE__COMPLEX	config.h	/^#define HAVE__COMPLEX /;"	d
+LIBOBJ	Makefile	/^LIBOBJ = create_rand.o stencil.o$/;"	m
+LIBS	Makefile	/^LIBS = -lm -L..\/sparse_matrix_converter -lsparse_matrix_converter -L..\/bebop_util -lbebop_util$/;"	m
+LINKER	Makefile	/^LINKER = gcc$/;"	m
+RANLIB	Makefile	/^RANLIB = echo$/;"	m
+RM	Makefile	/^RM = rm -f$/;"	m
+STDC_HEADERS	config.h	/^#define STDC_HEADERS /;"	d
+TESTEREXE	Makefile	/^TESTEREXE = matrix_generator_tester$/;"	m
+TESTEROBJ	Makefile	/^TESTEROBJ = main.o dict.o$/;"	m
+THELIB	Makefile	/^THELIB = lib_matrix_generators.a$/;"	m
+__create_random_matrix	create_rand.c	/^__create_random_matrix (const int bm, const int bn, $/;"	f	file:
+__create_random_matrix_banded	create_rand.c	/^__create_random_matrix_banded (const int bm, const int bn, $/;"	f	file:
+__create_random_matrix_banded_by_nnz_per_row	create_rand.c	/^__create_random_matrix_banded_by_nnz_per_row (const int bm, const int bn, $/;"	f	file:
+__create_random_matrix_banded_by_nnz_per_row2	create_rand.c	/^__create_random_matrix_banded_by_nnz_per_row2 (const int bm, const int bn, $/;"	f	file:
+__create_random_matrix_banded_by_nnz_per_row__nearly_dense_rows	create_rand.c	/^__create_random_matrix_banded_by_nnz_per_row__nearly_dense_rows (const int bm, const int bn, $/;"	f	file:
+__create_random_matrix_banded_by_statistics	create_rand.c	/^__create_random_matrix_banded_by_statistics (const int bm, const int bn, $/;"	f	file:
+__stencil_27pt_coo_matrix	stencil.c	/^__stencil_27pt_coo_matrix (const int n, int *pnnz, int **pI, int **pJ, double **pval, const int start_row, const int end_row)$/;"	f	file:
+__stencil_3pt_coo_matrix	stencil.c	/^__stencil_3pt_coo_matrix (const int n, int *pnnz, int **pI, int **pJ, double **pval, const int start_row, const int end_row)$/;"	f	file:
+__stencil_9pt_coo_matrix	stencil.c	/^__stencil_9pt_coo_matrix (const int n, int *pnnz, int **pI, int **pJ, $/;"	f	file:
+_create_rand_h	create_rand.h	/^#define _create_rand_h$/;"	d
+_stencil_h	stencil.h	/^#define _stencil_h$/;"	d
+add_elt	stencil.c	/^#  undef add_elt$/;"	d	file:
+add_elt	stencil.c	/^#define add_elt(/;"	d	file:
+allocnode	dict.c	/^#define allocnode /;"	d	file:
+arglist	main.c	/^struct arginfo *arglist = NULL;$/;"	v	typeref:struct:arginfo
+color	dict.c	/^#define color /;"	d	file:
+command_line_name_to_fnname	main.c	/^static dict_t* command_line_name_to_fnname = NULL;$/;"	v	file:
+compare	dict.c	/^#define compare /;"	d	file:
+compare_ints	create_rand.c	/^compare_ints (const void* a, const void* b)$/;"	f	file:
+comparef	dict.c	/^static int comparef(const void *key1, const void *key2)$/;"	f	file:
+construct	dict.c	/^static void construct(dict_t *d)$/;"	f	file:
+context	dict.c	/^#define context /;"	d	file:
+create_matrix	main.c	/^create_matrix (int argc, char *argv[], struct arginfo* arglist)$/;"	f	file:
+create_random_matrix	create_rand.c	/^create_random_matrix (const int bm, const int bn, const int r, $/;"	f
+create_random_matrix_banded	create_rand.c	/^create_random_matrix_banded (const int bm, const int bn, $/;"	f
+create_random_matrix_banded_by_nnz_per_row	create_rand.c	/^create_random_matrix_banded_by_nnz_per_row (const int bm, const int bn, $/;"	f
+create_random_matrix_banded_by_nnz_per_row_using_algorithm	create_rand.c	/^create_random_matrix_banded_by_nnz_per_row_using_algorithm (const int bm, const int bn, $/;"	f
+create_random_matrix_banded_by_statistics	create_rand.c	/^create_random_matrix_banded_by_statistics (const int bm, const int bn, $/;"	f
+data	dict.c	/^#define data /;"	d	file:
+deinit	main.c	/^deinit ()$/;"	f
+deinit_dicts	main.c	/^deinit_dicts ()$/;"	f	file:
+del_node	dict.c	/^static void del_node(dnode_t *n, void *c)$/;"	f	file:
+dict_alloc_insert	dict.c	/^int dict_alloc_insert(dict_t *dict, const void *key, void *data)$/;"	f
+dict_allocnode	dict.h	/^    dnode_alloc_t dict_allocnode;$/;"	m	struct:dict_t
+dict_allow_dupes	dict.c	/^void dict_allow_dupes(dict_t *dict)$/;"	f
+dict_clear	dict.c	/^static void dict_clear(dict_t *dict)$/;"	f	file:
+dict_color	dict.h	/^    dnode_color_t dict_color;$/;"	m	struct:dnode_t
+dict_comp_t	dict.h	/^typedef int (*dict_comp_t)(const void *, const void *);$/;"	t
+dict_compare	dict.h	/^    dict_comp_t dict_compare;$/;"	m	struct:dict_t
+dict_contains	dict.c	/^int dict_contains(dict_t *dict, dnode_t *node)$/;"	f
+dict_context	dict.h	/^    void *dict_context;$/;"	m	struct:dict_t
+dict_count	dict.c	/^#undef dict_count$/;"	d	file:
+dict_count	dict.c	/^dictcount_t dict_count(dict_t *dict)$/;"	f
+dict_count	dict.h	/^#define dict_count(/;"	d
+dict_create	dict.c	/^dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp)$/;"	f
+dict_data	dict.h	/^    void *dict_data;$/;"	m	struct:dnode_t
+dict_delete	dict.c	/^dnode_t *dict_delete(dict_t *dict, dnode_t *delete)$/;"	f
+dict_delete_free	dict.c	/^void dict_delete_free(dict_t *dict, dnode_t *node)$/;"	f
+dict_destroy	dict.c	/^void dict_destroy(dict_t *dict)$/;"	f
+dict_dictptr	dict.h	/^    dict_t *dict_dictptr;$/;"	m	struct:dict_load_t
+dict_dupes	dict.h	/^    int dict_dupes;$/;"	m	struct:dict_t
+dict_first	dict.c	/^dnode_t *dict_first(dict_t *dict)$/;"	f
+dict_free	dict.c	/^void dict_free(dict_t *dict)$/;"	f
+dict_free_nodes	dict.c	/^void dict_free_nodes(dict_t *dict)$/;"	f
+dict_freenode	dict.h	/^    dnode_free_t dict_freenode;$/;"	m	struct:dict_t
+dict_init	dict.c	/^dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)$/;"	f
+dict_init_like	dict.c	/^void dict_init_like(dict_t *dict, const dict_t *template)$/;"	f
+dict_insert	dict.c	/^void dict_insert(dict_t *dict, dnode_t *node, const void *key)$/;"	f
+dict_isempty	dict.c	/^#undef dict_isempty$/;"	d	file:
+dict_isempty	dict.c	/^int dict_isempty(dict_t *dict)$/;"	f
+dict_isempty	dict.h	/^#define dict_isempty(/;"	d
+dict_isfull	dict.c	/^#undef dict_isfull$/;"	d	file:
+dict_isfull	dict.c	/^int dict_isfull(dict_t *dict)$/;"	f
+dict_isfull	dict.h	/^#define dict_isfull(/;"	d
+dict_key	dict.h	/^    const void *dict_key;$/;"	m	struct:dnode_t
+dict_last	dict.c	/^dnode_t *dict_last(dict_t *dict)$/;"	f
+dict_left	dict.h	/^    struct dnode_t *dict_left;$/;"	m	struct:dnode_t	typeref:struct:dnode_t::dnode_t
+dict_load_begin	dict.c	/^void dict_load_begin(dict_load_t *load, dict_t *dict)$/;"	f
+dict_load_end	dict.c	/^void dict_load_end(dict_load_t *load)$/;"	f
+dict_load_next	dict.c	/^void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)$/;"	f
+dict_load_t	dict.h	/^typedef struct dict_load_t {$/;"	s
+dict_load_t	dict.h	/^} dict_load_t;$/;"	t	typeref:struct:dict_load_t
+dict_lookup	dict.c	/^dnode_t *dict_lookup(dict_t *dict, const void *key)$/;"	f
+dict_lower_bound	dict.c	/^dnode_t *dict_lower_bound(dict_t *dict, const void *key)$/;"	f
+dict_maxcount	dict.h	/^    dictcount_t dict_maxcount;$/;"	m	struct:dict_t
+dict_merge	dict.c	/^void dict_merge(dict_t *dest, dict_t *source)$/;"	f
+dict_next	dict.c	/^dnode_t *dict_next(dict_t *dict, dnode_t *curr)$/;"	f
+dict_nil	dict.c	/^#define dict_nil(/;"	d	file:
+dict_nilnode	dict.h	/^    dnode_t dict_nilnode;$/;"	m	struct:dict_load_t
+dict_nilnode	dict.h	/^    dnode_t dict_nilnode;$/;"	m	struct:dict_t
+dict_nodecount	dict.h	/^    dictcount_t dict_nodecount;$/;"	m	struct:dict_t
+dict_parent	dict.h	/^    struct dnode_t *dict_parent;$/;"	m	struct:dnode_t	typeref:struct:dnode_t::dnode_t
+dict_prev	dict.c	/^dnode_t *dict_prev(dict_t *dict, dnode_t *curr)$/;"	f
+dict_process	dict.c	/^void dict_process(dict_t *dict, void *context, dnode_process_t function)$/;"	f
+dict_right	dict.h	/^    struct dnode_t *dict_right;$/;"	m	struct:dnode_t	typeref:struct:dnode_t::dnode_t
+dict_root	dict.c	/^#define dict_root(/;"	d	file:
+dict_set_allocator	dict.c	/^void dict_set_allocator(dict_t *dict, dnode_alloc_t al,$/;"	f
+dict_similar	dict.c	/^int dict_similar(const dict_t *left, const dict_t *right)$/;"	f
+dict_t	dict.h	/^typedef struct dict_t {$/;"	s
+dict_t	dict.h	/^} dict_t;$/;"	t	typeref:struct:dict_t
+dict_upper_bound	dict.c	/^dnode_t *dict_upper_bound(dict_t *dict, const void *key)$/;"	f
+dict_verify	dict.c	/^int dict_verify(dict_t *dict)$/;"	f
+dictcount_t	dict.h	/^typedef unsigned long dictcount_t;$/;"	t
+dictptr	dict.c	/^#define dictptr /;"	d	file:
+dispatch_matrix_generator	main.c	/^dispatch_matrix_generator (const char* const function_name, $/;"	f	file:
+dnode_alloc	dict.c	/^static dnode_t *dnode_alloc(void *context)$/;"	f	file:
+dnode_alloc_t	dict.h	/^typedef dnode_t *(*dnode_alloc_t)(void *);$/;"	t
+dnode_black	dict.h	/^typedef enum { dnode_red, dnode_black } dnode_color_t;$/;"	e	enum:__anon1
+dnode_color_t	dict.h	/^typedef enum { dnode_red, dnode_black } dnode_color_t;$/;"	t	typeref:enum:__anon1
+dnode_create	dict.c	/^dnode_t *dnode_create(void *data)$/;"	f
+dnode_destroy	dict.c	/^void dnode_destroy(dnode_t *dnode)$/;"	f
+dnode_free	dict.c	/^static void dnode_free(dnode_t *node, void *context)$/;"	f	file:
+dnode_free_t	dict.h	/^typedef void (*dnode_free_t)(dnode_t *, void *);$/;"	t
+dnode_get	dict.c	/^#undef dnode_get$/;"	d	file:
+dnode_get	dict.c	/^void *dnode_get(dnode_t *dnode)$/;"	f
+dnode_get	dict.h	/^#define dnode_get(/;"	d
+dnode_getkey	dict.c	/^#undef dnode_getkey$/;"	d	file:
+dnode_getkey	dict.c	/^const void *dnode_getkey(dnode_t *dnode)$/;"	f
+dnode_getkey	dict.h	/^#define dnode_getkey(/;"	d
+dnode_init	dict.c	/^dnode_t *dnode_init(dnode_t *dnode, void *data)$/;"	f
+dnode_is_in_a_dict	dict.c	/^int dnode_is_in_a_dict(dnode_t *dnode)$/;"	f
+dnode_process_t	dict.h	/^typedef void (*dnode_process_t)(dict_t *, dnode_t *, void *);$/;"	t
+dnode_put	dict.c	/^#undef dnode_put$/;"	d	file:
+dnode_put	dict.c	/^void dnode_put(dnode_t *dnode, void *data)$/;"	f
+dnode_put	dict.h	/^#define dnode_put(/;"	d
+dnode_red	dict.h	/^typedef enum { dnode_red, dnode_black } dnode_color_t;$/;"	e	enum:__anon1
+dnode_t	dict.h	/^typedef struct dnode_t {$/;"	s
+dnode_t	dict.h	/^} dnode_t;$/;"	t	typeref:struct:dnode_t
+dupes	dict.c	/^#define dupes /;"	d	file:
+dupstring	dict.c	/^static char *dupstring(char *str)$/;"	f	file:
+fnname_to_fnptr	main.c	/^static dict_t* fnname_to_fnptr = NULL;$/;"	v	file:
+fnname_to_nargs	main.c	/^static dict_t* fnname_to_nargs = NULL;$/;"	v	file:
+fnnames	main.c	/^static char* fnnames[] = {$/;"	v	file:
+free_nodes	dict.c	/^static void free_nodes(dict_t *dict, dnode_t *node, dnode_t *nil)$/;"	f	file:
+freenode	dict.c	/^#define freenode /;"	d	file:
+init	main.c	/^init (int argc, char** argv)$/;"	f
+init_dicts	main.c	/^init_dicts ()$/;"	f	file:
+input_t	dict.c	/^typedef char input_t[256];$/;"	t	file:
+key	dict.c	/^#define key /;"	d	file:
+left	dict.c	/^#define left /;"	d	file:
+load_begin_internal	dict.c	/^static void load_begin_internal(dict_load_t *load, dict_t *dict)$/;"	f	file:
+main	dict.c	/^int main(void)$/;"	f
+main	main.c	/^main (int argc, char *argv[])$/;"	f
+matrix_type	main.c	/^static char* matrix_type = NULL;$/;"	v	file:
+mattypes	main.c	/^static char* mattypes[] = {$/;"	v	file:
+maxcount	dict.c	/^#define maxcount /;"	d	file:
+nargs_array	main.c	/^static int nargs_array[] = {3, 3, 3, 5, 7, 8, 3, 3, 3};$/;"	v	file:
+new_node	dict.c	/^static dnode_t *new_node(void *c)$/;"	f	file:
+nilnode	dict.c	/^#define nilnode /;"	d	file:
+nodecount	dict.c	/^#define nodecount /;"	d	file:
+num_dict_entries	main.c	/^static const int num_dict_entries = 9;$/;"	v	file:
+parent	dict.c	/^#define parent /;"	d	file:
+prompt	dict.c	/^static int prompt = 0;$/;"	v	file:
+rcsid	dict.c	/^static const char rcsid[] = "$Id: dict.c,v 1.1.1.1 2005\/08\/18 00:37:55 rajeshn Exp $";$/;"	v	file:
+remove_duplicates	create_rand.c	/^remove_duplicates (int* array, int length)$/;"	f	file:
+right	dict.c	/^#define right /;"	d	file:
+rotate_left	dict.c	/^static void rotate_left(dnode_t *upper)$/;"	f	file:
+rotate_right	dict.c	/^static void rotate_right(dnode_t *upper)$/;"	f	file:
+stencil_27pt_coo_matrix	stencil.c	/^stencil_27pt_coo_matrix (const int n, const int start_row, const int end_row)$/;"	f
+stencil_27pt_dist_bcsr_matrix_structure	stencil.c	/^stencil_27pt_dist_bcsr_matrix_structure (const int n, const int r, const int c, $/;"	f
+stencil_27pt_random_bcsr_matrix	stencil.c	/^stencil_27pt_random_bcsr_matrix (const int N, const int r, const int c)$/;"	f
+stencil_27pt_regblocked_random	stencil.c	/^stencil_27pt_regblocked_random (const int N, const int r, const int c, $/;"	f	file:
+stencil_3pt_coo_matrix	stencil.c	/^stencil_3pt_coo_matrix (const int n, const int start_row, const int end_row)$/;"	f
+stencil_3pt_dist_bcsr_matrix_structure	stencil.c	/^stencil_3pt_dist_bcsr_matrix_structure (const int n, const int r, const int c, $/;"	f
+stencil_3pt_random_bcsr_matrix	stencil.c	/^stencil_3pt_random_bcsr_matrix (const int n, const int r, const int c)$/;"	f
+stencil_3pt_regblocked_random	stencil.c	/^stencil_3pt_regblocked_random (const int n, const int r, const int c, $/;"	f	file:
+stencil_9pt_coo_matrix	stencil.c	/^stencil_9pt_coo_matrix (const int n, const int start_row, const int end_row)$/;"	f
+stencil_9pt_dist_bcsr_matrix_structure	stencil.c	/^stencil_9pt_dist_bcsr_matrix_structure (const int n, const int r, const int c, $/;"	f
+stencil_9pt_random	stencil.c	/^stencil_9pt_random (const int n, $/;"	f	file:
+stencil_9pt_random_bcsr_matrix	stencil.c	/^stencil_9pt_random_bcsr_matrix (const int n, const int r, const int c)$/;"	f
+stencil_9pt_random_csr_matrix	stencil.c	/^stencil_9pt_random_csr_matrix (const int n)$/;"	f
+stencil_9pt_regblocked_random	stencil.c	/^stencil_9pt_regblocked_random (const int n, const int r, const int c, $/;"	f
+tokenize	dict.c	/^static int tokenize(char *string, ...)$/;"	f	file:
+usage	main.c	/^usage (FILE* out, const struct arginfo* arglist, const struct arginfo* ext_args)$/;"	f	file:
+verify_bintree	dict.c	/^static int verify_bintree(dict_t *dict)$/;"	f	file:
+verify_dict_has_node	dict.c	/^static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)$/;"	f	file:
+verify_node_count	dict.c	/^static dictcount_t verify_node_count(dnode_t *nil, dnode_t *root)$/;"	f	file:
+verify_redblack	dict.c	/^static unsigned int verify_redblack(dnode_t *nil, dnode_t *root)$/;"	f	file:
