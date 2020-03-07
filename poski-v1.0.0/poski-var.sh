@@ -1,10 +1,10 @@
 #!/bin/bash
 
-export OSKIDIR=/Users/kulinseth/src/coding/spmv/poski-v1.0.0/
-export OSKIBUILD=/Users/kulinseth/src/coding/spmv/poski-v1.0.0/build/
+export OSKIDIR=NONE/build_oski
+export OSKIBUILD=/scratch/seth.k/spmv/poski-v1.0.0/build_oski
 export POSKIDIR=/usr/local
-export LD_LIBRARY_PATH=/usr/local:/Users/kulinseth/src/coding/spmv/poski-v1.0.0/:
+export LD_LIBRARY_PATH=/usr/local:NONE/build_oski:/usr/local/cuda-10.0/lib64{LD_LIBRARY_PATH:+:/usr/local/cuda-10.0/lib64{LD_LIBRARY_PATH:+:}}
 export POSKISRC=.
 export POSKICC=gcc
-export POSKICFLAGS="-I/Users/kulinseth/src/coding/spmv/poski-v1.0.0//include -g -O2 -std=gnu99 -D_THREAD_SAFE   -msse3 "
+export POSKICFLAGS="-INONE/build_oski/include -g -O2 -std=gnu99 -pthread -fopenmp -msse3 "
 

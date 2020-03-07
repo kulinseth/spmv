@@ -13,7 +13,7 @@
 -- inadvertant infinite recursion.
 --
 if not rawget(_G, "OSKI_LUA_PATH") then
-	OSKI_LUA_PATH = os.getenv("OSKI_LUA_PATH") or "/home/vuduc2/projects/bebop/oski/src-1.0/_install-icc-Tld_only/lib/oski/?.lua;/home/vuduc2/projects/bebop/oski/src-1.0/_install-icc-Tld_only/lib/oski/?"
+	OSKI_LUA_PATH = os.getenv("OSKI_LUA_PATH") or "NONE/lib/oski/?.lua;NONE/lib/oski/?"
 end
 
 --

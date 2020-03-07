@@ -13,13 +13,13 @@ fi
 
 # Command to convert process ${NM} output
 if test -z "${SYMPIPE}" ; then
-  SYMPIPE="sed -n -e 's/^.*[	 ]\([BCDEGRST][BCDEGRST]*\)[	 ][	 ]*_\([_A-Za-z][_A-Za-z0-9]*\)$/\1 _\2 \2/p' | sed '/ __gnu_lto/d'"
+  SYMPIPE="sed -n -e 's/^.*[	 ]\([ABCDGIRSTW][ABCDGIRSTW]*\)[	 ][	 ]*\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2 \2/p' | sed '/ __gnu_lto/d'"
 fi
 
 # Command to convert ${SYMPIPE} output
 # to C external symbol declarations.
 if test -z "${SYM2DECL}" ; then
-  SYM2DECL="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^[BCDEGRST]* .* \(.*\)$/extern char \1;/p'"
+  SYM2DECL="sed -n -e 's/^T .* \(.*\)$/extern int \1();/p' -e 's/^[ABCDGIRSTW]* .* \(.*\)$/extern char \1;/p'"
 fi
 
 #-----------------------------------------------------------------------

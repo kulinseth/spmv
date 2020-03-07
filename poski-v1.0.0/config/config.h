@@ -2,7 +2,7 @@
 /* config/config-h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the <argz.h> header file. */
-/* #undef HAVE_ARGZ_H */
+#define HAVE_ARGZ_H 1
 
 /* Define to 1 if you have the <assert.h> header file. */
 #define HAVE_ASSERT_H 1
@@ -63,7 +63,7 @@
 #define HAVE_MALLOC 1
 
 /* Define to 1 if you have the <malloc.h> header file. */
-/* #undef HAVE_MALLOC_H */
+#define HAVE_MALLOC_H 1
 
 /* Define to 1 if you have the `memcmp' function. */
 #define HAVE_MEMCMP 1
@@ -84,7 +84,7 @@
 /* #undef HAVE_NUMA_H */
 
 /* Define if OpenMP is enabled */
-/* #undef HAVE_OPENMP_H */
+#define HAVE_OPENMP_H 1
 
 /* Define if you have POSIX threads libraries and header files. */
 #define HAVE_PTHREAD_H 1
@@ -150,7 +150,7 @@
 #define HAVE_SYS_STAT_H 1
 
 /* Define to 1 if you have the <sys/sysinfo.h> header file. */
-/* #undef HAVE_SYS_SYSINFO_H */
+#define HAVE_SYS_SYSINFO_H 1
 
 /* Define to 1 if you have the <sys/systemcfg.h> header file. */
 /* #undef HAVE_SYS_SYSTEMCFG_H */
