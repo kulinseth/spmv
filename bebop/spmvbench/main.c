@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <unistd.h>   /* getopt (POSIX command-line args reader) */
 
-#include "smvm_invoker.h"
+/*#include "smvm_invoker.h"*/
 #include <smvm_util.h>
 
 
@@ -234,10 +234,9 @@ main (int argc, char* argv[])
 
   FILE* output = NULL;
   struct SMVM_invoker_cmdline_params  params;
-  struct SMVM_invoker_traits          traits;
-  struct SMVM_memory_hierarchy_traits memtraits;
+  /*struct SMVM_invoker_traits          traits;*/
 
-  smvm_set_debug_level_from_environment ();
+  /*smvm_set_debug_level_from_environment ();*/
 
   smvm_get_cmdline_args (&params, argc, argv);
 
@@ -255,10 +254,10 @@ main (int argc, char* argv[])
 	}
     }
 
-  smvm_init_memory_hierarchy_traits (&memtraits, params.max_mem_KB);
-  /* FIXME:  hardcoded fill! */
-  smvm_construct_invocation (&traits, params.num_trials, 0.01, memtraits, output, warn, dbg);
-  smvm_invoke (&traits, params.b_run_sparse, params.b_run_dense);
+  /*smvm_init_memory_hierarchy_traits (&memtraits, params.max_mem_KB);*/
+  /*[> FIXME:  hardcoded fill! <]*/
+  /*smvm_construct_invocation (&traits, params.num_trials, 0.01, memtraits, output, warn, dbg);*/
+  /*[>smvm_invoke (&traits, params.b_run_sparse, params.b_run_dense);<]*/
 
   /* Close the data output file. */
   if (fclose (output) != 0) 

@@ -26,7 +26,11 @@ LIBOBJ = $(BENCHMARK_OBJ) $(TIMING_OBJ)
 # OUTPUT RULES
 #########################################################################
 
-all: $(THELIB) 
+all: $(THELIB) spmv_driver 
+
+spmv_driver: $(THELIB) main.o
+	$(LINKER) $(CPPFLAGS) $(MPinc) $(CFLAGS) -o spmv_driver \
+		main.o $(THELIB) $(MPlib) $(LIBS)
 
 $(THELIB): $(LIBOBJ)
 	$(ARCHIVER) $(ARFLAGS) $(THELIB) $(LIBOBJ)
