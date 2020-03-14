@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
 	}
 	if (f != stdin) fclose(f);
 
-	//the original calculation result
 	double* res_seq = (double*)malloc(M*sizeof(double));
 	memset(res_seq, 0, M*sizeof(double));
 
@@ -167,7 +166,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	/*quicksort(val, vIndex, rIndex, cIndex, nz);*/
+   /*quicksort(val, vIndex, rIndex, cIndex, nz);*/
 
 	//We use rsIndex/reIndex to keep the start/end position of each row. The intial values are 
 	//-1 or -2 for all entries.  rsIndex[i] indicates the start poistion of the i-th row. Hence 
@@ -221,12 +220,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	}
-	
-	
-
 	gettimeofday(&end, NULL);
-
-	
   printf(" End of computation ... \n\n");
 
 
@@ -235,7 +229,7 @@ int main(int argc, char *argv[])
 	long elapsed_time = ((end.tv_sec * 1000000 + end.tv_usec)
 		  - (start.tv_sec * 1000000 + start.tv_usec));
 
-		
+	printf(" Static Parallelization Total time: %ld micro-seconds\n\n",  elapsed_time);
 	if (!checkerror(res, res_seq, M))
 	{
 		printf("Calculation Error!\n");
@@ -246,7 +240,6 @@ int main(int argc, char *argv[])
 	}
 
 
-	printf(" Static Parallelization Total time: %ld micro-seconds\n\n",  elapsed_time);
 
 	if (!checkerror(res, res_seq, M))
 	{

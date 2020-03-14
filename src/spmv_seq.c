@@ -157,14 +157,13 @@ int main(int argc, char *argv[])
 	for (i = 0; i < nz; i++)
 	{
 		vIndex[i] = (double)rIndex[i] * N + cIndex[i];
-		if (vIndex[i] < 0)
-		{	
+		if (vIndex[i] < 0) {
 	           printf("Error!\n");
 	           exit(1);
-	        }
+	   }
 	}
 
-	quicksort(val, vIndex, rIndex, cIndex, nz);
+	/*quicksort(val, vIndex, rIndex, cIndex, nz);*/
 
 	//we use rsIndex/reIndex to keep the start/end position of each row. The intial values are 
 	//-1 for all entries.  rsIndex[i] indicates the start poistion of the i-th row. Hence 
@@ -189,13 +188,11 @@ int main(int argc, char *argv[])
 
   printf("\n Start computation ... \n");
 	struct timeval start, end;
-	
   /**********************************************************/
 	/* Start the spmarse matrix vector multiplication         */
 	/**********************************************************/
 	res = (double*)malloc(M*sizeof(double));
 	memset(res, 0, M*sizeof(double));
-	
 	gettimeofday(&start, NULL);
 	for (i = 0; i<M; i++)
 	{
@@ -207,13 +204,11 @@ int main(int argc, char *argv[])
 	}
 	gettimeofday(&end, NULL);
 
-	
   printf(" End of computation ... \n \n");
 
 	long elapsed_time = ((end.tv_sec * 1000000 + end.tv_usec)
 		  - (start.tv_sec * 1000000 + start.tv_usec));
-  
-	
+	printf(" Total time: %ld micro-seconds\n\n",  elapsed_time);
 	if (!checkerror(res, res_seq, M))
 	{
 		printf("Calculation Error!\n");
@@ -224,7 +219,6 @@ int main(int argc, char *argv[])
 	}
 
 
-	printf(" Total time: %ld micro-seconds\n\n",  elapsed_time);
 
 	// save the result
 	if ((f = fopen("output.txt", "w")) == NULL)
