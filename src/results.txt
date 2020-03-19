@@ -1,0 +1,168 @@
+atmosmodd
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 4.18193
+MFLOPS_S 486.543
+Time 1.08704e-07
+Fletcher_sum 7041
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 63.771175
+MFLOPS_s 1773.8
+Time 2.9817e-08
+Fletcher_sum 63663
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 26.327111
+MFLOPS_s 1018.04,Time 5.19519e-08
+Fletcher_sum 63663
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 51.639
+MFLOPS_s 1453.41
+Time 3.63898e-08
+Fletcher_sum 63663
+
+
+Baumann
+coo
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 16.0619
+MFLOPS_S 1099.31
+Time 2.04219e-06
+Fletcher_sum 10321
+
+csr
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 5.671019
+MFLOPS_s 2190.34
+Time 1.02495e-06
+Fletcher_sum 62142
+
+dia
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 13.700502
+MFLOPS_s 1017.18,Time 2.20708e-06
+Fletcher_sum 62142
+
+ell
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 2.75488
+MFLOPS_s 1658.14
+Time 1.35392e-06
+Fletcher_sum 62142
+
+
+cant
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 16.1673
+MFLOPS_S 591.599
+Time 4.06429e-08
+Fletcher_sum 10036
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 150.115167
+MFLOPS_s 1756.27
+Time 1.36905e-08
+Fletcher_sum 64201
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 6.074087
+MFLOPS_s 394.702,Time 6.09176e-08
+Fletcher_sum 50467
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 69.2312
+MFLOPS_s 1155.11
+Time 2.08155e-08
+Fletcher_sum 50467
+
+
+consph
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 12.4062
+MFLOPS_S 577.655
+Time 6.24298e-08
+Fletcher_sum 31873
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 143.990229
+MFLOPS_s 1734.72
+Time 2.07888e-08
+Fletcher_sum 55756
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 0.003114
+MFLOPS_s 3.62733,Time 9.942e-06
+Fletcher_sum 21506
+
