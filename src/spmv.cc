@@ -1,104 +1,58 @@
 #include "spmv.h"
 
 //template<typename Index, typename Value>
-void spmv_coo(Index *rowind, Index *colind, Value *val, int nz, Index N, Value *x, Value *y)
+//void spmv_coo(Index *rowind, Index *colind, Value *val, Index start_row, Index end_row,
+              //Index nz, Index N, Index stride, Value *x, Value *y)
+void spmv_coo(spmv_struct *sp)
 {
-  int i;
-  for(i = 0; i < nz ; i++)
-    y[rowind[i]] += val[i] * x[colind[i]];
+  // ptr is row_index
+  // col is col_index
+  for(Index i = 0; i < sp->n ; i++)
+    sp->y[sp->ptr[i]] += sp->data[i] * sp->x[sp->ind[i]];
 }
 
 
 //template<typename Index, typename Value>
-void spmv_csr(Index *row_ptr, Index *colind, Value *val, Index N, Value *x, Value *y)
+//void spmv_csr(Index *row_ptr, Index *colind, Value *val, Index start_row, Index end_row,
+              //Index n, Index N, Index stride, Value *x, Value *y)
+void spmv_csr(spmv_struct *sp)
 {
-  Index i, j;
-  Value temp;
-  for(i = 0; i < N ; i++)
+  for(Index i = 0; i < sp->N ; i++)
   {
-    temp = y[i];
-    for(j = row_ptr[i]; j < row_ptr[i+1]; j++){
-      temp += val[j] * x[colind[j]] ;
+    Value temp = sp->y[i];
+    for(Index j = sp->ptr[i]; j < sp->ptr[i+1]; j++){
+      temp += sp->data[j] * sp->x[sp->ind[j]] ;
     }
-    y[i] = temp;
+    sp->y[i] = temp;
   }
 }
 
 //template<typename Index, typename Value>
-void spmv_dia(Index *offset, Value *data, Index start_row, Index end_row, Index nd, Index N, Index stride, Value *x, Value *y)
+//void spmv_dia(Index *offset, Index *ptr, Value *data, Index start_row, Index end_row,
+              //Index nd, Index N, Index stride, Value *x, Value *y)
+void spmv_dia(spmv_struct *sp)
 {
-  Index i, row;
-  Index col;
-  for(row = start_row; row < end_row; row++){
-    for(i = 0; i < nd; i++){
-      col = offset[i] + row;
-      if(col >=0 && col < N){
-        y[row] += (data[(size_t)row*nd+i] * x[col]);
+  for(Index row = sp->start_row; row < sp->end_row; row++){
+    Index nd = sp->n;
+    for(Index i = 0; i < nd; i++){
+      Index col = sp->ptr[i] + row;
+      if(col >=0 && col < sp->N){
+        sp->y[row] += (sp->data[row*nd+i] * sp->x[col]);
       }
     }
   }
 }
 
 //template<typename Index, typename Value>
-//void spmv_custom(Index *offset, Value *data, Index N, Index nd, Index *ptr, Value *x, Value *y)
-//{
-  //Index i, k, n, istart, iend, index;
-
-  //index = 0;
-  //for(i = 0; i < nd; i++){
-    //k = offset[i];
-    //istart = (0 < -k) ? -k : 0;
-    //iend = (N-1 < N-1-k) ? N-1 : N-1-k;
-    //for(n = istart; n <= iend; n++){
-      //y[n] += (data[index++] * x[n+k]);
-    //}
-  //}
-//}
-
-//template<typename Index, typename Value>
-void spmv_diaii(Index *offset, Value *data, Index start_row, Index end_row, Index nd, Index N, Index stride, Value *x, Value *y)
+//void spmv_ell(Index *offset, Index *indices, Value *data, Index start_row, Index end_row,
+              //Index nc, Index N, Index stride, Value *x, Value *y)
+void spmv_ell (spmv_struct *sp)
 {
-  Index i, k, n, istart, iend, index;
-
-  for(i = 0; i < nd; i++){
-    k = offset[i];
-    index = 0;
-    istart = (0 < -k) ? index = N-stride, -k : 0;
-    istart = (istart > start_row) ? istart : start_row;
-    iend = (N-1 < N-1-k) ? N-1 : N-1-k;
-    iend = (iend < end_row) ? iend : end_row;
-    for(n = istart; n <= iend; n++){
-      y[n] += (data[(size_t)i*stride+n-index] * x[n+k]);
+  for(Index row = sp->start_row; row < sp->end_row; row++){
+    for(Index i = 0; i < sp->n; i++){
+      Index col = sp->ind[(size_t)row*sp->n+i];
+      if(col < 0) break;
+      sp->y[row] += (sp->data[(size_t)row*sp->n+i] * sp->x[col]);
     }
   }
 }
-
-//template<typename Index, typename Value>
-void spmv_ell(Index *indices, Value *data, Index start_row, Index end_row, Index nc, Index N, Value *x, Value *y)
-{
-  Index i, row;
-  Index col;
-  for(row = start_row; row < end_row; row++){
-    for(i = 0; i < nc; i++){
-      col = indices[(size_t)row*nc+i];
-      if(col < 0)
-        break;
-      y[row] += (data[(size_t)row*nc+i] * x[col]);
-    }
-  }
-}
-
-//template<typename Index, typename Value>
-void spmv_ellii(Index *indices, Value *data, Index start_row, Index end_row, Index nc, Index N, Value *x, Value *y)
-{
-  Index i, row;
-  Index col;
-  for(i = 0; i < nc; i++){
-    for(row = start_row; row < end_row; row++){
-      col = indices[(size_t)i*N+row];
-      if(col >= 0)
-        y[row] += data[(size_t)i*N+row] * x[indices[(size_t)i*N+row]];
-    }
-  }
-}
-

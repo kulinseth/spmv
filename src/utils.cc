@@ -142,7 +142,7 @@ int median(int *arr, int n)
 
 // This function counts the number of elements in the diagonals of the matrix. 
 // It doesn't include the zero padding added to store the diagonals in the 2-D array
-long long count_diag_elems(int *row, int *col, MYTYPE *val, int nnz, int N, int *nd)
+long long count_diag_elems(int *row, int *col, Value *val, int nnz, int N, int *nd)
 {
   int i, *ind, num_diag=0, diag_no;
   long long sum = 0;
@@ -176,14 +176,14 @@ void swap(int* a, int* b)
   *a = *b; 
   *b = t; 
 }
-void swap_val(MYTYPE* a, MYTYPE* b) 
+void swap_val(Value* a, Value* b) 
 { 
-  MYTYPE t = *a; 
+  Value t = *a; 
   *a = *b; 
   *b = t; 
 }
 
-void quickSort(int arr[], int arr2[], MYTYPE arr3[], int left, int right)
+void quickSort(int arr[], int arr2[], Value arr3[], int left, int right)
 {
   int i = left, j = right;
   int pivot = arr[(left + right) / 2];
@@ -211,11 +211,11 @@ void quickSort(int arr[], int arr2[], MYTYPE arr3[], int left, int right)
     quickSort(arr, arr2, arr3, i, right);
 }
 
-void sort_coo(int start, int end, int *array1, int *array2, MYTYPE *array3)
+void sort_coo(int start, int end, int *array1, int *array2, Value *array3)
 {
   printf("sorting started...\n");
   int i, j, temp;
-  MYTYPE temp2;
+  Value temp2;
   for(i = 0; i < end-start-1; i++){
     for(j = start; j < end-i-1; j++){
       if(array1[j] > array1[j+1] || (array1[j] == array1[j+1] && array2[j] > array2[j+1])){
@@ -228,14 +228,14 @@ void sort_coo(int start, int end, int *array1, int *array2, MYTYPE *array3)
   printf("sorting ended...\n");
 }
 
-void init_arr(int N, MYTYPE* a)
+void init_arr(int N, Value* a)
 {	
 	int i;
 	for (i=0; i<N;i++) {
           a[i] = i;
 	}
 }
-void zero_arr(int N, MYTYPE* a)
+void zero_arr(int N, Value* a)
 {	
 	int i;
 	for (i=0; i<N;i++) {
@@ -256,7 +256,7 @@ void print_arr(int N, char * name, double* array)
 	}
 }
 
-void sort(int start, int end, int *array1, MYTYPE *array2)
+void sort(int start, int end, int *array1, Value *array2)
 { 
   int i, j;
   for(i = 0; i < end-start-1; i++){
@@ -269,7 +269,7 @@ void sort(int start, int end, int *array1, MYTYPE *array2)
   }
 }
 
-void cmp(MYTYPE *y, MYTYPE *y1, int N)
+void cmp(Value *y, Value *y1, int N)
 {
   int i;
   for(i = 0; i < N; i++){
@@ -283,7 +283,7 @@ double matlab_modulo(double x, double y) {
     return (x - n*y);
 }
 
-int fletcher_sum(MYTYPE *a, int size) {
+int fletcher_sum(Value *a, int size) {
     double sum1 = 0;
     double sum2 = 0;
     for (int i = 0; i < size; ++i) {
@@ -320,7 +320,7 @@ int fletcher_sum_1d_array_int(int *a, int size) {
   return num_blocks;
 }*/
 
-/*void csr_bcsr(int nz, int N, int *row_ptr, int *colind, MYTYPE *csr_val)
+/*void csr_bcsr(int nz, int N, int *row_ptr, int *colind, Value *csr_val)
 {
   for(i=0; i<N; i++){
     blocks_per_row[i] = create_blocks(row_ptr[i], row_ptr[i+1], colind);
@@ -328,10 +328,10 @@ int fletcher_sum_1d_array_int(int *a, int size) {
 
 }
 */
-void coo_csr(int nz, int N, int *row, int *col, MYTYPE *coo_val, int *row_ptr, int *colind, MYTYPE *val)
+void coo_csr(int nz, int N, int *row, int *col, Value *coo_val, int *row_ptr, int *colind, Value *val)
 {
   int i, j, j0, r, c;
-  MYTYPE data;
+  Value data;
 
   for (i=0; i<nz; i++)
     row_ptr[row[i]]++;
@@ -365,7 +365,7 @@ void coo_csr(int nz, int N, int *row, int *col, MYTYPE *coo_val, int *row_ptr, i
 //  printf("Elapsed time for coo to csr =\t %g milliseconds\n", ((double)(stop - start)) / CLOCKS_PER_SEC * 1000);
 }
 
-void csr_ell(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **data, int N, int* num_cols, int nnz)
+void csr_ell(int *row_ptr, int *colind, Value *val, int **indices, Value **data, int N, int* num_cols, int nnz)
 {
   int i, j, k, col, max = 0, temp = 0;
 
@@ -381,7 +381,7 @@ void csr_ell(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **dat
       /*exit(1);*/
   /*}*/
 
-  *data = (MYTYPE*)calloc((size_t)N * max, sizeof(MYTYPE));
+  *data = (Value*)calloc((size_t)N * max, sizeof(Value));
   if(*data == NULL){
     fprintf(stderr, "couldn't allocate ell_data using malloc");
     exit(1);
@@ -416,7 +416,7 @@ void csr_ell(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **dat
     }
   }*/
 }
-void csr_dia(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **data, int N, int *nd, int *stride, int nnz)
+void csr_dia(int *row_ptr, int *colind, Value *val, int **offset, Value **data, int N, int *nd, int *stride, int nnz)
 {
   int i, j, num_diag, min, *ind, index, diag_no, col, k;
   int move;
@@ -459,7 +459,7 @@ void csr_dia(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **data
     diag_no++;
   }
   //*stride = N - min;
-  *data = (MYTYPE*)calloc(size, sizeof(MYTYPE));
+  *data = (Value*)calloc(size, sizeof(Value));
   if(*data == NULL){
     fprintf(stderr, "couldn't allocate *data using calloc\n");
     fprintf(stderr, "%s\n", strerror(errno));
@@ -483,7 +483,7 @@ void csr_dia(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **data
   } 
 }
 
-void csr_diaii(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **data, int N, int *nd, int *stride, int nnz)
+void csr_diaii(int *row_ptr, int *colind, Value *val, int **offset, Value **data, int N, int *nd, int *stride, int nnz)
 {
   int i, j, num_diag, min, *ind, index, diag_no, col, k;
   int move;
@@ -526,7 +526,7 @@ void csr_diaii(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **da
     diag_no++;
   }
   //*stride = N - min;
-  *data = (MYTYPE*)calloc(size, sizeof(MYTYPE));
+  *data = (Value*)calloc(size, sizeof(Value));
   if(*data == NULL){
     fprintf(stderr, "couldn't allocate *data using calloc\n");
     fprintf(stderr, "%s\n", strerror(errno));
@@ -550,7 +550,7 @@ void csr_diaii(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **da
   //printf("Elapsed time for csr to dia =\t %g milliseconds\n", ((double)(stop - start)) / CLOCKS_PER_SEC * 1000);
 }
 
-void csr_ellii(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **data, int N, int* num_cols, int nnz)
+void csr_ellii(int *row_ptr, int *colind, Value *val, int **indices, Value **data, int N, int* num_cols, int nnz)
 { 
   int i, j, k, col, max = 0, temp = 0;
   
@@ -566,7 +566,7 @@ void csr_ellii(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **d
       /*exit(-1);*/
   /*}*/
 
-  *data = (MYTYPE*)calloc((size_t)N * max, sizeof(MYTYPE));
+  *data = (Value*)calloc((size_t)N * max, sizeof(Value));
   if(*data == NULL){
     fprintf(stderr, "couldn't allocate ell_data using malloc");
     exit(1);
@@ -593,7 +593,7 @@ void csr_ellii(int *row_ptr, int *colind, MYTYPE *val, int **indices, MYTYPE **d
   }
 }
 
-void csr_custom(int *row_ptr, int *colind, MYTYPE *val, int **offset, MYTYPE **data, int N, int *nd, int **ptr)
+void csr_custom(int *row_ptr, int *colind, Value *val, int **offset, Value **data, int N, int *nd, int **ptr)
 {
   int i, j, num_diag, min, *ind, index, diag_no, col, k;
   clock_t start, stop;
@@ -638,7 +638,7 @@ diag_no = -((2*N-1)/2);
     }
     diag_no++;
   }
-  *data = (MYTYPE*)calloc(size, sizeof(MYTYPE));
+  *data = (Value*)calloc(size, sizeof(Value));
   if(*data == NULL){
     fprintf(stderr, "couldn't allocate *data using calloc\n");
     fprintf(stderr, "%s\n", strerror(errno));

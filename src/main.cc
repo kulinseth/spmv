@@ -14,198 +14,28 @@
 #include <sys/syscall.h>
 
 #define OUTER_MAX 3
-#define _GNU_SOURCE
 
-template <typename T, typename F>
+//template <typename T, typename F>
 void *spmv_wrapper(void *ptr) {
-  int inside;
-  T *s = (T *) ptr;
+  spmv_pthread_struct *s = (spmv_pthread_struct *)ptr;
   cpu_set_t cpuset;
   int cpu = s->tid + 1;
   CPU_ZERO(&cpuset);       //clears the cpuset
   CPU_SET(cpu, &cpuset);
   sched_setaffinity(0, sizeof(cpuset), &cpuset);
-  
-  int nz = s->len;
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    F(s->row, s->col, s->val, nz, s->N, s->x, s->y);
+  for(int inside = 0; inside < s->inside_max; inside++){
+    s->fn(s->sp);
   }
   pthread_exit(NULL);
 }
 
-void *spmv_coo_wrapper(void *ptr){
-  int inside;
-  spmv_coo_struct *s = (spmv_coo_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-  
-  int nz = s->len;
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_coo(s->row, s->col, s->val, nz, s->N, s->x, s->y);
-  }
-  pthread_exit(NULL);
-}
-
-void *spmv_csr_wrapper(void *ptr){
-  int inside;
-  spmv_csr_struct *s = (spmv_csr_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-  int N = s->len;
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_csr(s->rowptr, s->col, s->val, N, s->x, s->y);
-  }
-  pthread_exit(NULL);
-}
-
-void *spmv_dia_wrapper(void *ptr){
-  int inside;
-  spmv_dia_struct *s = (spmv_dia_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_dia(s->offset, s->data, s->start_row, s->end_row, s->nd, s->N, s->stride, s->x, s->y);
-  }
-  pthread_exit(NULL);
-}
-
-void *spmv_ell_wrapper(void *ptr){
-  int inside;
-  spmv_ell_struct *s = (spmv_ell_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_ell(s->indices, s->data, s->start_row, s->end_row, s->nc, s->N, s->x, s->y);
-  }
-  pthread_exit(NULL);
-}
-
-void *spmv_diaii_wrapper(void *ptr){
-  unsigned long int tid;
-  int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;
-  long long values[3];
-  if (PAPI_thread_init(pthread_self) != PAPI_OK)
-    exit(1);
-  if ((tid = PAPI_thread_id()) == (unsigned long int)-1)
-    exit(1);
-  PAPI_register_thread();
-  ret = PAPI_create_eventset(&event_set);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "create event set error\n");
-    exit(1);
-  }
-  ret = PAPI_add_events(event_set, events, 3);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "add event error\n");
-    exit(1);
-  }
-  int inside;
-  spmv_diaii_struct *s = (spmv_diaii_struct *) ptr;
-  int cpu = s->tid;
-  cpu_set_t cpuset;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-  //printf("%u %d\n", current_thread, sched_getcpu());
-  int inside_max = s->inside_max;
-  if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-    fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-    exit(1);
-  }
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_diaii(s->offset, s->data, s->start_row, s->end_row, s->nd, s->N, s->stride, s->x, s->y);
-  }
-  if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-    fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-    exit(1);
-  }
-  PAPI_unregister_thread();
-  pthread_exit(NULL);
-}
-
-void *spmv_ellii_wrapper(void *ptr){
-  int inside;
-  spmv_ellii_struct *s = (spmv_ellii_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
-
-  int inside_max = s->inside_max;
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_ellii(s->indices, s->data, s->start_row, s->end_row, s->nc, s->N, s->x, s->y);
-  }
-  pthread_exit(NULL);
-}
-
-int main(int argc, char* argv[])
-{
-  struct timespec start_tp, stop_tp;
-  clockid_t clk_id;
-  clk_id = CLOCK_REALTIME;
-  int ret_code, r, c, k;
-  MM_typecode matcode;
-  FILE *f, *g;
-  int M, N, entries, anz, i, j, *row, *col, *row_ptr, *colind, *offset, *ptr, *indices, num_diags, stride, num_cols;
-  MYTYPE *x, *y, *val, *dia_data, *ell_data, *coo_val;
-  double v;
-  clock_t start, stop;
-  double sum = 0, mean = 0, sd = 0, variance = 0;
-  int inside = 0, inside_max = 1000000, outer_max = OUTER_MAX;
-  double exec_arr[OUTER_MAX];
-  int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;
-  long long values[3];
-
- /* int numberOfProcessors = sysconf(_SC_NPROCESSORS_ONLN);
-  printf("Number of processors: %d\n", numberOfProcessors);
-  pthread_attr_t attr;
-  cpu_set_t cpus;
-  pthread_attr_init(&attr);*/
-
-  //printf("The process id: %d\n", getpid());
-  //printf("The thread id: %d\n", syscall(__NR_gettid));
+int papi_init(int *event_set) {
+  int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret;
 
   cpu_set_t cpuset;
   CPU_ZERO(&cpuset);       //clears the cpuset
   CPU_SET(0, &cpuset);     //initialize cpuset to 0x0
   sched_setaffinity(0, sizeof(cpuset), &cpuset); //initialize main thread to P0
-
-  if(argc < 4){
-    fprintf(stderr, "Usage: %s [martix-market-filename] format_num num_workers\n", argv[0]);
-      exit(1);
-  }
-  else{
-    if((f = fopen(argv[1], "r")) == NULL)
-      exit(1);
-  }
-
-  /*if (PAPI_num_counters() < 3) {
-     fprintf(stderr, "No hardware counters here, or PAPI not supported.\n");
-     exit(1);
-  }*/
-
 
   ret = PAPI_library_init(PAPI_VER_CURRENT);
   if (ret != PAPI_VER_CURRENT && ret > 0) {
@@ -217,19 +47,137 @@ int main(int argc, char* argv[])
     exit(1);
   }
 
-  ret = PAPI_create_eventset(&event_set);
+  ret = PAPI_create_eventset(event_set);
   if(ret != PAPI_OK){
     fprintf(stderr, "create event set error\n");
     exit(1);
   }
-  ret = PAPI_add_events(event_set, events, 3);
+  ret = PAPI_add_events(*event_set, events, 3);
   if(ret != PAPI_OK){
     fprintf(stderr, "hi add event error\n");
     fprintf(stderr, "%d %s\n", ret, PAPI_strerror(ret));
     exit(1);
   }
 
-  int num_workers = atoi(argv[3]);  
+  return ret;
+}
+
+
+//void launch_spmv (Index *row, Index *col, Value *coo_val, Index *row_ptr,
+                  //Index *colind, int anz, int N, int inside_max) {
+  //spmv_pthread_struct *s[num_workers];
+  //int nnz_per_worker = anz / num_workers;
+  //int rem = anz - nnz_per_worker * num_workers;
+  //int t_index = 0;
+  //int t = 0;
+  //for(t = 0; t < num_workers; t++){
+    //s[t] = (spmv_pthread_struct*)malloc(sizeof(spmv_pthread_struct));
+    //if(s[t] == NULL){
+      //printf("struct couldn't be allocated\n");
+      //exit (EXIT_FAILURE);
+    //}
+    //s[t]->sp = (spmv_struct*)calloc(1, sizeof(spmv_struct));
+    //s[t]->tid = t;
+    //s[t]->sp->n = nnz_per_worker;
+    //s[t]->sp->N = N;
+    //s[t]->sp->ptr = row + t_index;
+    //s[t]->sp->ind =  col + t_index;
+    //s[t]->sp->data = coo_val + t_index;
+    //s[t]->sp->x = x;
+    //s[t]->sp->y = (Value*) calloc(N, sizeof(Value));
+    //s[t]->fn = &spmv_coo;
+    //t_index += nnz_per_worker;
+    //s[t]->inside_max = inside_max;
+  //}
+  //s[t-1]->sp->n += rem;
+  //int iret;
+  //if ((ret = PAPI_start(event_set)) != PAPI_OK) {
+    //fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
+    //exit(1);
+  //}
+  //for (i=0; i<outer_max; i++){
+    //zero_arr(N, y);
+    //for(t = 0; t < num_workers; t++)
+      //zero_arr(N, s[t]->sp->y);
+    //start = clock();
+    //clock_gettime(clk_id, &start_tp);
+    //for(t = 0; t < num_workers; t++) {
+      //iret = pthread_create(&threads[t], NULL, spmv_wrapper, (void *)(s[t])); 
+      //if(iret != 0){
+        //printf("Error in pthreads!\n");
+        //exit(1);
+      //}
+    //}
+    //for(t = 0; t < num_workers; t++){
+      //pthread_join(threads[t], NULL);
+      //for(int j = 0; j < N; j++){
+        //y[j] += s[t]->sp->y[j];
+      //}
+    //}
+    //[>printf("%d\n", fletcher_sum(y, N)); <]
+    //clock_gettime(clk_id, &stop_tp);
+    //printf("Time elpased %f\n",(double) ((stop_tp.tv_sec - start_tp.tv_sec) + ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
+    //exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
+    //sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
+  //}
+  //if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
+    //fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
+    //exit(1);
+  //}
+  //printf("coo\n");
+  //printf("Num_threads %d\n", num_workers);
+  //printf("Outer %d\n", outer_max);
+  //printf("Inside %d\n", inside_max);
+  //printf("N %d\n", N);
+  //printf("NNZ %d\n", anz);
+  //mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
+  //for (i=0; i<outer_max; i++){
+    //variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
+  //}
+  //variance /= outer_max;
+  //sd = sqrt(variance);
+  //printf("SD %g\n", sd);
+  //printf("MFLOPS_S %g\n", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
+  //printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
+  //printf("%d\n", fletcher_sum(coo_val, anz));
+  //printf("%d\n", fletcher_sum(x, M));
+  //printf("Fletcher_sum %d\n", fletcher_sum(y, N));
+  //printf("L1 data cache misses is %lld\n", values[0]);
+  //printf("L2 data cache misses is %lld\n", values[1]);
+  //printf("L3 data cache misses is %lld\n", values[2]);
+
+//}
+
+int main(int argc, char* argv[])
+{
+  struct timespec start_tp, stop_tp;
+  clockid_t clk_id;
+  clk_id = CLOCK_REALTIME;
+  int ret_code, r, c, k;
+  MM_typecode matcode;
+  FILE *f, *g;
+  int M, N, entries, anz, i, j, *row, *col, *row_ptr, *colind, *offset, *ptr, *indices, num_diags, stride, num_cols;
+  Value *x, *y, *val, *dia_data, *ell_data, *coo_val;
+  double v;
+  clock_t start, stop;
+  double sum = 0, mean = 0, sd = 0, variance = 0;
+  int ret, event_set=PAPI_NULL;
+  int inside = 0, inside_max = 1000000, outer_max = OUTER_MAX;
+  double exec_arr[OUTER_MAX];
+  long long values[3];
+
+  if(argc < 4){
+    fprintf(stderr, "Usage: %s [martix-market-filename] format_num num_workers\n", argv[0]);
+      exit(1);
+  }
+  else{
+    if((f = fopen(argv[1], "r")) == NULL)
+      exit(1);
+  }
+
+  ret = papi_init(&event_set);
+
+  int num_workers = atoi(argv[3]);
 
   if(mm_read_banner(f, &matcode) != 0){
     fprintf(stderr, "Could not process Matrix Market banner.\n");
@@ -275,7 +223,7 @@ int main(int argc, char* argv[])
         else
           anz = anz + 2;
       }
-    } 
+    }
   }
   else{
       anz = 0;
@@ -299,43 +247,43 @@ int main(int argc, char* argv[])
   else
     M = N;
 
-  row = (int*)malloc(anz * sizeof(int));
+  row = (Index*)malloc(anz * sizeof(Index));
   if(row == NULL){
     fprintf(stderr, "couldn't allocate row using malloc");
     exit(1);
   }
-  col = (int*)malloc(anz * sizeof(int));
+  col = (Index*)malloc(anz * sizeof(Index));
   if(col == NULL){
     fprintf(stderr, "couldn't allocate col using malloc");
     exit(1);
   }
-  coo_val = (MYTYPE*)malloc(anz * sizeof(MYTYPE));
+  coo_val = (Value*)malloc(anz * sizeof(Value));
   if(coo_val == NULL){
     fprintf(stderr, "couldn't allocate val using malloc");
     exit(1);
   }
-  row_ptr = (int*)calloc(N+1, sizeof(int));
+  row_ptr = (Index*)calloc(N+1, sizeof(Index));
   if(row_ptr == NULL){
     fprintf(stderr, "couldn't allocate row_ptr using malloc");
     exit(1);
   }
-  colind = (int*)malloc(anz * sizeof(int));
+  colind = (Index*)malloc(anz * sizeof(Index));
   if(colind == NULL){
     fprintf(stderr, "couldn't allocate colind using malloc");
     exit(1);
   }
-  val = (MYTYPE*)malloc(anz * sizeof(MYTYPE));
+  val = (Value*)malloc(anz * sizeof(Value));
   if(val == NULL){
     fprintf(stderr, "couldn't allocate val using malloc");
     exit(1);
   }
-  x=(MYTYPE*) malloc( sizeof(MYTYPE)*N );
+  x=(Value*) malloc( sizeof(Value)*N );
   if(x == NULL){
     fprintf(stderr, "couldn't allocate x using malloc");
     exit(1);
   }
   init_arr(N,x);
-  y=(MYTYPE*) calloc(N, sizeof(MYTYPE));
+  y=(Value*) calloc(N, sizeof(Value));
   if(y == NULL){
     fprintf(stderr, "couldn't allocate y using calloc");
     exit(1);
@@ -354,7 +302,7 @@ int main(int argc, char* argv[])
           row[k] = r - 1;
           col[k]= c - 1;
           coo_val[k] = v;
-	  if(fpclassify(coo_val[k]) == FP_NAN){
+	       if(fpclassify(coo_val[k]) == FP_NAN){
             fprintf(stderr,"bad value : nan\n");
             exit(1);
           }
@@ -370,7 +318,7 @@ int main(int argc, char* argv[])
             k++;
           }
           else{
-            row[k+1] = col[k]; 
+            row[k+1] = col[k];
             col[k+1] = row[k];
             coo_val[k+1] = v;
 	    if(fpclassify(coo_val[k+1]) == FP_SUBNORMAL){
@@ -392,7 +340,7 @@ int main(int argc, char* argv[])
           k++;
         }
         else{
-          row[k+1] = col[k]; 
+          row[k+1] = col[k];
           col[k+1] = row[k];
           coo_val[k+1] = 1.0;
           k = k + 2;
@@ -445,138 +393,118 @@ int main(int argc, char* argv[])
 
   pthread_t threads[num_workers];
 
-  if(atoi(argv[2]) == 1){
-    spmv_coo_struct *s[num_workers];
-    int nnz_per_worker = anz / num_workers;
-    int rem = anz - nnz_per_worker * num_workers;
-    int t_index = 0;
-    int t = 0;
-    /*for(i = 0; i < anz; i++){
-      printf("%d %d %f\n", row[i], col[i], coo_val[i]); 
-    }*/
-    for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_coo_struct*)malloc(sizeof(spmv_coo_struct));
-      if(s[t] == NULL){
-        printf("struct couldn't be allocated\n");
-        exit(1);
-      }
-      s[t]->tid = t;
-      s[t]->nz = anz;
-      s[t]->N = N;
-      s[t]->row = row + t_index;
-      //printf("start %d\n", s[t]->row[0]);
-      s[t]->col =  col + t_index;
-      s[t]->val = coo_val + t_index;
-      s[t]->x = x;
-      s[t]->y = (MYTYPE*) calloc(N, sizeof(MYTYPE));
-      t_index += nnz_per_worker;
-      s[t]->len = nnz_per_worker; 
-      //printf("end %d\n", s[t]->row[nnz_per_worker-1]);
-      s[t]->inside_max = inside_max;
-    }
-    s[t-1]->len += rem;
-    //printf("\n%d\n", fletcher_sum_1d_array_int(row, anz));
-    int iret;
-    if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
-    /*if ((ret = PAPI_start_counters(events, 3)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }*/
-    for (i=0; i<outer_max; i++){
-      zero_arr(N, y);
-      for(t = 0; t < num_workers; t++)
-        zero_arr(N, s[t]->y);
-      start = clock();
-      clock_gettime(clk_id, &start_tp);
-      for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_coo_wrapper, (void *)(s[t])); 
-        if(iret != 0){
-          printf("Error in pthreads!\n");
-          exit(1);
-        }
-      }
-      for(t = 0; t < num_workers; t++){
-        pthread_join(threads[t], NULL);
-        for(int j = 0; j < N; j++){
-          y[j] += s[t]->y[j];
-        }
-      }
-      /*stop = clock();*/
-      /*printf("%d\n", fletcher_sum(y, N)); */
-      /*exec_arr[i] = 1.0/1000000 * 2 * anz / ((double)(stop - start)/ CLOCKS_PER_SEC); */
-      /*sum += (double)(stop - start);*/
-      clock_gettime(clk_id, &stop_tp);
-      /*printf("Time elpased %f\n",(double) ((stop_tp.tv_sec - start_tp.tv_sec) + ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); */
-      exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
-      sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
-    }
-    /*if ((ret = PAPI_read_counters(values, 3)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }*/
-    if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
-    printf("coo\n");
-    printf("Num_threads %d\n", num_workers);
-    printf("Outer %d\n", outer_max);
-    printf("Inside %d\n", inside_max);
-    printf("N %d\n", N);
-    printf("NNZ %d\n", anz);
-    mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
-    for (i=0; i<outer_max; i++){
-      variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
-    } 
-    variance /= outer_max;
-    sd = sqrt(variance);
-    printf("SD %g\n", sd);
-    printf("MFLOPS_S %g\n", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
-    printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
-    //printf("%d\n", fletcher_sum_1d_array_int(row, anz)); 
-    //printf("%d\n", fletcher_sum_1d_array_int(col, anz)); 
-    //printf("%d\n", fletcher_sum(coo_val, anz)); 
-    //printf("%d\n", fletcher_sum(x, M)); 
-    printf("Fletcher_sum %d\n", fletcher_sum(y, N)); 
-    /*printf("L1 data cache misses is %lld\n", values[0]);*/
-    /*printf("L2 data cache misses is %lld\n", values[1]);*/
-    /*printf("L3 data cache misses is %lld\n", values[2]);*/
-    /*for(i = 0; i < N; i++){
-      printf("%.12lf\n", y[i]);
-    }*/
-  } else if(atoi(argv[2]) == 2){
+  if(atoi(argv[2]) == SPMV_ALGORITHM_COO){
+     spmv_pthread_struct *s[num_workers];
+     int nnz_per_worker = anz / num_workers;
+     int rem = anz - nnz_per_worker * num_workers;
+     int t_index = 0;
+     int t = 0;
+     for(t = 0; t < num_workers; t++){
+       s[t] = (spmv_pthread_struct*)malloc(sizeof(spmv_pthread_struct));
+       if(s[t] == NULL){
+         printf("struct couldn't be allocated\n");
+         exit (EXIT_FAILURE);
+       }
+       s[t]->sp = (spmv_struct*)calloc(1, sizeof(spmv_struct));
+       s[t]->tid = t;
+       s[t]->sp->n = nnz_per_worker;
+       s[t]->sp->N = N;
+       s[t]->sp->ptr = row + t_index;
+       s[t]->sp->ind =  col + t_index;
+       s[t]->sp->data = coo_val + t_index;
+       s[t]->sp->x = x;
+       s[t]->sp->y = (Value*) calloc(N, sizeof(Value));
+       s[t]->fn = &spmv_coo;
+       t_index += nnz_per_worker;
+       s[t]->inside_max = inside_max;
+     }
+     s[t-1]->sp->n += rem;
+     int iret;
+     if ((ret = PAPI_start(event_set)) != PAPI_OK) {
+       fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
+       exit(1);
+     }
+     for (i=0; i<outer_max; i++){
+       zero_arr(N, y);
+       for(t = 0; t < num_workers; t++)
+         zero_arr(N, s[t]->sp->y);
+       start = clock();
+       clock_gettime(clk_id, &start_tp);
+       for(t = 0; t < num_workers; t++) {
+         iret = pthread_create(&threads[t], NULL, spmv_wrapper, (void *)(s[t])); 
+         if(iret != 0){
+           printf("Error in pthreads!\n");
+           exit(1);
+         }
+       }
+       for(t = 0; t < num_workers; t++){
+         pthread_join(threads[t], NULL);
+         for(int j = 0; j < N; j++){
+           y[j] += s[t]->sp->y[j];
+         }
+       }
+       /*printf("%d\n", fletcher_sum(y, N)); */
+       clock_gettime(clk_id, &stop_tp);
+       printf("Time elpased %f\n",(double) ((stop_tp.tv_sec - start_tp.tv_sec) + ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
+       exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
+       sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
+     }
+     if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
+       fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
+       exit(1);
+     }
+     printf("coo\n");
+     printf("Num_threads %d\n", num_workers);
+     printf("Outer %d\n", outer_max);
+     printf("Inside %d\n", inside_max);
+     printf("N %d\n", N);
+     printf("NNZ %d\n", anz);
+     mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
+     for (i=0; i<outer_max; i++){
+       variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
+     }
+     variance /= outer_max;
+     sd = sqrt(variance);
+     printf("SD %g\n", sd);
+     printf("MFLOPS_S %g\n", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
+     printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
+     printf("Fletcher sum coo_val: %d\n", fletcher_sum(coo_val, anz));
+     printf("Fletcher sum x: %d\n", fletcher_sum(x, M));
+     printf("Fletcher_sum y: %d\n", fletcher_sum(y, N));
+     printf("L1 data cache misses is %lld\n", values[0]);
+     printf("L2 data cache misses is %lld\n", values[1]);
+     printf("L3 data cache misses is %lld\n", values[2]);
+
+    //launch_spmv(row, col, coo_val, row_ptr, colind, anz);
+  } else if(atoi(argv[2]) == SPMV_ALGORITHM_CSR){
     coo_csr(anz, N, row, col, coo_val, row_ptr, colind, val);
-    spmv_csr_struct *s[num_workers];
+    spmv_pthread_struct *s[num_workers];
     int rows_per_worker = N / num_workers;
     int rem = N - rows_per_worker * num_workers;
     int t_index = 0;
     int t = 0;
-    /*for(i = 0; i < N; i++){
-      for(j = row_ptr[i]; j < row_ptr[i+1]; j++)
-        printf("%d %d %f\n", i, colind[j], val[j]);
-    }*/
     for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_csr_struct*)malloc(sizeof(spmv_csr_struct));
+      s[t] = (spmv_pthread_struct*)malloc(sizeof(spmv_pthread_struct));
       if(s[t] == NULL){
         printf("struct couldn't be allocated\n");
         exit(1);
       }
+
+      s[t]->sp = (spmv_struct*)calloc(1, sizeof(spmv_struct));
       s[t]->tid = t;
-      s[t]->nz = anz;
-      s[t]->N = N;
-      s[t]->rowptr = row_ptr + t_index;
-      s[t]->col =  colind;
-      s[t]->val = val;
-      s[t]->x = x;
-      s[t]->y = y + t_index;
+      s[t]->sp->n = rows_per_worker;
+      s[t]->sp->N = rows_per_worker;
+      s[t]->sp->ptr = row_ptr + t_index;
+      s[t]->sp->ind =  colind;
+      s[t]->sp->data = val;
+      s[t]->sp->x = x;
+      s[t]->sp->y = y + t_index;
+      s[t]->fn = &spmv_csr;
       t_index += rows_per_worker;
       s[t]->len = rows_per_worker;
       s[t]->inside_max = inside_max;
     }
-    s[t-1]->len += rem;
+    s[t-1]->sp->N += rem;
     int iret;
     if ((ret = PAPI_start(event_set)) != PAPI_OK) {
       fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
@@ -589,7 +517,7 @@ int main(int argc, char* argv[])
       start = clock();
       clock_gettime(clk_id, &start_tp);
       for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_csr_wrapper, (void *)(s[t]));
+        iret = pthread_create(&threads[t], NULL, spmv_wrapper, (void *)(s[t]));
         if(iret != 0){
           printf("Error in pthreads!\n");
           exit(1);
@@ -597,9 +525,6 @@ int main(int argc, char* argv[])
       }
       for(t = 0; t < num_workers; t++){
         pthread_join(threads[t], NULL);
-        /*for(int j = 0; j < N; j++){
-          y[j] += s[t]->y[j];
-        }*/
       }
       stop = clock();
       //printf("%d\n", fletcher_sum(y, N)); 
@@ -631,63 +556,49 @@ int main(int argc, char* argv[])
     printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
     //printf("%d\n", fletcher_sum_1d_array_int(row, anz)); 
     //printf("%d\n", fletcher_sum_1d_array_int(col, anz)); 
-    //printf("%d\n", fletcher_sum(coo_val, anz)); 
-    //printf("%d\n", fletcher_sum(x, M)); 
-    printf("Fletcher_sum %d\n", fletcher_sum(y, N));
-    /*printf("L1 data cache misses is %lld\n", values[0]);*/
-    /*printf("L2 data cache misses is %lld\n", values[1]);*/
-    /*printf("L3 data cache misses is %lld\n", values[2]);*/
-  }
-  else if(atoi(argv[2]) == 3){
+    printf("Fletcher sum coo_val: %d\n", fletcher_sum(coo_val, anz)); 
+    printf("Fletcher_sum x: %d\n", fletcher_sum(x, M)); 
+    printf("Fletcher_sum y: %d\n", fletcher_sum(y, N));
+    printf("L1 data cache misses is %lld\n", values[0]);
+    printf("L2 data cache misses is %lld\n", values[1]);
+    printf("L3 data cache misses is %lld\n", values[2]);
+  } else if(atoi(argv[2]) == SPMV_ALGORITHM_DIA) {
     coo_csr(anz, N, row, col, coo_val, row_ptr, colind, val);
     csr_dia(row_ptr, colind, val, &offset, &dia_data, N, &num_diags, &stride, anz);
-    spmv_dia_struct *s[num_workers];
+    spmv_pthread_struct *s[num_workers];
     int rows_per_worker = N / num_workers;
     int rem = N - rows_per_worker * num_workers;
     int t_index = 0;
     int t = 0;
-    /*for(i = 0; i < N; i++){
-      for(j = 0; j < num_diags; j++)
-        printf("%f, ", dia_data[i*num_diags+j]);
-      printf("\n");
-    }
-    printf("hi");
-    for(j = 0; j < num_diags; j++)
-      printf("%d, ", offset[j]);
-    printf("\n");*/
-    for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_dia_struct*)malloc(sizeof(spmv_dia_struct));
+    for(t = 0; t < num_workers; t++) {
+      s[t] = (spmv_pthread_struct*)malloc(sizeof(spmv_pthread_struct));
       if(s[t] == NULL){
         printf("struct couldn't be allocated\n");
         exit(1);
       }
+
+      s[t]->sp = (spmv_struct*)calloc(1, sizeof(spmv_struct));
       s[t]->tid = t;
-      s[t]->nd = num_diags;
-      s[t]->N = N;
-      //printf("num diags %d\n", s[t]->nd);
-      s[t]->stride = stride;
-      //printf("stride %d\n", s[t]->stride);
-      s[t]->start_row = t_index/num_diags;
-      //printf("start row %d\n", s[t]->start_row);
-      s[t]->data = dia_data;
-      s[t]->offset = offset;
-      s[t]->x = x;
-      s[t]->y = y;
+      s[t]->sp->n = num_diags;
+      s[t]->sp->N = N;
+      s[t]->sp->start_row = t_index/num_diags;
+      s[t]->sp->data = dia_data;
+      s[t]->sp->ptr = offset;
+      s[t]->sp->x = x;
+      s[t]->sp->y = y;
+      s[t]->sp->end_row = s[t]->sp->start_row + rows_per_worker;
+      s[t]->fn = &spmv_dia;
       t_index += rows_per_worker * num_diags;
-      s[t]->end_row = s[t]->start_row + rows_per_worker;
-      //printf("end row %d\n", s[t]->end_row);
       s[t]->inside_max = inside_max;
     }
-    s[t-1]->end_row += rem;
+    s[t-1]->sp->end_row += rem;
     int iret;
-    for (i=0; i<outer_max; i++){
+    for (i=0; i<outer_max; i++) {
       zero_arr(N, y);
-      for(t = 0; t < num_workers; t++)
-        //zero_arr(N, s[t]->y);
-      //start = clock();
+      for(t = 0; t < num_workers; t++) zero_arr(N, s[t]->sp->y);
       clock_gettime(clk_id, &start_tp);
       for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_dia_wrapper, (void *)(s[t]));
+        iret = pthread_create(&threads[t], NULL, spmv_wrapper, (void *)(s[t]));
         if(iret != 0){
           printf("Error in pthreads!\n");
           exit(1);
@@ -695,9 +606,6 @@ int main(int argc, char* argv[])
       }
       for(t = 0; t < num_workers; t++){
         pthread_join(threads[t], NULL);
-        /*for(int j = 0; j < N; j++){
-          y[j] += s[t]->y[j];
-        }*/
       }
       //stop = clock();
       //printf("%d\n", fletcher_sum(y, N)); 
@@ -725,48 +633,46 @@ int main(int argc, char* argv[])
     printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
     //printf("%d\n", fletcher_sum_1d_array_int(row, anz)); 
     //printf("%d\n", fletcher_sum_1d_array_int(col, anz)); 
-    //printf("%d\n", fletcher_sum(coo_val, anz)); 
-    //printf("%d\n", fletcher_sum(x, M)); 
-    printf("Fletcher_sum %d\n", fletcher_sum(y, N));
-    /*for(i = 0; i < N; i++){
-      printf("%f\n", y[i]);
-    }*/
-  }
-  else if(atoi(argv[2]) == 4){
+    printf("Fletcher_sum coo_val %d\n", fletcher_sum(coo_val, anz)); 
+    printf("Fletcher_sum x: %d\n", fletcher_sum(x, M)); 
+    printf("Fletcher_sum y: %d\n", fletcher_sum(y, N));
+  } else if(atoi(argv[2]) == SPMV_ALGORITHM_ELL) {
     coo_csr(anz, N, row, col, coo_val, row_ptr, colind, val);
     csr_ell(row_ptr, colind, val, &indices, &ell_data, N, &num_cols, anz);
 
-    spmv_ell_struct *s[num_workers];
+    spmv_pthread_struct *s[num_workers];
     int rows_per_worker = N / num_workers;
     int rem = N - rows_per_worker * num_workers;
     int t_index = 0;
     int t;
     for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_ell_struct*)malloc(sizeof(spmv_ell_struct));
+      s[t] = (spmv_pthread_struct*)malloc(sizeof(spmv_pthread_struct));
       if(s[t] == NULL){
         printf("struct couldn't be allocated\n");
         exit(1);
       }
+      s[t]->sp = (spmv_struct*)calloc(1, sizeof(spmv_struct));
       s[t]->tid = t;
-      s[t]->nc = num_cols;
-      s[t]->N = N;
-      s[t]->start_row = t_index/num_cols;
-      s[t]->data = ell_data;
-      s[t]->indices = indices;
-      s[t]->x = x;
-      s[t]->y = y;
+      s[t]->sp->n = num_cols;
+      s[t]->sp->N = N;
+      s[t]->sp->start_row = t_index/num_cols;
+      s[t]->sp->data = ell_data;
+      s[t]->sp->ind = indices;
+      s[t]->sp->x = x;
+      s[t]->sp->y = y;
+      s[t]->fn = &spmv_ell;
       t_index += rows_per_worker * num_cols;
-      s[t]->end_row = s[t]->start_row + rows_per_worker;
+      s[t]->sp->end_row = s[t]->sp->start_row + rows_per_worker;
       s[t]->inside_max = inside_max;
     }
-    s[t-1]->end_row += rem;
+    s[t-1]->sp->end_row += rem;
     int iret;
     for (i=0; i<outer_max; i++){
       zero_arr(N, y);
       for(t = 0; t < num_workers; t++)
       clock_gettime(clk_id, &start_tp);
       for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_ell_wrapper, (void *)(s[t]));
+        iret = pthread_create(&threads[t], NULL, spmv_wrapper, (void *)(s[t]));
         if(iret != 0){
           printf("Error in pthreads!\n");
           exit(1);
@@ -794,194 +700,12 @@ int main(int argc, char* argv[])
     printf("SD %g\n", sd);
     printf("MFLOPS_s %g\n", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
     printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
+    printf("Fletcher_sum coo_val %d\n", fletcher_sum(coo_val, anz)); 
+    printf("Fletcher_sum x: %d\n", fletcher_sum(x, M)); 
     printf("Fletcher_sum %d\n", fletcher_sum(y, N));
   }
-  
-  else if(atoi(argv[2]) == 5){
-    coo_csr(anz, N, row, col, coo_val, row_ptr, colind, val);
-    csr_diaii(row_ptr, colind, val, &offset, &dia_data, N, &num_diags, &stride, anz);
-    spmv_diaii_struct *s[num_workers];
-    int rows_per_worker = N / num_workers;
-    int rem = N - rows_per_worker * num_workers;
-    int t_index = 0;
-    int t = 0;
-    pthread_attr_t attr;
-    int ret;
-    int scope;
-    /* initialize an attribute to the default value */
-    ret = pthread_attr_init(&attr);
-    if (ret != 0){
-      fprintf(stderr, "pthread attr init error\n");
-      exit(1);
-    } 
-    ret = pthread_attr_getscope(&attr, &scope);
-    if (ret != 0){
-      fprintf(stderr, "pthread attr get scope\n");
-      exit(1);
-    } 
-    if(scope == PTHREAD_SCOPE_PROCESS)
-      printf("process scope\n");
-    else if(scope == PTHREAD_SCOPE_SYSTEM)
-      printf("system scope\n");
-    /*for(i = 0; i < N; i++){
-      for(j = 0; j < num_diags; j++)
-        printf("%f, ", dia_data[i*num_diags+j]);
-      printf("\n");
-    }
-    for(j = 0; j < num_diags; j++)
-      printf("%d, ", offset[j]);
-    printf("\n");*/
-    for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_diaii_struct*)malloc(sizeof(spmv_diaii_struct));
-      if(s[t] == NULL){
-        printf("struct couldn't be allocated\n");
-        exit(1);
-      }
-      s[t]->tid = t;
-      s[t]->nd = num_diags;
-      s[t]->N = N;
-      //printf("num diags %d\n", s[t]->nd);
-      s[t]->stride = stride;
-      //printf("stride %d\n", s[t]->stride);
-      s[t]->start_row = t_index/num_diags;
-      //printf("start row %d\n", s[t]->start_row);
-      s[t]->data = dia_data;
-      s[t]->offset = offset;
-      s[t]->x = x;
-      //s[t]->y = (MYTYPE*) calloc(N, sizeof(MYTYPE));
-      s[t]->y = y; 
-      t_index += rows_per_worker * num_diags;
-      s[t]->end_row = s[t]->start_row + rows_per_worker - 1;
-      //printf("end row %d\n", s[t]->end_row);
-      s[t]->inside_max = inside_max;
-    }
-    s[t-1]->end_row += rem;
-    int iret;
-    /*if ((ret = PAPI_start_counters(events, 3)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }*/
-    if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
-    for (i=0; i<outer_max; i++){
-      zero_arr(N, y);
-      for(t = 0; t < num_workers; t++)
-        //zero_arr(N, s[t]->y);
-      //start = clock();
-      clock_gettime(clk_id, &start_tp);
-      for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_diaii_wrapper, (void *)(s[t]));
-        if(iret != 0){
-          printf("Error in pthreads!\n");
-          exit(1);
-        }
-      }
-      for(t = 0; t < num_workers; t++){
-        pthread_join(threads[t], NULL);
-        /*for(int j = 0; j < N; j++){
-          y[j] += s[t]->y[j];
-        }*/
-      }
-      //stop = clock();
-      //printf("%d\n", fletcher_sum(y, N)); 
-      //exec_arr[i] = 1.0/1000000 * 2 * anz / ((double)(stop - start)/ CLOCKS_PER_SEC); 
-      //sum += (double)(stop - start);
-      clock_gettime(clk_id, &stop_tp);
-      //printf("%f\n",(double) ((stop_tp.tv_sec - start_tp.tv_sec) + ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
-      exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
-      sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
-    }
-    /*if ((ret = PAPI_read_counters(values, 3)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }*/
-    if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
-    mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
-    for (i=0; i<outer_max; i++){
-      variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
-    }
-    variance /= outer_max;
-    sd = sqrt(variance);
-    printf("%f,", sd);
-    printf("%g,", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
-    //printf("%d\n", fletcher_sum_1d_array_int(row, anz)); 
-    //printf("%d\n", fletcher_sum_1d_array_int(col, anz)); 
-    //printf("%d\n", fletcher_sum(coo_val, anz)); 
-    //printf("%d\n", fletcher_sum(x, M)); 
-    printf("%d\n", fletcher_sum(y, N));
-    /*for(i = 0; i < N; i++){
-      printf("%f\n", y[i]);
-    }*/
-    printf("L1 data cache misses is %lld\n", values[0]);
-    printf("L2 data cache misses is %lld\n", values[1]);
-    printf("L3 data cache misses is %lld\n", values[2]);
-  }
 
-  else if(atoi(argv[2]) == 6){
-    coo_csr(anz, N, row, col, coo_val, row_ptr, colind, val);
-    csr_ellii(row_ptr, colind, val, &indices, &ell_data, N, &num_cols, anz);
-
-    spmv_ellii_struct *s[num_workers];
-    int rows_per_worker = N / num_workers;
-    int rem = N - rows_per_worker * num_workers;
-    int t_index = 0;
-    int t;
-    for(t = 0; t < num_workers; t++){
-      s[t] = (spmv_ellii_struct*)malloc(sizeof(spmv_ellii_struct));
-      if(s[t] == NULL){
-        printf("struct couldn't be allocated\n");
-        exit(1);
-      }
-      s[t]->tid = t;
-      s[t]->nc = num_cols;
-      s[t]->N = N;
-      s[t]->start_row = t_index/num_cols;
-      s[t]->data = ell_data;
-      s[t]->indices = indices;
-      s[t]->x = x;
-      s[t]->y = y;
-      t_index += rows_per_worker * num_cols;
-      s[t]->end_row = s[t]->start_row + rows_per_worker;
-      s[t]->inside_max = inside_max;
-    }
-    s[t-1]->end_row += rem;
-    int iret;
-    for (i=0; i<outer_max; i++){
-      zero_arr(N, y);
-      for(t = 0; t < num_workers; t++)
-      clock_gettime(clk_id, &start_tp);
-      for(t = 0; t < num_workers; t++){
-        iret = pthread_create(&threads[t], NULL, spmv_ellii_wrapper, (void *)(s[t]));
-        if(iret != 0){
-          printf("Error in pthreads!\n");
-          exit(1);
-        }
-      }
-      for(t = 0; t < num_workers; t++){
-        pthread_join(threads[t], NULL);
-      }
-      clock_gettime(clk_id, &stop_tp);
-      exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
-      sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
-    }
-    mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
-    for (i=0; i<outer_max; i++){
-      variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
-    }
-    variance /= outer_max;
-    sd = sqrt(variance);
-    printf("%f\n", sd);
-    printf("%g,", 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum)));
-    printf("%d\n", fletcher_sum(y, N));
-  }
-
-  
-  if (f !=stdin) 
+  if (f !=stdin)
     fclose(f);
   pthread_exit(NULL);
 
@@ -993,5 +717,3 @@ int main(int argc, char* argv[])
 
   return 0;
 }
-
-
