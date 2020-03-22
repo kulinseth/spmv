@@ -1,0 +1,518 @@
+atmosmodd
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 2.66045
+MFLOPS_S 412.816
+Time 1.28118e-07
+Fletcher_sum 11207
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 57.867265
+MFLOPS_s 1453.82
+Time 3.63795e-08
+Fletcher_sum 13711
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 17.896394
+MFLOPS_s 1023.53,Time 5.16737e-08
+Fletcher_sum 13711
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 1270432
+NNZ 8814880
+SD 30.6053
+MFLOPS_s 1359.02
+Time 3.89172e-08
+Fletcher_sum 13711
+
+
+Baumann
+coo
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 0.421547
+MFLOPS_S 1146.64
+Time 1.95789e-06
+Fletcher_sum 44927
+
+csr
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 1.538615
+MFLOPS_s 2277.66
+Time 9.85656e-07
+Fletcher_sum 23339
+
+dia
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 0.359928
+MFLOPS_s 1078.95,Time 2.08073e-06
+Fletcher_sum 23339
+
+ell
+Num_threads 16
+Outer 3
+Inside 500
+N 112211
+NNZ 748331
+SD 0.85846
+MFLOPS_s 1686.07
+Time 1.3315e-06
+Fletcher_sum 23339
+
+
+cant
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 19.8871
+MFLOPS_S 630.977
+Time 3.81064e-08
+Fletcher_sum 59046
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 123.727483
+MFLOPS_s 1489.95
+Time 1.61376e-08
+Fletcher_sum 59047
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 8.929789
+MFLOPS_s 446.903,Time 5.3802e-08
+Fletcher_sum 59047
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 62451
+NNZ 4007383
+SD 95.1777
+MFLOPS_s 1231.92
+Time 1.95178e-08
+Fletcher_sum 59047
+
+
+consph
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 13.0357
+MFLOPS_S 633.849
+Time 5.68951e-08
+Fletcher_sum 46696
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 91.052670
+MFLOPS_s 1556.53
+Time 2.31688e-08
+Fletcher_sum 46697
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 0.001837
+MFLOPS_s 4.10913,Time 8.77628e-06
+Fletcher_sum 46697
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 83334
+NNZ 6010480
+SD 79.8613
+MFLOPS_s 1335.54
+Time 2.70024e-08
+Fletcher_sum 46697
+
+
+denormal
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 89400
+NNZ 1156224
+SD 31.9716
+MFLOPS_S 537.958
+Time 1.28957e-08
+Fletcher_sum 57709
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 89400
+NNZ 1156224
+SD 226.277667
+MFLOPS_s 1478.55
+Time 4.692e-09
+Fletcher_sum 57709
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 89400
+NNZ 1156224
+SD 64.559033
+MFLOPS_s 843.297,Time 8.22645e-09
+Fletcher_sum 57709
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 89400
+NNZ 1156224
+SD 142.745
+MFLOPS_s 1257.8
+Time 5.51544e-09
+Fletcher_sum 57709
+
+
+dixmaanl
+coo
+Num_threads 16
+Outer 3
+Inside 500
+N 60000
+NNZ 299998
+SD 0.73787
+MFLOPS_S 1119.4
+Time 8.03996e-07
+Fletcher_sum 37173
+
+csr
+Num_threads 16
+Outer 3
+Inside 500
+N 60000
+NNZ 299998
+SD 2.439809
+MFLOPS_s 2200.01
+Time 4.09087e-07
+Fletcher_sum 35473
+
+dia
+Num_threads 16
+Outer 3
+Inside 500
+N 60000
+NNZ 299998
+SD 0.344047
+MFLOPS_s 928.025,Time 9.69795e-07
+Fletcher_sum 35473
+
+ell
+Num_threads 16
+Outer 3
+Inside 500
+N 60000
+NNZ 299998
+SD 1.04554
+MFLOPS_s 1574.99
+Time 5.7143e-07
+Fletcher_sum 35473
+
+
+ecology1
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 1000000
+NNZ 4996000
+SD 6.32819
+MFLOPS_S 330.465
+Time 9.07087e-08
+Fletcher_sum 4417
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 1000000
+NNZ 4996000
+SD 75.867219
+MFLOPS_s 1366.04
+Time 2.19438e-08
+Fletcher_sum 4417
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 1000000
+NNZ 4996000
+SD 53.087889
+MFLOPS_s 960.046,Time 3.12235e-08
+Fletcher_sum 4417
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 1000000
+NNZ 4996000
+SD 73.3603
+MFLOPS_s 1264.15
+Time 2.37125e-08
+Fletcher_sum 4417
+
+
+jnlbrng1
+coo
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 199200
+SD 1.00195
+MFLOPS_S 1121.82
+Time 5.32708e-07
+Fletcher_sum 44052
+
+csr
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 199200
+SD 2.662012
+MFLOPS_s 2175.46
+Time 2.74701e-07
+Fletcher_sum 44051
+
+dia
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 199200
+SD 0.599937
+MFLOPS_s 1080.31,Time 5.53173e-07
+Fletcher_sum 44051
+
+ell
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 199200
+SD 1.67387
+MFLOPS_s 1589.05
+Time 3.76073e-07
+Fletcher_sum 44051
+
+
+obstclae
+coo
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 197608
+SD 1.07922
+MFLOPS_S 1121.2
+Time 5.28739e-07
+Fletcher_sum 21807
+
+csr
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 197608
+SD 3.009429
+MFLOPS_s 2238.76
+Time 2.648e-07
+Fletcher_sum 21807
+
+dia
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 197608
+SD 0.770497
+MFLOPS_s 1090.74,Time 5.43506e-07
+Fletcher_sum 21807
+
+ell
+Num_threads 16
+Outer 3
+Inside 500
+N 40000
+NNZ 197608
+SD 2.3721
+MFLOPS_s 1628.07
+Time 3.64126e-07
+Fletcher_sum 21807
+
+
+pdb1HYS
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 36417
+NNZ 4344765
+SD 13.1207
+MFLOPS_S 618.887
+Time 4.21217e-08
+Fletcher_sum 16861
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 36417
+NNZ 4344765
+SD 91.556826
+MFLOPS_s 1507.58
+Time 1.72917e-08
+Fletcher_sum 16861
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 36417
+NNZ 4344765
+SD 0.003476
+MFLOPS_s 3.80803,Time 6.84569e-06
+Fletcher_sum 16861
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 36417
+NNZ 4344765
+SD 56.421
+MFLOPS_s 1035.59
+Time 2.51726e-08
+Fletcher_sum 16861
+
+
+rma10
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 46835
+NNZ 2329092
+SD 18.8248
+MFLOPS_S 626.621
+Time 2.23015e-08
+Fletcher_sum 47318
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 46835
+NNZ 2329092
+SD 221.592591
+MFLOPS_s 1598.42
+Time 8.74272e-09
+Fletcher_sum 47317
+
+dia
+Num_threads 16
+Outer 3
+Inside 1
+N 46835
+NNZ 2329092
+SD 0.001673
+MFLOPS_s 2.44704,Time 5.7108e-06
+Fletcher_sum 47317
+
+ell
+Num_threads 16
+Outer 3
+Inside 1
+N 46835
+NNZ 2329092
+SD 42.6709
+MFLOPS_s 686.172
+Time 2.03659e-08
+Fletcher_sum 47317
+
+
+webbase-1M
+coo
+Num_threads 16
+Outer 3
+Inside 1
+N 1000005
+NNZ 3105536
+SD 2.55406
+MFLOPS_S 216.627
+Time 8.60154e-08
+Fletcher_sum 58256
+
+csr
+Num_threads 16
+Outer 3
+Inside 1
+N 1000005
+NNZ 3105536
+SD 75.823109
+MFLOPS_s 869.091
+Time 2.14399e-08
+Fletcher_sum 58256
+
