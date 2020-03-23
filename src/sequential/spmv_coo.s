@@ -1,36 +1,85 @@
-	.file	"spmv_coo.c"
-	.text
-	.p2align 4,,15
-	.globl	spmv_coo
-	.type	spmv_coo, @function
-spmv_coo:
-.LFB37:
+	.section	__TEXT,__text,regular,pure_instructions
+	.build_version macos, 10, 16	sdk_version 10, 16
+	.globl	_spmv_coo               ## -- Begin function spmv_coo
+	.p2align	4, 0x90
+_spmv_coo:                              ## @spmv_coo
 	.cfi_startproc
-	movq	8(%rsp), %r10
+## %bb.0:
 	testl	%ecx, %ecx
-	jle	.L5
-	leal	-1(%rcx), %r11d
-	xorl	%eax, %eax
-	jmp	.L3
-	.p2align 4,,10
-	.p2align 3
-.L4:
-	movq	%rcx, %rax
-.L3:
-	movslq	(%rdi,%rax,4), %rcx
-	movslq	(%rsi,%rax,4), %r8
-	vmovss	(%rdx,%rax,4), %xmm0
-	leaq	(%r10,%rcx,4), %rcx
-	vmovss	(%rcx), %xmm1
-	vfmadd132ss	(%r9,%r8,4), %xmm1, %xmm0
-	vmovss	%xmm0, (%rcx)
-	leaq	1(%rax), %rcx
-	cmpq	%r11, %rax
-	jne	.L4
-.L5:
-	ret
+	jle	LBB0_8
+## %bb.1:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movq	16(%rbp), %r11
+	movl	%ecx, %r10d
+	leaq	-1(%r10), %rcx
+	movl	%r10d, %r8d
+	andl	$3, %r8d
+	cmpq	$3, %rcx
+	popq	%rbp
+	jae	LBB0_3
+## %bb.2:
+	xorl	%ecx, %ecx
+	testq	%r8, %r8
+	jne	LBB0_6
+	jmp	LBB0_8
+LBB0_3:
+	subq	%r8, %r10
+	xorl	%ecx, %ecx
+	.p2align	4, 0x90
+LBB0_4:                                 ## =>This Inner Loop Header: Depth=1
+	vmovss	(%rdx,%rcx,4), %xmm0    ## xmm0 = mem[0],zero,zero,zero
+	movslq	(%rsi,%rcx,4), %rax
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	movslq	(%rdi,%rcx,4), %rax
+	vaddss	(%r11,%rax,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r11,%rax,4)
+	vmovss	4(%rdx,%rcx,4), %xmm0   ## xmm0 = mem[0],zero,zero,zero
+	movslq	4(%rsi,%rcx,4), %rax
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	movslq	4(%rdi,%rcx,4), %rax
+	vaddss	(%r11,%rax,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r11,%rax,4)
+	vmovss	8(%rdx,%rcx,4), %xmm0   ## xmm0 = mem[0],zero,zero,zero
+	movslq	8(%rsi,%rcx,4), %rax
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	movslq	8(%rdi,%rcx,4), %rax
+	vaddss	(%r11,%rax,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r11,%rax,4)
+	vmovss	12(%rdx,%rcx,4), %xmm0  ## xmm0 = mem[0],zero,zero,zero
+	movslq	12(%rsi,%rcx,4), %rax
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	movslq	12(%rdi,%rcx,4), %rax
+	vaddss	(%r11,%rax,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r11,%rax,4)
+	addq	$4, %rcx
+	cmpq	%rcx, %r10
+	jne	LBB0_4
+## %bb.5:
+	testq	%r8, %r8
+	je	LBB0_8
+LBB0_6:
+	leaq	(%rdi,%rcx,4), %rdi
+	leaq	(%rsi,%rcx,4), %rsi
+	leaq	(%rdx,%rcx,4), %rcx
+	xorl	%edx, %edx
+	.p2align	4, 0x90
+LBB0_7:                                 ## =>This Inner Loop Header: Depth=1
+	vmovss	(%rcx,%rdx,4), %xmm0    ## xmm0 = mem[0],zero,zero,zero
+	movslq	(%rsi,%rdx,4), %rax
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	movslq	(%rdi,%rdx,4), %rax
+	vaddss	(%r11,%rax,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r11,%rax,4)
+	addq	$1, %rdx
+	cmpq	%rdx, %r8
+	jne	LBB0_7
+LBB0_8:
+	retq
 	.cfi_endproc
-.LFE37:
-	.size	spmv_coo, .-spmv_coo
-	.ident	"GCC: (GNU) 8.1.0"
-	.section	.note.GNU-stack,"",@progbits
+                                        ## -- End function
+
+.subsections_via_symbols

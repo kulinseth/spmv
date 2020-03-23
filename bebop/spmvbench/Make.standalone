@@ -21,6 +21,8 @@ CONFIG_H      = config.h
 
 LIBOBJ = $(BENCHMARK_OBJ) $(TIMING_OBJ)
 
+LIBS = -L../matrix_generator -l_matrix_generators -L../bebop_util -lbebop_util \
+	-L../sparse_matrix_converter -lsparse_matrix_converter -lm
 
 #########################################################################
 # OUTPUT RULES

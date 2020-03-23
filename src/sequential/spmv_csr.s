@@ -114,5 +114,19 @@ LBB0_9:
 	retq
 	.cfi_endproc
                                         ## -- End function
+	.globl	_spmv_csr4              ## -- Begin function spmv_csr4
+	.p2align	4, 0x90
+_spmv_csr4:                             ## @spmv_csr4
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
 
 .subsections_via_symbols

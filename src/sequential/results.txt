@@ -1,72 +1,890 @@
-webbase-1M
+Phase	Benchmark	Mode	Feature	Value
+Sparse	Baumann.mtx	csr	Outer	20
+Sparse	Baumann.mtx	csr	Inner	500
+Sparse	Baumann.mtx	csr	N	112211
+Sparse	Baumann.mtx	csr	NNZ	748331
+Sparse	Baumann.mtx	csr	SD	33.416952
+Sparse	Baumann.mtx	csr	MFLOPS_s	2923.17
+Sparse	Baumann.mtx	csr	MFLOPS_median	2928.44
+Sparse	Baumann.mtx	csr	Time	5.12
+Sparse	Baumann.mtx	csr	Fletcher_sum	63537
 
+Sparse	Baumann.mtx	dia	Outer	20
+Sparse	Baumann.mtx	dia	Inner	500
+Sparse	Baumann.mtx	dia	N	112211
+Sparse	Baumann.mtx	dia	NNZ	748331
+Sparse	Baumann.mtx	dia	SD	10.454802
+Sparse	Baumann.mtx	dia	MFLOPS_s	5831.43
+Sparse	Baumann.mtx	dia	MFLOPS_median	5829.82
+Sparse	Baumann.mtx	dia	Time	2.56655
+Sparse	Baumann.mtx	dia	Fletcher_sum	63537
 
-Sparse
-1000005,3105536,3.105520,91.847496,564259,455335322717,146620.526285,-1,-0.000000,0.000000,0.587597,82.527283,8.435258,3.341183,1.549392,96.440720,68.284737,0.901567,1,4700,3.105520,641.147949,25.320900
+Sparse	Baumann.mtx	ell	Outer	20
+Sparse	Baumann.mtx	ell	Inner	500
+Sparse	Baumann.mtx	ell	N	112211
+Sparse	Baumann.mtx	ell	NNZ	748331
+Sparse	Baumann.mtx	ell	SD	90.823255
+Sparse	Baumann.mtx	ell	MFLOPS_s	2553.63
+Sparse	Baumann.mtx	ell	MFLOPS_median	2597.78
+Sparse	Baumann.mtx	ell	Time	5.86093
+Sparse	Baumann.mtx	ell	Fletcher_sum	63537
 
-csr
-Outer 3
-Inner 1
-N 1000005
-NNZ 3105536
-SD 594.664870
-MFLOPS_s 931.661
-Time 0.02
-Fletcher_sum 101
+Sparse	Baumann.mtx	coo	Outer	20
+Sparse	Baumann.mtx	coo	Inner	500
+Sparse	Baumann.mtx	coo	N	112211
+Sparse	Baumann.mtx	coo	NNZ	748331
+Sparse	Baumann.mtx	coo	SD	20.4032
+Sparse	Baumann.mtx	coo	MFLOPS_s	1578.64
+Sparse	Baumann.mtx	coo	MFLOPS_median	1528.64
+Sparse	Baumann.mtx	coo	Time	9.4807
+Sparse	Baumann.mtx	coo	Fletcher_sum	63537
 
-coo
-Outer 3
-Inner 1
-N 1000005
-NNZ 3105536
-SD 400.923
-MFLOPS_s 621.107
-Time 0.03
-Fletcher_sum 38162
+Dense	Baumann.mtx	csr	Outer	20
+Dense	Baumann.mtx	csr	Inner	500
+Dense	Baumann.mtx	csr	N	1000
+Dense	Baumann.mtx	csr	NNZ	1000000
+Dense	Baumann.mtx	csr	SD	32.935006
+Dense	Baumann.mtx	csr	MFLOPS_s	1948.22
+Dense	Baumann.mtx	csr	MFLOPS_median	1963.95
+Dense	Baumann.mtx	csr	Time	10.2658
+Dense	Baumann.mtx	csr	Fletcher_sum	0
 
+Dense	Baumann.mtx	dia	Outer	20
+Dense	Baumann.mtx	dia	Inner	500
+Dense	Baumann.mtx	dia	N	1000
+Dense	Baumann.mtx	dia	NNZ	1000000
+Dense	Baumann.mtx	dia	SD	115.950551
+Dense	Baumann.mtx	dia	MFLOPS_s	4343.28
+Dense	Baumann.mtx	dia	MFLOPS_median	4392.05
+Dense	Baumann.mtx	dia	Time	4.60482
+Dense	Baumann.mtx	dia	Fletcher_sum	0
 
+Dense	Baumann.mtx	ell	Outer	20
+Dense	Baumann.mtx	ell	Inner	500
+Dense	Baumann.mtx	ell	N	1000
+Dense	Baumann.mtx	ell	NNZ	1000000
+Dense	Baumann.mtx	ell	SD	54.011419
+Dense	Baumann.mtx	ell	MFLOPS_s	2576.11
+Dense	Baumann.mtx	ell	MFLOPS_median	2522.6
+Dense	Baumann.mtx	ell	Time	7.76363
+Dense	Baumann.mtx	ell	Fletcher_sum	0
 
-Dense
-csr
-Outer 3
-Inner 500
-N 1000
-NNZ 1000000
-SD 18.753287
-MFLOPS_s 1229.51
-Time 2.44
-Fletcher_sum 0
+Dense	Baumann.mtx	coo	Outer	20
+Dense	Baumann.mtx	coo	Inner	500
+Dense	Baumann.mtx	coo	N	1000
+Dense	Baumann.mtx	coo	NNZ	1000000
+Dense	Baumann.mtx	coo	SD	1.75578
+Dense	Baumann.mtx	coo	MFLOPS_s	913.896
+Dense	Baumann.mtx	coo	MFLOPS_median	913.747
+Dense	Baumann.mtx	coo	Time	21.8843
+Dense	Baumann.mtx	coo	Fletcher_sum	0
 
-dia
-Outer 3
-Inner 500
-N 1000
-NNZ 1000000
-SD 124.090693
-MFLOPS_s 5172.41
-Time 0.58
-Fletcher_sum 0
+Sparse	atmosmodd.mtx	csr	Outer	20
+Sparse	atmosmodd.mtx	csr	Inner	1
+Sparse	atmosmodd.mtx	csr	N	1270432
+Sparse	atmosmodd.mtx	csr	NNZ	8814880
+Sparse	atmosmodd.mtx	csr	SD	18.166754
+Sparse	atmosmodd.mtx	csr	MFLOPS_s	2502.27
+Sparse	atmosmodd.mtx	csr	MFLOPS_median	2508.42
+Sparse	atmosmodd.mtx	csr	Time	0.14091
+Sparse	atmosmodd.mtx	csr	Fletcher_sum	24131
 
-ell
-Outer 3
-Inner 500
-N 1000
-NNZ 1000000
-SD 27.377160
-MFLOPS_s 2400
-Time 1.25
-Fletcher_sum 0
+Sparse	atmosmodd.mtx	dia	Outer	20
+Sparse	atmosmodd.mtx	dia	Inner	1
+Sparse	atmosmodd.mtx	dia	N	1270432
+Sparse	atmosmodd.mtx	dia	NNZ	8814880
+Sparse	atmosmodd.mtx	dia	SD	43.869664
+Sparse	atmosmodd.mtx	dia	MFLOPS_s	3372.44
+Sparse	atmosmodd.mtx	dia	MFLOPS_median	3290.41
+Sparse	atmosmodd.mtx	dia	Time	0.104552
+Sparse	atmosmodd.mtx	dia	Fletcher_sum	24131
 
-coo
-Outer 3
-Inner 500
-N 1000
-NNZ 1000000
-SD 1.49624
-MFLOPS_s 562.852
-Time 5.33
-Fletcher_sum 0
+Sparse	atmosmodd.mtx	ell	Outer	20
+Sparse	atmosmodd.mtx	ell	Inner	1
+Sparse	atmosmodd.mtx	ell	N	1270432
+Sparse	atmosmodd.mtx	ell	NNZ	8814880
+Sparse	atmosmodd.mtx	ell	SD	29.236658
+Sparse	atmosmodd.mtx	ell	MFLOPS_s	2170.9
+Sparse	atmosmodd.mtx	ell	MFLOPS_median	2185.28
+Sparse	atmosmodd.mtx	ell	Time	0.162419
+Sparse	atmosmodd.mtx	ell	Fletcher_sum	24131
 
+Sparse	atmosmodd.mtx	coo	Outer	20
+Sparse	atmosmodd.mtx	coo	Inner	1
+Sparse	atmosmodd.mtx	coo	N	1270432
+Sparse	atmosmodd.mtx	coo	NNZ	8814880
+Sparse	atmosmodd.mtx	coo	SD	9.5097
+Sparse	atmosmodd.mtx	coo	MFLOPS_s	1496.74
+Sparse	atmosmodd.mtx	coo	MFLOPS_median	1502.52
+Sparse	atmosmodd.mtx	coo	Time	0.235576
+Sparse	atmosmodd.mtx	coo	Fletcher_sum	24131
 
+Dense	atmosmodd.mtx	csr	Outer	20
+Dense	atmosmodd.mtx	csr	Inner	500
+Dense	atmosmodd.mtx	csr	N	1000
+Dense	atmosmodd.mtx	csr	NNZ	1000000
+Dense	atmosmodd.mtx	csr	SD	11.661576
+Dense	atmosmodd.mtx	csr	MFLOPS_s	1972.42
+Dense	atmosmodd.mtx	csr	MFLOPS_median	1950.05
+Dense	atmosmodd.mtx	csr	Time	10.1398
+Dense	atmosmodd.mtx	csr	Fletcher_sum	0
 
+Dense	atmosmodd.mtx	dia	Outer	20
+Dense	atmosmodd.mtx	dia	Inner	500
+Dense	atmosmodd.mtx	dia	N	1000
+Dense	atmosmodd.mtx	dia	NNZ	1000000
+Dense	atmosmodd.mtx	dia	SD	156.904213
+Dense	atmosmodd.mtx	dia	MFLOPS_s	4710.37
+Dense	atmosmodd.mtx	dia	MFLOPS_median	4541.53
+Dense	atmosmodd.mtx	dia	Time	4.24595
+Dense	atmosmodd.mtx	dia	Fletcher_sum	0
 
+Dense	atmosmodd.mtx	ell	Outer	20
+Dense	atmosmodd.mtx	ell	Inner	500
+Dense	atmosmodd.mtx	ell	N	1000
+Dense	atmosmodd.mtx	ell	NNZ	1000000
+Dense	atmosmodd.mtx	ell	SD	45.750125
+Dense	atmosmodd.mtx	ell	MFLOPS_s	2558.68
+Dense	atmosmodd.mtx	ell	MFLOPS_median	2545.77
+Dense	atmosmodd.mtx	ell	Time	7.81652
+Dense	atmosmodd.mtx	ell	Fletcher_sum	0
+
+Dense	atmosmodd.mtx	coo	Outer	20
+Dense	atmosmodd.mtx	coo	Inner	500
+Dense	atmosmodd.mtx	coo	N	1000
+Dense	atmosmodd.mtx	coo	NNZ	1000000
+Dense	atmosmodd.mtx	coo	SD	2.22091
+Dense	atmosmodd.mtx	coo	MFLOPS_s	912.725
+Dense	atmosmodd.mtx	coo	MFLOPS_median	912.346
+Dense	atmosmodd.mtx	coo	Time	21.9124
+Dense	atmosmodd.mtx	coo	Fletcher_sum	0
+
+Sparse	cant.mtx	csr	Outer	20
+Sparse	cant.mtx	csr	Inner	1
+Sparse	cant.mtx	csr	N	62451
+Sparse	cant.mtx	csr	NNZ	4007383
+Sparse	cant.mtx	csr	SD	14.482731
+Sparse	cant.mtx	csr	MFLOPS_s	2377.1
+Sparse	cant.mtx	csr	MFLOPS_median	2379.68
+Sparse	cant.mtx	csr	Time	0.067433
+Sparse	cant.mtx	csr	Fletcher_sum	16737
+
+Sparse	cant.mtx	dia	Outer	20
+Sparse	cant.mtx	dia	Inner	1
+Sparse	cant.mtx	dia	N	62451
+Sparse	cant.mtx	dia	NNZ	4007383
+Sparse	cant.mtx	dia	SD	59.936727
+Sparse	cant.mtx	dia	MFLOPS_s	4717.2
+Sparse	cant.mtx	dia	MFLOPS_median	4731.55
+Sparse	cant.mtx	dia	Time	0.033981
+Sparse	cant.mtx	dia	Fletcher_sum	16737
+
+Sparse	cant.mtx	ell	Outer	20
+Sparse	cant.mtx	ell	Inner	1
+Sparse	cant.mtx	ell	N	62451
+Sparse	cant.mtx	ell	NNZ	4007383
+Sparse	cant.mtx	ell	SD	37.060180
+Sparse	cant.mtx	ell	MFLOPS_s	2178.61
+Sparse	cant.mtx	ell	MFLOPS_median	2113.48
+Sparse	cant.mtx	ell	Time	0.073577
+Sparse	cant.mtx	ell	Fletcher_sum	16737
+
+Sparse	cant.mtx	coo	Outer	20
+Sparse	cant.mtx	coo	Inner	1
+Sparse	cant.mtx	coo	N	62451
+Sparse	cant.mtx	coo	NNZ	4007383
+Sparse	cant.mtx	coo	SD	12.0382
+Sparse	cant.mtx	coo	MFLOPS_s	1041.95
+Sparse	cant.mtx	coo	MFLOPS_median	1044.19
+Sparse	cant.mtx	coo	Time	0.153842
+Sparse	cant.mtx	coo	Fletcher_sum	16737
+
+Dense	cant.mtx	csr	Outer	20
+Dense	cant.mtx	csr	Inner	500
+Dense	cant.mtx	csr	N	1000
+Dense	cant.mtx	csr	NNZ	1000000
+Dense	cant.mtx	csr	SD	13.903753
+Dense	cant.mtx	csr	MFLOPS_s	1983.33
+Dense	cant.mtx	csr	MFLOPS_median	1982.17
+Dense	cant.mtx	csr	Time	10.0841
+Dense	cant.mtx	csr	Fletcher_sum	0
+
+Dense	cant.mtx	dia	Outer	20
+Dense	cant.mtx	dia	Inner	500
+Dense	cant.mtx	dia	N	1000
+Dense	cant.mtx	dia	NNZ	1000000
+Dense	cant.mtx	dia	SD	14.429052
+Dense	cant.mtx	dia	MFLOPS_s	4369.03
+Dense	cant.mtx	dia	MFLOPS_median	4359.19
+Dense	cant.mtx	dia	Time	4.57768
+Dense	cant.mtx	dia	Fletcher_sum	0
+
+Dense	cant.mtx	ell	Outer	20
+Dense	cant.mtx	ell	Inner	500
+Dense	cant.mtx	ell	N	1000
+Dense	cant.mtx	ell	NNZ	1000000
+Dense	cant.mtx	ell	SD	33.518116
+Dense	cant.mtx	ell	MFLOPS_s	2543.59
+Dense	cant.mtx	ell	MFLOPS_median	2517.84
+Dense	cant.mtx	ell	Time	7.86291
+Dense	cant.mtx	ell	Fletcher_sum	0
+
+Dense	cant.mtx	coo	Outer	20
+Dense	cant.mtx	coo	Inner	500
+Dense	cant.mtx	coo	N	1000
+Dense	cant.mtx	coo	NNZ	1000000
+Dense	cant.mtx	coo	SD	2.29021
+Dense	cant.mtx	coo	MFLOPS_s	912.031
+Dense	cant.mtx	coo	MFLOPS_median	910.793
+Dense	cant.mtx	coo	Time	21.9291
+Dense	cant.mtx	coo	Fletcher_sum	0
+
+Sparse	consph.mtx	csr	Outer	20
+Sparse	consph.mtx	csr	Inner	1
+Sparse	consph.mtx	csr	N	83334
+Sparse	consph.mtx	csr	NNZ	6010480
+Sparse	consph.mtx	csr	SD	23.696564
+Sparse	consph.mtx	csr	MFLOPS_s	2338.41
+Sparse	consph.mtx	csr	MFLOPS_median	2350.14
+Sparse	consph.mtx	csr	Time	0.102813
+Sparse	consph.mtx	csr	Fletcher_sum	59279
+
+Sparse	consph.mtx	dia	Outer	20
+Sparse	consph.mtx	dia	Inner	1
+Sparse	consph.mtx	dia	N	83334
+Sparse	consph.mtx	dia	NNZ	6010480
+Sparse	consph.mtx	dia	SD	10.055066
+Sparse	consph.mtx	dia	MFLOPS_s	37.0073
+Sparse	consph.mtx	dia	MFLOPS_median	26.5999
+Sparse	consph.mtx	dia	Time	6.49653
+Sparse	consph.mtx	dia	Fletcher_sum	59279
+
+Sparse	consph.mtx	ell	Outer	20
+Sparse	consph.mtx	ell	Inner	1
+Sparse	consph.mtx	ell	N	83334
+Sparse	consph.mtx	ell	NNZ	6010480
+Sparse	consph.mtx	ell	SD	40.318940
+Sparse	consph.mtx	ell	MFLOPS_s	2189.07
+Sparse	consph.mtx	ell	MFLOPS_median	2211.16
+Sparse	consph.mtx	ell	Time	0.109827
+Sparse	consph.mtx	ell	Fletcher_sum	59279
+
+Sparse	consph.mtx	coo	Outer	20
+Sparse	consph.mtx	coo	Inner	1
+Sparse	consph.mtx	coo	N	83334
+Sparse	consph.mtx	coo	NNZ	6010480
+Sparse	consph.mtx	coo	SD	6.10517
+Sparse	consph.mtx	coo	MFLOPS_s	1016.93
+Sparse	consph.mtx	coo	MFLOPS_median	1014.94
+Sparse	consph.mtx	coo	Time	0.236417
+Sparse	consph.mtx	coo	Fletcher_sum	59279
+
+Dense	consph.mtx	csr	Outer	20
+Dense	consph.mtx	csr	Inner	500
+Dense	consph.mtx	csr	N	1000
+Dense	consph.mtx	csr	NNZ	1000000
+Dense	consph.mtx	csr	SD	9.884766
+Dense	consph.mtx	csr	MFLOPS_s	1987.04
+Dense	consph.mtx	csr	MFLOPS_median	1980.91
+Dense	consph.mtx	csr	Time	10.0652
+Dense	consph.mtx	csr	Fletcher_sum	0
+
+Dense	consph.mtx	dia	Outer	20
+Dense	consph.mtx	dia	Inner	500
+Dense	consph.mtx	dia	N	1000
+Dense	consph.mtx	dia	NNZ	1000000
+Dense	consph.mtx	dia	SD	132.082527
+Dense	consph.mtx	dia	MFLOPS_s	4420.69
+Dense	consph.mtx	dia	MFLOPS_median	4373.43
+Dense	consph.mtx	dia	Time	4.52418
+Dense	consph.mtx	dia	Fletcher_sum	0
+
+Dense	consph.mtx	ell	Outer	20
+Dense	consph.mtx	ell	Inner	500
+Dense	consph.mtx	ell	N	1000
+Dense	consph.mtx	ell	NNZ	1000000
+Dense	consph.mtx	ell	SD	17.686282
+Dense	consph.mtx	ell	MFLOPS_s	2558.93
+Dense	consph.mtx	ell	MFLOPS_median	2570.66
+Dense	consph.mtx	ell	Time	7.81576
+Dense	consph.mtx	ell	Fletcher_sum	0
+
+Dense	consph.mtx	coo	Outer	20
+Dense	consph.mtx	coo	Inner	500
+Dense	consph.mtx	coo	N	1000
+Dense	consph.mtx	coo	NNZ	1000000
+Dense	consph.mtx	coo	SD	1.62513
+Dense	consph.mtx	coo	MFLOPS_s	914.203
+Dense	consph.mtx	coo	MFLOPS_median	914.671
+Dense	consph.mtx	coo	Time	21.877
+Dense	consph.mtx	coo	Fletcher_sum	0
+
+Sparse	denormal.mtx	csr	Outer	20
+Sparse	denormal.mtx	csr	Inner	1
+Sparse	denormal.mtx	csr	N	89400
+Sparse	denormal.mtx	csr	NNZ	1156224
+Sparse	denormal.mtx	csr	SD	102.319731
+Sparse	denormal.mtx	csr	MFLOPS_s	3129.58
+Sparse	denormal.mtx	csr	MFLOPS_median	3163.5
+Sparse	denormal.mtx	csr	Time	0.014778
+Sparse	denormal.mtx	csr	Fletcher_sum	27292
+
+Sparse	denormal.mtx	dia	Outer	20
+Sparse	denormal.mtx	dia	Inner	1
+Sparse	denormal.mtx	dia	N	89400
+Sparse	denormal.mtx	dia	NNZ	1156224
+Sparse	denormal.mtx	dia	SD	783.713021
+Sparse	denormal.mtx	dia	MFLOPS_s	9004.86
+Sparse	denormal.mtx	dia	MFLOPS_median	8911.47
+Sparse	denormal.mtx	dia	Time	0.005136
+Sparse	denormal.mtx	dia	Fletcher_sum	27292
+
+Sparse	denormal.mtx	ell	Outer	20
+Sparse	denormal.mtx	ell	Inner	1
+Sparse	denormal.mtx	ell	N	89400
+Sparse	denormal.mtx	ell	NNZ	1156224
+Sparse	denormal.mtx	ell	SD	48.570977
+Sparse	denormal.mtx	ell	MFLOPS_s	2598.69
+Sparse	denormal.mtx	ell	MFLOPS_median	2635.27
+Sparse	denormal.mtx	ell	Time	0.017797
+Sparse	denormal.mtx	ell	Fletcher_sum	27292
+
+Sparse	denormal.mtx	coo	Outer	20
+Sparse	denormal.mtx	coo	Inner	1
+Sparse	denormal.mtx	coo	N	89400
+Sparse	denormal.mtx	coo	NNZ	1156224
+Sparse	denormal.mtx	coo	SD	11.5482
+Sparse	denormal.mtx	coo	MFLOPS_s	1406.98
+Sparse	denormal.mtx	coo	MFLOPS_median	1410.47
+Sparse	denormal.mtx	coo	Time	0.032871
+Sparse	denormal.mtx	coo	Fletcher_sum	27292
+
+Dense	denormal.mtx	csr	Outer	20
+Dense	denormal.mtx	csr	Inner	500
+Dense	denormal.mtx	csr	N	1000
+Dense	denormal.mtx	csr	NNZ	1000000
+Dense	denormal.mtx	csr	SD	4.853497
+Dense	denormal.mtx	csr	MFLOPS_s	1969.2
+Dense	denormal.mtx	csr	MFLOPS_median	1972.15
+Dense	denormal.mtx	csr	Time	10.1564
+Dense	denormal.mtx	csr	Fletcher_sum	0
+
+Dense	denormal.mtx	dia	Outer	20
+Dense	denormal.mtx	dia	Inner	500
+Dense	denormal.mtx	dia	N	1000
+Dense	denormal.mtx	dia	NNZ	1000000
+Dense	denormal.mtx	dia	SD	210.497848
+Dense	denormal.mtx	dia	MFLOPS_s	4798.57
+Dense	denormal.mtx	dia	MFLOPS_median	4782.05
+Dense	denormal.mtx	dia	Time	4.16791
+Dense	denormal.mtx	dia	Fletcher_sum	0
+
+Dense	denormal.mtx	ell	Outer	20
+Dense	denormal.mtx	ell	Inner	500
+Dense	denormal.mtx	ell	N	1000
+Dense	denormal.mtx	ell	NNZ	1000000
+Dense	denormal.mtx	ell	SD	46.562700
+Dense	denormal.mtx	ell	MFLOPS_s	2635.03
+Dense	denormal.mtx	ell	MFLOPS_median	2672.15
+Dense	denormal.mtx	ell	Time	7.59004
+Dense	denormal.mtx	ell	Fletcher_sum	0
+
+Dense	denormal.mtx	coo	Outer	20
+Dense	denormal.mtx	coo	Inner	500
+Dense	denormal.mtx	coo	N	1000
+Dense	denormal.mtx	coo	NNZ	1000000
+Dense	denormal.mtx	coo	SD	1.59574
+Dense	denormal.mtx	coo	MFLOPS_s	914.461
+Dense	denormal.mtx	coo	MFLOPS_median	914.332
+Dense	denormal.mtx	coo	Time	21.8708
+Dense	denormal.mtx	coo	Fletcher_sum	0
+
+Sparse	dixmaanl.mtx	csr	Outer	20
+Sparse	dixmaanl.mtx	csr	Inner	500
+Sparse	dixmaanl.mtx	csr	N	60000
+Sparse	dixmaanl.mtx	csr	NNZ	299998
+Sparse	dixmaanl.mtx	csr	SD	14.441556
+Sparse	dixmaanl.mtx	csr	MFLOPS_s	2667.36
+Sparse	dixmaanl.mtx	csr	MFLOPS_median	2664.06
+Sparse	dixmaanl.mtx	csr	Time	2.2494
+Sparse	dixmaanl.mtx	csr	Fletcher_sum	55804
+
+Sparse	dixmaanl.mtx	dia	Outer	20
+Sparse	dixmaanl.mtx	dia	Inner	500
+Sparse	dixmaanl.mtx	dia	N	60000
+Sparse	dixmaanl.mtx	dia	NNZ	299998
+Sparse	dixmaanl.mtx	dia	SD	102.452744
+Sparse	dixmaanl.mtx	dia	MFLOPS_s	11779.3
+Sparse	dixmaanl.mtx	dia	MFLOPS_median	11832.2
+Sparse	dixmaanl.mtx	dia	Time	0.509365
+Sparse	dixmaanl.mtx	dia	Fletcher_sum	55804
+
+Sparse	dixmaanl.mtx	ell	Outer	20
+Sparse	dixmaanl.mtx	ell	Inner	500
+Sparse	dixmaanl.mtx	ell	N	60000
+Sparse	dixmaanl.mtx	ell	NNZ	299998
+Sparse	dixmaanl.mtx	ell	SD	9.154353
+Sparse	dixmaanl.mtx	ell	MFLOPS_s	3063.39
+Sparse	dixmaanl.mtx	ell	MFLOPS_median	3057.7
+Sparse	dixmaanl.mtx	ell	Time	1.9586
+Sparse	dixmaanl.mtx	ell	Fletcher_sum	55804
+
+Sparse	dixmaanl.mtx	coo	Outer	20
+Sparse	dixmaanl.mtx	coo	Inner	500
+Sparse	dixmaanl.mtx	coo	N	60000
+Sparse	dixmaanl.mtx	coo	NNZ	299998
+Sparse	dixmaanl.mtx	coo	SD	3.5763
+Sparse	dixmaanl.mtx	coo	MFLOPS_s	1589.16
+Sparse	dixmaanl.mtx	coo	MFLOPS_median	1585.16
+Sparse	dixmaanl.mtx	coo	Time	3.77556
+Sparse	dixmaanl.mtx	coo	Fletcher_sum	55804
+
+Dense	dixmaanl.mtx	csr	Outer	20
+Dense	dixmaanl.mtx	csr	Inner	500
+Dense	dixmaanl.mtx	csr	N	1000
+Dense	dixmaanl.mtx	csr	NNZ	1000000
+Dense	dixmaanl.mtx	csr	SD	8.894632
+Dense	dixmaanl.mtx	csr	MFLOPS_s	1979.14
+Dense	dixmaanl.mtx	csr	MFLOPS_median	1972.58
+Dense	dixmaanl.mtx	csr	Time	10.1054
+Dense	dixmaanl.mtx	csr	Fletcher_sum	0
+
+Dense	dixmaanl.mtx	dia	Outer	20
+Dense	dixmaanl.mtx	dia	Inner	500
+Dense	dixmaanl.mtx	dia	N	1000
+Dense	dixmaanl.mtx	dia	NNZ	1000000
+Dense	dixmaanl.mtx	dia	SD	152.639787
+Dense	dixmaanl.mtx	dia	MFLOPS_s	4914.37
+Dense	dixmaanl.mtx	dia	MFLOPS_median	4785.67
+Dense	dixmaanl.mtx	dia	Time	4.0697
+Dense	dixmaanl.mtx	dia	Fletcher_sum	0
+
+Dense	dixmaanl.mtx	ell	Outer	20
+Dense	dixmaanl.mtx	ell	Inner	500
+Dense	dixmaanl.mtx	ell	N	1000
+Dense	dixmaanl.mtx	ell	NNZ	1000000
+Dense	dixmaanl.mtx	ell	SD	50.307787
+Dense	dixmaanl.mtx	ell	MFLOPS_s	2604.64
+Dense	dixmaanl.mtx	ell	MFLOPS_median	2629.41
+Dense	dixmaanl.mtx	ell	Time	7.67859
+Dense	dixmaanl.mtx	ell	Fletcher_sum	0
+
+Dense	dixmaanl.mtx	coo	Outer	20
+Dense	dixmaanl.mtx	coo	Inner	500
+Dense	dixmaanl.mtx	coo	N	1000
+Dense	dixmaanl.mtx	coo	NNZ	1000000
+Dense	dixmaanl.mtx	coo	SD	12.4672
+Dense	dixmaanl.mtx	coo	MFLOPS_s	905.658
+Dense	dixmaanl.mtx	coo	MFLOPS_median	908.031
+Dense	dixmaanl.mtx	coo	Time	22.0834
+Dense	dixmaanl.mtx	coo	Fletcher_sum	0
+
+Sparse	ecology1.mtx	csr	Outer	20
+Sparse	ecology1.mtx	csr	Inner	1
+Sparse	ecology1.mtx	csr	N	1000000
+Sparse	ecology1.mtx	csr	NNZ	4996000
+Sparse	ecology1.mtx	csr	SD	23.199632
+Sparse	ecology1.mtx	csr	MFLOPS_s	2363.94
+Sparse	ecology1.mtx	csr	MFLOPS_median	2352.14
+Sparse	ecology1.mtx	csr	Time	0.084537
+Sparse	ecology1.mtx	csr	Fletcher_sum	60935
+
+Sparse	ecology1.mtx	dia	Outer	20
+Sparse	ecology1.mtx	dia	Inner	1
+Sparse	ecology1.mtx	dia	N	1000000
+Sparse	ecology1.mtx	dia	NNZ	4996000
+Sparse	ecology1.mtx	dia	SD	86.930500
+Sparse	ecology1.mtx	dia	MFLOPS_s	3832.61
+Sparse	ecology1.mtx	dia	MFLOPS_median	3873.63
+Sparse	ecology1.mtx	dia	Time	0.052142
+Sparse	ecology1.mtx	dia	Fletcher_sum	60935
+
+Sparse	ecology1.mtx	ell	Outer	20
+Sparse	ecology1.mtx	ell	Inner	1
+Sparse	ecology1.mtx	ell	N	1000000
+Sparse	ecology1.mtx	ell	NNZ	4996000
+Sparse	ecology1.mtx	ell	SD	45.269813
+Sparse	ecology1.mtx	ell	MFLOPS_s	2146.26
+Sparse	ecology1.mtx	ell	MFLOPS_median	2159.45
+Sparse	ecology1.mtx	ell	Time	0.093111
+Sparse	ecology1.mtx	ell	Fletcher_sum	60935
+
+Sparse	ecology1.mtx	coo	Outer	20
+Sparse	ecology1.mtx	coo	Inner	1
+Sparse	ecology1.mtx	coo	N	1000000
+Sparse	ecology1.mtx	coo	NNZ	4996000
+Sparse	ecology1.mtx	coo	SD	9.66413
+Sparse	ecology1.mtx	coo	MFLOPS_s	1486.58
+Sparse	ecology1.mtx	coo	MFLOPS_median	1473.56
+Sparse	ecology1.mtx	coo	Time	0.134429
+Sparse	ecology1.mtx	coo	Fletcher_sum	60935
+
+Dense	ecology1.mtx	csr	Outer	20
+Dense	ecology1.mtx	csr	Inner	500
+Dense	ecology1.mtx	csr	N	1000
+Dense	ecology1.mtx	csr	NNZ	1000000
+Dense	ecology1.mtx	csr	SD	10.036341
+Dense	ecology1.mtx	csr	MFLOPS_s	1985.55
+Dense	ecology1.mtx	csr	MFLOPS_median	1976.8
+Dense	ecology1.mtx	csr	Time	10.0728
+Dense	ecology1.mtx	csr	Fletcher_sum	0
+
+Dense	ecology1.mtx	dia	Outer	20
+Dense	ecology1.mtx	dia	Inner	500
+Dense	ecology1.mtx	dia	N	1000
+Dense	ecology1.mtx	dia	NNZ	1000000
+Dense	ecology1.mtx	dia	SD	155.314475
+Dense	ecology1.mtx	dia	MFLOPS_s	4779.78
+Dense	ecology1.mtx	dia	MFLOPS_median	4630.81
+Dense	ecology1.mtx	dia	Time	4.18429
+Dense	ecology1.mtx	dia	Fletcher_sum	0
+
+Dense	ecology1.mtx	ell	Outer	20
+Dense	ecology1.mtx	ell	Inner	500
+Dense	ecology1.mtx	ell	N	1000
+Dense	ecology1.mtx	ell	NNZ	1000000
+Dense	ecology1.mtx	ell	SD	41.379661
+Dense	ecology1.mtx	ell	MFLOPS_s	2578.65
+Dense	ecology1.mtx	ell	MFLOPS_median	2514.88
+Dense	ecology1.mtx	ell	Time	7.756
+Dense	ecology1.mtx	ell	Fletcher_sum	0
+
+Dense	ecology1.mtx	coo	Outer	20
+Dense	ecology1.mtx	coo	Inner	500
+Dense	ecology1.mtx	coo	N	1000
+Dense	ecology1.mtx	coo	NNZ	1000000
+Dense	ecology1.mtx	coo	SD	1.73026
+Dense	ecology1.mtx	coo	MFLOPS_s	914.219
+Dense	ecology1.mtx	coo	MFLOPS_median	913.873
+Dense	ecology1.mtx	coo	Time	21.8766
+Dense	ecology1.mtx	coo	Fletcher_sum	0
+
+Sparse	jnlbrng1.mtx	csr	Outer	20
+Sparse	jnlbrng1.mtx	csr	Inner	500
+Sparse	jnlbrng1.mtx	csr	N	40000
+Sparse	jnlbrng1.mtx	csr	NNZ	199200
+Sparse	jnlbrng1.mtx	csr	SD	8.831094
+Sparse	jnlbrng1.mtx	csr	MFLOPS_s	2693.26
+Sparse	jnlbrng1.mtx	csr	MFLOPS_median	2695.47
+Sparse	jnlbrng1.mtx	csr	Time	1.47925
+Sparse	jnlbrng1.mtx	csr	Fletcher_sum	63755
+
+Sparse	jnlbrng1.mtx	dia	Outer	20
+Sparse	jnlbrng1.mtx	dia	Inner	500
+Sparse	jnlbrng1.mtx	dia	N	40000
+Sparse	jnlbrng1.mtx	dia	NNZ	199200
+Sparse	jnlbrng1.mtx	dia	SD	638.891024
+Sparse	jnlbrng1.mtx	dia	MFLOPS_s	16482.2
+Sparse	jnlbrng1.mtx	dia	MFLOPS_median	16187.6
+Sparse	jnlbrng1.mtx	dia	Time	0.241716
+Sparse	jnlbrng1.mtx	dia	Fletcher_sum	63755
+
+Sparse	jnlbrng1.mtx	ell	Outer	20
+Sparse	jnlbrng1.mtx	ell	Inner	500
+Sparse	jnlbrng1.mtx	ell	N	40000
+Sparse	jnlbrng1.mtx	ell	NNZ	199200
+Sparse	jnlbrng1.mtx	ell	SD	8.272709
+Sparse	jnlbrng1.mtx	ell	MFLOPS_s	3070.09
+Sparse	jnlbrng1.mtx	ell	MFLOPS_median	3063.73
+Sparse	jnlbrng1.mtx	ell	Time	1.29768
+Sparse	jnlbrng1.mtx	ell	Fletcher_sum	63755
+
+Sparse	jnlbrng1.mtx	coo	Outer	20
+Sparse	jnlbrng1.mtx	coo	Inner	500
+Sparse	jnlbrng1.mtx	coo	N	40000
+Sparse	jnlbrng1.mtx	coo	NNZ	199200
+Sparse	jnlbrng1.mtx	coo	SD	8.17446
+Sparse	jnlbrng1.mtx	coo	MFLOPS_s	1612.91
+Sparse	jnlbrng1.mtx	coo	MFLOPS_median	1613.81
+Sparse	jnlbrng1.mtx	coo	Time	2.47007
+Sparse	jnlbrng1.mtx	coo	Fletcher_sum	63755
+
+Dense	jnlbrng1.mtx	csr	Outer	20
+Dense	jnlbrng1.mtx	csr	Inner	500
+Dense	jnlbrng1.mtx	csr	N	1000
+Dense	jnlbrng1.mtx	csr	NNZ	1000000
+Dense	jnlbrng1.mtx	csr	SD	8.866537
+Dense	jnlbrng1.mtx	csr	MFLOPS_s	1977.63
+Dense	jnlbrng1.mtx	csr	MFLOPS_median	1976.62
+Dense	jnlbrng1.mtx	csr	Time	10.1131
+Dense	jnlbrng1.mtx	csr	Fletcher_sum	0
+
+Dense	jnlbrng1.mtx	dia	Outer	20
+Dense	jnlbrng1.mtx	dia	Inner	500
+Dense	jnlbrng1.mtx	dia	N	1000
+Dense	jnlbrng1.mtx	dia	NNZ	1000000
+Dense	jnlbrng1.mtx	dia	SD	105.239718
+Dense	jnlbrng1.mtx	dia	MFLOPS_s	4848.89
+Dense	jnlbrng1.mtx	dia	MFLOPS_median	4900.01
+Dense	jnlbrng1.mtx	dia	Time	4.12466
+Dense	jnlbrng1.mtx	dia	Fletcher_sum	0
+
+Dense	jnlbrng1.mtx	ell	Outer	20
+Dense	jnlbrng1.mtx	ell	Inner	500
+Dense	jnlbrng1.mtx	ell	N	1000
+Dense	jnlbrng1.mtx	ell	NNZ	1000000
+Dense	jnlbrng1.mtx	ell	SD	19.535265
+Dense	jnlbrng1.mtx	ell	MFLOPS_s	2572.27
+Dense	jnlbrng1.mtx	ell	MFLOPS_median	2587.82
+Dense	jnlbrng1.mtx	ell	Time	7.77524
+Dense	jnlbrng1.mtx	ell	Fletcher_sum	0
+
+Dense	jnlbrng1.mtx	coo	Outer	20
+Dense	jnlbrng1.mtx	coo	Inner	500
+Dense	jnlbrng1.mtx	coo	N	1000
+Dense	jnlbrng1.mtx	coo	NNZ	1000000
+Dense	jnlbrng1.mtx	coo	SD	1.7269
+Dense	jnlbrng1.mtx	coo	MFLOPS_s	914.727
+Dense	jnlbrng1.mtx	coo	MFLOPS_median	913.974
+Dense	jnlbrng1.mtx	coo	Time	21.8644
+Dense	jnlbrng1.mtx	coo	Fletcher_sum	0
+
+Sparse	obstclae.mtx	csr	Outer	20
+Sparse	obstclae.mtx	csr	Inner	500
+Sparse	obstclae.mtx	csr	N	40000
+Sparse	obstclae.mtx	csr	NNZ	197608
+Sparse	obstclae.mtx	csr	SD	12.845197
+Sparse	obstclae.mtx	csr	MFLOPS_s	2692.29
+Sparse	obstclae.mtx	csr	MFLOPS_median	2666.26
+Sparse	obstclae.mtx	csr	Time	1.46795
+Sparse	obstclae.mtx	csr	Fletcher_sum	36581
+
+Sparse	obstclae.mtx	dia	Outer	20
+Sparse	obstclae.mtx	dia	Inner	500
+Sparse	obstclae.mtx	dia	N	40000
+Sparse	obstclae.mtx	dia	NNZ	197608
+Sparse	obstclae.mtx	dia	SD	205.976825
+Sparse	obstclae.mtx	dia	MFLOPS_s	15167.4
+Sparse	obstclae.mtx	dia	MFLOPS_median	15356.5
+Sparse	obstclae.mtx	dia	Time	0.260569
+Sparse	obstclae.mtx	dia	Fletcher_sum	36581
+
+Sparse	obstclae.mtx	ell	Outer	20
+Sparse	obstclae.mtx	ell	Inner	500
+Sparse	obstclae.mtx	ell	N	40000
+Sparse	obstclae.mtx	ell	NNZ	197608
+Sparse	obstclae.mtx	ell	SD	9.905651
+Sparse	obstclae.mtx	ell	MFLOPS_s	3040.31
+Sparse	obstclae.mtx	ell	MFLOPS_median	3038.74
+Sparse	obstclae.mtx	ell	Time	1.29992
+Sparse	obstclae.mtx	ell	Fletcher_sum	36581
+
+Sparse	obstclae.mtx	coo	Outer	20
+Sparse	obstclae.mtx	coo	Inner	500
+Sparse	obstclae.mtx	coo	N	40000
+Sparse	obstclae.mtx	coo	NNZ	197608
+Sparse	obstclae.mtx	coo	SD	3.40861
+Sparse	obstclae.mtx	coo	MFLOPS_s	1613.4
+Sparse	obstclae.mtx	coo	MFLOPS_median	1611.76
+Sparse	obstclae.mtx	coo	Time	2.44958
+Sparse	obstclae.mtx	coo	Fletcher_sum	36581
+
+Dense	obstclae.mtx	csr	Outer	20
+Dense	obstclae.mtx	csr	Inner	500
+Dense	obstclae.mtx	csr	N	1000
+Dense	obstclae.mtx	csr	NNZ	1000000
+Dense	obstclae.mtx	csr	SD	10.221358
+Dense	obstclae.mtx	csr	MFLOPS_s	1979.55
+Dense	obstclae.mtx	csr	MFLOPS_median	1966.8
+Dense	obstclae.mtx	csr	Time	10.1033
+Dense	obstclae.mtx	csr	Fletcher_sum	0
+
+Dense	obstclae.mtx	dia	Outer	20
+Dense	obstclae.mtx	dia	Inner	500
+Dense	obstclae.mtx	dia	N	1000
+Dense	obstclae.mtx	dia	NNZ	1000000
+Dense	obstclae.mtx	dia	SD	20.105232
+Dense	obstclae.mtx	dia	MFLOPS_s	4907.52
+Dense	obstclae.mtx	dia	MFLOPS_median	4903.34
+Dense	obstclae.mtx	dia	Time	4.07538
+Dense	obstclae.mtx	dia	Fletcher_sum	0
+
+Dense	obstclae.mtx	ell	Outer	20
+Dense	obstclae.mtx	ell	Inner	500
+Dense	obstclae.mtx	ell	N	1000
+Dense	obstclae.mtx	ell	NNZ	1000000
+Dense	obstclae.mtx	ell	SD	40.894670
+Dense	obstclae.mtx	ell	MFLOPS_s	2608.82
+Dense	obstclae.mtx	ell	MFLOPS_median	2654.84
+Dense	obstclae.mtx	ell	Time	7.6663
+Dense	obstclae.mtx	ell	Fletcher_sum	0
+
+Dense	obstclae.mtx	coo	Outer	20
+Dense	obstclae.mtx	coo	Inner	500
+Dense	obstclae.mtx	coo	N	1000
+Dense	obstclae.mtx	coo	NNZ	1000000
+Dense	obstclae.mtx	coo	SD	1.32099
+Dense	obstclae.mtx	coo	MFLOPS_s	915.015
+Dense	obstclae.mtx	coo	MFLOPS_median	916.009
+Dense	obstclae.mtx	coo	Time	21.8576
+Dense	obstclae.mtx	coo	Fletcher_sum	0
+
+Sparse	pdb1HYS.mtx	csr	Outer	20
+Sparse	pdb1HYS.mtx	csr	Inner	1
+Sparse	pdb1HYS.mtx	csr	N	36417
+Sparse	pdb1HYS.mtx	csr	NNZ	4344765
+Sparse	pdb1HYS.mtx	csr	SD	10.926862
+Sparse	pdb1HYS.mtx	csr	MFLOPS_s	2096.36
+Sparse	pdb1HYS.mtx	csr	MFLOPS_median	2086.83
+Sparse	pdb1HYS.mtx	csr	Time	0.082901
+Sparse	pdb1HYS.mtx	csr	Fletcher_sum	11978
+
+Sparse	pdb1HYS.mtx	dia	Outer	20
+Sparse	pdb1HYS.mtx	dia	Inner	1
+Sparse	pdb1HYS.mtx	dia	N	36417
+Sparse	pdb1HYS.mtx	dia	NNZ	4344765
+Sparse	pdb1HYS.mtx	dia	SD	9.317509
+Sparse	pdb1HYS.mtx	dia	MFLOPS_s	35.7586
+Sparse	pdb1HYS.mtx	dia	MFLOPS_median	43.177
+Sparse	pdb1HYS.mtx	dia	Time	4.8601
+Sparse	pdb1HYS.mtx	dia	Fletcher_sum	11978
+
+Sparse	pdb1HYS.mtx	ell	Outer	20
+Sparse	pdb1HYS.mtx	ell	Inner	1
+Sparse	pdb1HYS.mtx	ell	N	36417
+Sparse	pdb1HYS.mtx	ell	NNZ	4344765
+Sparse	pdb1HYS.mtx	ell	SD	63.507649
+Sparse	pdb1HYS.mtx	ell	MFLOPS_s	1573.79
+Sparse	pdb1HYS.mtx	ell	MFLOPS_median	1601.98
+Sparse	pdb1HYS.mtx	ell	Time	0.110428
+Sparse	pdb1HYS.mtx	ell	Fletcher_sum	11978
+
+Sparse	pdb1HYS.mtx	coo	Outer	20
+Sparse	pdb1HYS.mtx	coo	Inner	1
+Sparse	pdb1HYS.mtx	coo	N	36417
+Sparse	pdb1HYS.mtx	coo	NNZ	4344765
+Sparse	pdb1HYS.mtx	coo	SD	9.20583
+Sparse	pdb1HYS.mtx	coo	MFLOPS_s	963.528
+Sparse	pdb1HYS.mtx	coo	MFLOPS_median	959.228
+Sparse	pdb1HYS.mtx	coo	Time	0.180369
+Sparse	pdb1HYS.mtx	coo	Fletcher_sum	11978
+
+Dense	pdb1HYS.mtx	csr	Outer	20
+Dense	pdb1HYS.mtx	csr	Inner	500
+Dense	pdb1HYS.mtx	csr	N	1000
+Dense	pdb1HYS.mtx	csr	NNZ	1000000
+Dense	pdb1HYS.mtx	csr	SD	5.593715
+Dense	pdb1HYS.mtx	csr	MFLOPS_s	1987.74
+Dense	pdb1HYS.mtx	csr	MFLOPS_median	1990.13
+Dense	pdb1HYS.mtx	csr	Time	10.0617
+Dense	pdb1HYS.mtx	csr	Fletcher_sum	0
+
+Dense	pdb1HYS.mtx	dia	Outer	20
+Dense	pdb1HYS.mtx	dia	Inner	500
+Dense	pdb1HYS.mtx	dia	N	1000
+Dense	pdb1HYS.mtx	dia	NNZ	1000000
+Dense	pdb1HYS.mtx	dia	SD	112.966191
+Dense	pdb1HYS.mtx	dia	MFLOPS_s	4959.57
+Dense	pdb1HYS.mtx	dia	MFLOPS_median	5050.19
+Dense	pdb1HYS.mtx	dia	Time	4.03261
+Dense	pdb1HYS.mtx	dia	Fletcher_sum	0
+
+Dense	pdb1HYS.mtx	ell	Outer	20
+Dense	pdb1HYS.mtx	ell	Inner	500
+Dense	pdb1HYS.mtx	ell	N	1000
+Dense	pdb1HYS.mtx	ell	NNZ	1000000
+Dense	pdb1HYS.mtx	ell	SD	18.992668
+Dense	pdb1HYS.mtx	ell	MFLOPS_s	2628.99
+Dense	pdb1HYS.mtx	ell	MFLOPS_median	2599.36
+Dense	pdb1HYS.mtx	ell	Time	7.60748
+Dense	pdb1HYS.mtx	ell	Fletcher_sum	0
+
+Dense	pdb1HYS.mtx	coo	Outer	20
+Dense	pdb1HYS.mtx	coo	Inner	500
+Dense	pdb1HYS.mtx	coo	N	1000
+Dense	pdb1HYS.mtx	coo	NNZ	1000000
+Dense	pdb1HYS.mtx	coo	SD	1.46761
+Dense	pdb1HYS.mtx	coo	MFLOPS_s	914.177
+Dense	pdb1HYS.mtx	coo	MFLOPS_median	914.28
+Dense	pdb1HYS.mtx	coo	Time	21.8776
+Dense	pdb1HYS.mtx	coo	Fletcher_sum	0
+
+Sparse	rma10.mtx	csr	Outer	20
+Sparse	rma10.mtx	csr	Inner	1
+Sparse	rma10.mtx	csr	N	46835
+Sparse	rma10.mtx	csr	NNZ	2329092
+Sparse	rma10.mtx	csr	SD	19.104737
+Sparse	rma10.mtx	csr	MFLOPS_s	2356.55
+Sparse	rma10.mtx	csr	MFLOPS_median	2320.26
+Sparse	rma10.mtx	csr	Time	0.039534
+Sparse	rma10.mtx	csr	Fletcher_sum	33704
+
+Sparse	rma10.mtx	dia	Outer	20
+Sparse	rma10.mtx	dia	Inner	1
+Sparse	rma10.mtx	dia	N	46835
+Sparse	rma10.mtx	dia	NNZ	2329092
+Sparse	rma10.mtx	dia	SD	6.373985
+Sparse	rma10.mtx	dia	MFLOPS_s	23.4486
+Sparse	rma10.mtx	dia	MFLOPS_median	28.5233
+Sparse	rma10.mtx	dia	Time	3.9731
+Sparse	rma10.mtx	dia	Fletcher_sum	33704
+
+Sparse	rma10.mtx	ell	Outer	20
+Sparse	rma10.mtx	ell	Inner	1
+Sparse	rma10.mtx	ell	N	46835
+Sparse	rma10.mtx	ell	NNZ	2329092
+Sparse	rma10.mtx	ell	SD	84.051802
+Sparse	rma10.mtx	ell	MFLOPS_s	915.632
+Sparse	rma10.mtx	ell	MFLOPS_median	931.276
+Sparse	rma10.mtx	ell	Time	0.101748
+Sparse	rma10.mtx	ell	Fletcher_sum	33704
+
+Sparse	rma10.mtx	coo	Outer	20
+Sparse	rma10.mtx	coo	Inner	1
+Sparse	rma10.mtx	coo	N	46835
+Sparse	rma10.mtx	coo	NNZ	2329092
+Sparse	rma10.mtx	coo	SD	6.5592
+Sparse	rma10.mtx	coo	MFLOPS_s	1082.59
+Sparse	rma10.mtx	coo	MFLOPS_median	1084.94
+Sparse	rma10.mtx	coo	Time	0.086056
+Sparse	rma10.mtx	coo	Fletcher_sum	33704
+
+Dense	rma10.mtx	csr	Outer	20
+Dense	rma10.mtx	csr	Inner	500
+Dense	rma10.mtx	csr	N	1000
+Dense	rma10.mtx	csr	NNZ	1000000
+Dense	rma10.mtx	csr	SD	8.121954
+Dense	rma10.mtx	csr	MFLOPS_s	1961.39
+Dense	rma10.mtx	csr	MFLOPS_median	1952.97
+Dense	rma10.mtx	csr	Time	10.1969
+Dense	rma10.mtx	csr	Fletcher_sum	0
+
+Dense	rma10.mtx	dia	Outer	20
+Dense	rma10.mtx	dia	Inner	500
+Dense	rma10.mtx	dia	N	1000
+Dense	rma10.mtx	dia	NNZ	1000000
+Dense	rma10.mtx	dia	SD	12.283387
+Dense	rma10.mtx	dia	MFLOPS_s	4376.92
+Dense	rma10.mtx	dia	MFLOPS_median	4366.26
+Dense	rma10.mtx	dia	Time	4.56943
+Dense	rma10.mtx	dia	Fletcher_sum	0
+
+Dense	rma10.mtx	ell	Outer	20
+Dense	rma10.mtx	ell	Inner	500
+Dense	rma10.mtx	ell	N	1000
+Dense	rma10.mtx	ell	NNZ	1000000
+Dense	rma10.mtx	ell	SD	38.274390
+Dense	rma10.mtx	ell	MFLOPS_s	2590.18
+Dense	rma10.mtx	ell	MFLOPS_median	2617.59
+Dense	rma10.mtx	ell	Time	7.72146
+Dense	rma10.mtx	ell	Fletcher_sum	0
+
+Dense	rma10.mtx	coo	Outer	20
+Dense	rma10.mtx	coo	Inner	500
+Dense	rma10.mtx	coo	N	1000
+Dense	rma10.mtx	coo	NNZ	1000000
+Dense	rma10.mtx	coo	SD	1.42436
+Dense	rma10.mtx	coo	MFLOPS_s	914.347
+Dense	rma10.mtx	coo	MFLOPS_median	915.71
+Dense	rma10.mtx	coo	Time	21.8735
+Dense	rma10.mtx	coo	Fletcher_sum	0
+
+Sparse	webbase-1M.mtx	csr	Outer	20
+Sparse	webbase-1M.mtx	csr	Inner	1
+Sparse	webbase-1M.mtx	csr	N	1000005
+Sparse	webbase-1M.mtx	csr	NNZ	3105536
+Sparse	webbase-1M.mtx	csr	SD	28.715850
+Sparse	webbase-1M.mtx	csr	MFLOPS_s	1311
+Sparse	webbase-1M.mtx	csr	MFLOPS_median	1266.5
+Sparse	webbase-1M.mtx	csr	Time	0.094753
+Sparse	webbase-1M.mtx	csr	Fletcher_sum	3136

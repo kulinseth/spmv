@@ -11,7 +11,7 @@ arch = UNKNOWN
 
 CPPFLAGS = -DSPMV_STANDALONE -I../matrix_generator -I../bebop_util -I../sparse_matrix_converter
 
-include ./config/Make.$(arch)
+include ../makes/Make.$(arch)
 
 #include ../hpl/Make.$(arch)
 #CPPFLAGS = -I. -I../hpl/include -I../include $(HPL_DEFS)

@@ -442,16 +442,20 @@ int main(int argc, char* argv[])
     ell_elem = -1;
 
 
-  printf("%d,%d,", N, anz);
-  printf("%f,", anz/((float)N));
-  printf("%f,", ((float)sum*100)/anz);
-  printf("%d,", num_diags);
-  printf("%lld,%f,", diag_elem, (double)diag_elem/anz); 
-  printf("%lld,%f,", ell_elem, (double)ell_elem/anz);
-  printf("%f,%f,%f,%f,%f,%f,%f,",(float)empty_rows*100/N, (float)one_rows*100/N, (float)two_rows*100/N, (float)three_rows*100/N, (float)four_rows*100/N, (float)five_rows*100/N, (float)total_small_rows*100/N);
-  printf("%f,", (float)total_elems_small_rows*100/anz);
-  printf("%f,", mean_i(diff_nnz_row, N-1));
-  printf("%d,%d,%f,%f,%f", min_nnz_row, max_nnz_row, mean_i(nnz_row, N), vr_i(nnz_row, N, mean_i(nnz_row, N)), sd_i(nnz_row, N, mean_i(nnz_row, N)));
+  printf("N %d\n", N);
+  printf("NNZ %d\n", anz);
+  printf("Nonzeros(nnz/N) %g\n", anz/((float)N));
+  printf("Density %g\n", anz/((float)N*N));
+  /*printf("%f,", ((float)sum*100)/anz);*/
+  printf("Diags %d\n", num_diags);
+  printf("Diag_elem(num_diag_elem, num_diag_elem/NNZ) %lld,%f\n", diag_elem, (double)diag_elem/anz); 
+  printf("ELL_elem(num_ell_elem, num_ell_elem/NNZ) %lld,%f\n", ell_elem, (double)ell_elem/anz);
+  /*printf("Empty_rows(percentage) %f,%f,%f,%f,%f,%f,%f,",(float)empty_rows*100/N, (float)one_rows*100/N, (float)two_rows*100/N, (float)three_rows*100/N, (float)four_rows*100/N, (float)five_rows*100/N, (float)total_small_rows*100/N);*/
+  printf("Empty_rows(percentage) %f\n",(float)empty_rows*100/N);
+  printf("Total_small_rows(percentage) %f\n", (float)total_small_rows*100/N);
+  printf("Total_small_rows_elem(percentage) %f\n", (float)total_elems_small_rows*100/anz);
+  /*printf("%f,", mean_i(diff_nnz_row, N-1));*/
+  /*printf("%d,%d,%f,%f,%f", min_nnz_row, max_nnz_row, mean_i(nnz_row, N), vr_i(nnz_row, N, mean_i(nnz_row, N)), sd_i(nnz_row, N, mean_i(nnz_row, N)));*/
   /*printf("%e,%e,%e,", (float)min_col_width/N, (float)max_col_width/N, mean_i(col_width, N));
   printf("%.3f,", geo_mean(scatter_row, N)); 
   printf("%e,", geo_mean(misses, N));

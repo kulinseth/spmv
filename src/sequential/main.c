@@ -268,11 +268,17 @@ int main(int argc, char* argv[])
   else if(anz > 5000) inner_max = 10000;
   else if(anz > 500) inner_max = 100000;
 
-  printf("%s\n", argv[2]);
-  printf("Outer %d\n", OUTER_MAX);
-  printf("Inner %d\n", inner_max);
-  printf("N %d\n", N);
-  printf("NNZ %d\n", anz);
+  #ifdef DENSE
+  const char phase[] = "Dense";
+  #else
+  const char phase[] = "Sparse";
+  #endif
+
+  /*printf("%s\n", argv[2]);*/
+  printf("\n%s\t%s\t%s\tOuter\t%d\n", phase, basename(argv[1]), argv[2], OUTER_MAX);
+  printf("%s\t%s\t%s\tInner\t%d\n", phase,  basename(argv[1]), argv[2],inner_max);
+  printf("%s\t%s\t%s\tN\t%d\n", phase,  basename(argv[1]), argv[2],N);
+  printf("%s\t%s\t%s\tNNZ\t%d\n", phase,  basename(argv[1]), argv[2],anz);
   if(!string_compare(argv[2], "coo")){
     #ifdef DEBUG
     if ((ret = PAPI_start(event_set)) != PAPI_OK) {
@@ -298,15 +304,18 @@ int main(int argc, char* argv[])
     }
     #endif
     mean  = 1.0/1000000 * 2 * anz * inner_max * OUTER_MAX / ((double)(sum) / CLOCKS_PER_SEC);
+    qsort(exec_arr, sizeof exec_arr / sizeof *exec_arr, sizeof(exec_arr[0]), comp_float);
+    float median = (exec_arr[OUTER_MAX/2] + exec_arr[OUTER_MAX/2 -1])/2.0;
     for (i=0; i<OUTER_MAX; i++){
       variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
     } 
     variance /= OUTER_MAX;
     sd = sqrt(variance);
-    printf("SD %g\n", sd);
-    printf("MFLOPS_s %g\n", mean);
-    printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
-    printf("Fletcher_sum %d\n", fletcher_sum(y, M)); 
+    printf("%s\t%s\t%s\tSD\t%g\n", phase,  basename(argv[1]), argv[2],sd);
+    printf("%s\t%s\t%s\tMFLOPS_s\t%g\n", phase,  basename(argv[1]), argv[2],mean);
+    printf("%s\t%s\t%s\tMFLOPS_median\t%g\n", phase,  basename(argv[1]), argv[2],median);
+    printf("%s\t%s\t%s\tTime\t%g\n", phase,  basename(argv[1]), argv[2],(((double)(sum))/CLOCKS_PER_SEC));
+    printf("%s\t%s\t%s\tFletcher_sum\t%d\n", phase,  basename(argv[1]), argv[2],fletcher_sum(y, M)); 
     #ifdef DEBUG
     printf(",%lld,%lld,%lld,%lld", values[0], values[1], values[2], (100*values[4])/(values[4]+values[3]));
     printf("L1 data cache misses is %lld\n", values[0]);
@@ -323,7 +332,7 @@ int main(int argc, char* argv[])
       exit(1);
     }
     #endif
-    printf("Exec arr = [ ");
+    /*printf("Exec arr = [ ");*/
     for (i=0; i<OUTER_MAX; i++){
       zero_arr(N, y);
       start = clock();
@@ -333,10 +342,10 @@ int main(int argc, char* argv[])
       if (start != stop) {
       exec_arr[i] = 1.0/1000000 * 2 * anz * inner_max / ((double)(stop - start)/ CLOCKS_PER_SEC); 
       }
-      printf("%g, ", exec_arr[i]);
+      /*printf("%g, ", exec_arr[i]);*/
       sum += (double)(stop - start);
     }
-    printf("]\n");
+    /*printf("]\n");*/
     #ifdef DEBUG
     if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
       fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
@@ -349,15 +358,13 @@ int main(int argc, char* argv[])
     }
     qsort(exec_arr, sizeof exec_arr / sizeof *exec_arr, sizeof(exec_arr[0]), comp_float);
     float median = (exec_arr[OUTER_MAX/2] + exec_arr[OUTER_MAX/2 -1])/2.0;
-    printf("clock_s: %g\n", (CLOCKS_PER_SEC/1000000.0));
-    printf("median: %g\n", median);
     variance /= OUTER_MAX;
     sd = sqrt(variance);
-    printf("SD %f\n", sd);
-    printf("MFLOPS_s %g\n", mean);
-    printf("MFLOPS_median %g\n", median);
-    printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
-    printf("Fletcher_sum %d\n", fletcher_sum(y, M)); 
+    printf("%s\t%s\t%s\tSD\t%f\n", phase,  basename(argv[1]), argv[2],sd);
+    printf("%s\t%s\t%s\tMFLOPS_s\t%g\n", phase,  basename(argv[1]), argv[2],mean);
+    printf("%s\t%s\t%s\tMFLOPS_median\t%g\n", phase,  basename(argv[1]), argv[2],median);
+    printf("%s\t%s\t%s\tTime\t%g\n", phase,  basename(argv[1]), argv[2],(((double)(sum))/CLOCKS_PER_SEC));
+    printf("%s\t%s\t%s\tFletcher_sum\t%d\n", phase,  basename(argv[1]), argv[2],fletcher_sum(y, M)); 
     #ifdef DEBUG
     printf(",%lld,%lld,%lld,%lld", values[0], values[1], values[2], (100*values[4])/(values[4]+values[3]));
     printf("\n");
@@ -394,15 +401,18 @@ int main(int argc, char* argv[])
     }
     #endif
     mean  = 1.0/1000000 * 2 * anz * inner_max * OUTER_MAX / ((double)(sum) / CLOCKS_PER_SEC);
+    qsort(exec_arr, sizeof exec_arr / sizeof *exec_arr, sizeof(exec_arr[0]), comp_float);
+    float median = (exec_arr[OUTER_MAX/2] + exec_arr[OUTER_MAX/2 -1])/2.0;
     for (i=0; i<OUTER_MAX; i++){
       variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
     }
     variance /= OUTER_MAX;
     sd = sqrt(variance);
-    printf("SD %f\n", sd);
-    printf("MFLOPS_s %g\n", mean);
-    printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
-    printf("Fletcher_sum %d\n", fletcher_sum(y, M)); 
+    printf("%s\t%s\t%s\tSD\t%f\n",phase,  basename(argv[1]), argv[2], sd);
+    printf("%s\t%s\t%s\tMFLOPS_s\t%g\n", phase,  basename(argv[1]), argv[2],mean);
+    printf("%s\t%s\t%s\tMFLOPS_median\t%g\n", phase,  basename(argv[1]), argv[2],median);
+    printf("%s\t%s\t%s\tTime\t%g\n", phase,  basename(argv[1]), argv[2],(((double)(sum))/CLOCKS_PER_SEC));
+    printf("%s\t%s\t%s\tFletcher_sum\t%d\n", phase,  basename(argv[1]), argv[2],fletcher_sum(y, M)); 
     #ifdef DEBUG
     printf(",%lld,%lld,%lld,%lld", values[0], values[1], values[2], (100*values[4])/(values[3]+values[4]));
     printf("\n");
@@ -441,15 +451,18 @@ int main(int argc, char* argv[])
     }
     #endif
     mean  = 1.0/1000000 * 2 * anz * inner_max * OUTER_MAX / ((double)(sum) / CLOCKS_PER_SEC);
+    qsort(exec_arr, sizeof exec_arr / sizeof *exec_arr, sizeof(exec_arr[0]), comp_float);
+    float median = (exec_arr[OUTER_MAX/2] + exec_arr[OUTER_MAX/2 -1])/2.0;
     for (i=0; i<OUTER_MAX; i++){
       variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);
     } 
     variance /= OUTER_MAX;
     sd = sqrt(variance);
-    printf("SD %f\n", sd);
-    printf("MFLOPS_s %g\n", mean);
-    printf("Time %g\n", (((double)(sum))/CLOCKS_PER_SEC));
-    printf("Fletcher_sum %d\n", fletcher_sum(y, M)); 
+    printf("%s\t%s\t%s\tSD\t%f\n", phase,  basename(argv[1]), argv[2],sd);
+    printf("%s\t%s\t%s\tMFLOPS_s\t%g\n", phase,  basename(argv[1]), argv[2],mean);
+    printf("%s\t%s\t%s\tMFLOPS_median\t%g\n", phase,  basename(argv[1]), argv[2],median);
+    printf("%s\t%s\t%s\tTime\t%g\n", phase,  basename(argv[1]), argv[2],(((double)(sum))/CLOCKS_PER_SEC));
+    printf("%s\t%s\t%s\tFletcher_sum\t%d\n", phase,  basename(argv[1]), argv[2],fletcher_sum(y, M)); 
     #ifdef DEBUG
     printf(",%lld,%lld,%lld,%lld", values[0], values[1], values[2], (100*values[4])/(values[4]+values[3]));
     printf("\n");

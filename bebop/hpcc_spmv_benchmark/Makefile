@@ -7,7 +7,7 @@ INCLUDE    =
 SRC        = benchmark_subset.c hpcc_spmv_benchmark.c main.c
 # NOTE:  the library loading order is backwards from what you expect!  
 LIBS       = -lm -l_bsr_spmv -l_matrix_generators -lsparse_matrix_converter -lbebop_util 
-CFLAGS     = -O3 -Wall -std=c99 -I../bebop_util -I../sparse_matrix_converter -I../matrix_generator -I../spmvbench
+CFLAGS     = -O3 -DDEBUG -Wall -std=c99 -I../bebop_util -I../sparse_matrix_converter -I../matrix_generator -I../spmvbench
 #CFLAGS     = -O2 -Wall -std=c99 -I../bebop_util -I../sparse_matrix_converter -I../matrix_generator -I../spmvbench
 #CFLAGS     = -g -Wall -std=c99 -I../bebop_util -I../sparse_matrix_converter -I../matrix_generator -I../spmvbench
 
