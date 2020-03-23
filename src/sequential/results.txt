@@ -883,8 +883,38 @@ Sparse	webbase-1M.mtx	csr	Outer	20
 Sparse	webbase-1M.mtx	csr	Inner	1
 Sparse	webbase-1M.mtx	csr	N	1000005
 Sparse	webbase-1M.mtx	csr	NNZ	3105536
-Sparse	webbase-1M.mtx	csr	SD	28.715850
-Sparse	webbase-1M.mtx	csr	MFLOPS_s	1311
-Sparse	webbase-1M.mtx	csr	MFLOPS_median	1266.5
-Sparse	webbase-1M.mtx	csr	Time	0.094753
+Sparse	webbase-1M.mtx	csr	SD	43.577758
+Sparse	webbase-1M.mtx	csr	MFLOPS_s	1300.99
+Sparse	webbase-1M.mtx	csr	MFLOPS_median	1217.72
+Sparse	webbase-1M.mtx	csr	Time	0.095482
 Sparse	webbase-1M.mtx	csr	Fletcher_sum	3136
+
+Sparse	webbase-1M.mtx	coo	Outer	20
+Sparse	webbase-1M.mtx	coo	Inner	1
+Sparse	webbase-1M.mtx	coo	N	1000005
+Sparse	webbase-1M.mtx	coo	NNZ	3105536
+Sparse	webbase-1M.mtx	coo	SD	39.3572
+Sparse	webbase-1M.mtx	coo	MFLOPS_s	1313.22
+Sparse	webbase-1M.mtx	coo	MFLOPS_median	1246.53
+Sparse	webbase-1M.mtx	coo	Time	0.094593
+Sparse	webbase-1M.mtx	coo	Fletcher_sum	3136
+
+Dense	webbase-1M.mtx	csr	Outer	20
+Dense	webbase-1M.mtx	csr	Inner	500
+Dense	webbase-1M.mtx	csr	N	1000
+Dense	webbase-1M.mtx	csr	NNZ	1000000
+Dense	webbase-1M.mtx	csr	SD	9.160331
+Dense	webbase-1M.mtx	csr	MFLOPS_s	1963.91
+Dense	webbase-1M.mtx	csr	MFLOPS_median	1960.1
+Dense	webbase-1M.mtx	csr	Time	10.1838
+Dense	webbase-1M.mtx	csr	Fletcher_sum	0
+
+Dense	webbase-1M.mtx	coo	Outer	20
+Dense	webbase-1M.mtx	coo	Inner	500
+Dense	webbase-1M.mtx	coo	N	1000
+Dense	webbase-1M.mtx	coo	NNZ	1000000
+Dense	webbase-1M.mtx	coo	SD	7.4379
+Dense	webbase-1M.mtx	coo	MFLOPS_s	901.697
+Dense	webbase-1M.mtx	coo	MFLOPS_median	908.546
+Dense	webbase-1M.mtx	coo	Time	22.1804
+Dense	webbase-1M.mtx	coo	Fletcher_sum	0
