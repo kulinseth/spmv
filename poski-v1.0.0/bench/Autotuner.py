@@ -114,12 +114,12 @@ class Autotuner:
             print "Autotunung tuneParams=" + str(tuneParams)
             self.GenerateAllCode(tuneParams)
             self.Toolchain.Compile()
-            self.Benchmarker.RunBenchmark(self.CodeGen, self.InstSet, tuneParams)
+            # self.Benchmarker.RunBenchmark(self.CodeGen, self.InstSet, tuneParams)
             
-        for codeParams in self.CodeParamSpace:
-            bestTuneParams = self.Benchmarker.GetBest(codeParams)
-            print "Generating best code for " + str(codeParams) + ": " + str(bestTuneParams)
-            self.GenerateCode(codeParams, bestTuneParams)
+        # for codeParams in self.CodeParamSpace:
+            # bestTuneParams = self.Benchmarker.GetBest(codeParams)
+            # print "Generating best code for " + str(codeParams) + ": " + str(bestTuneParams)
+            # self.GenerateCode(codeParams, bestTuneParams)
             
             
     def CreateCodeBackups(self):
