@@ -4,3 +4,6 @@
 [submodule "bench/bindsnet"]
 	path = bench/bindsnet
 	url = https://github.com/BindsNET/bindsnet.git
+[submodule "external/suite-sparse"]
+	path = external/suite-sparse
+	url = https://github.com/ScottKolo/suitesparse-matrix-collection-website.git

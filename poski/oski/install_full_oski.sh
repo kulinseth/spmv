@@ -62,9 +62,9 @@ done
 echo "[Building OSKI library...]"
 cd $oskiblddir
 if [ "$oskicc" != "" ]; then
-	time env CC=$oskicc $oskipath/oski-1.0.1h/configure --prefix=$oskiprefix --with-papi=no
+	time env CC=$oskicc $oskipath/oski-1.0.1h/configure --prefix=$oskiprefix --with-papi=yes --with-debug=no
 else
-	time $oskipath/oski-1.0.1h/configure --prefix=$oskiprefix --with-papi=no
+	time $oskipath/oski-1.0.1h/configure --prefix=$oskiprefix --with-papi=yes --with-debug=no
 fi
 echo "OSKI is built in $oskiprefix"
 

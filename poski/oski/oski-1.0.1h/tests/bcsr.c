@@ -203,13 +203,12 @@ main (int argc, char *argv[])
   r = atoi (argv[2]);
   c = atoi (argv[3]);
 
-  oski_PrintDebugMessage (1, "... Reading the input file, '%s' ...", matfile);
+  printf ("... Reading the input file, '%s' ...", matfile);
   oski_RestartTimer (timer);
   A_input = readhb_pattern_matrix (matfile, &m, &n, NULL, 0);
   assert (A_input != NULL);
   oski_StopTimer (timer);
-  oski_PrintDebugMessage (1, "(Took %g seconds)",
-			  oski_ReadElapsedTime (timer));
+  printf( "(Took %g seconds)", oski_ReadElapsedTime (timer));
 
   oski_PrintDebugMessage (1, "... Making a tunable copy ...");
   oski_RestartTimer (timer);
