@@ -1,0 +1,128 @@
+from pathlib import Path
+import os
+import requests
+import wget
+import json
+from ast import literal_eval
+import argparse
+import requests
+parser = argparse.ArgumentParser("Script to parse the TAMU sparse suite")
+parser.add_argument('--download_files', action='store_true',  default=False, 
+        help="Download files")
+parser.add_argument('--download_images', action='store_true', default=False ,
+        help="Download images")
+
+URL = "https://sparse.tamu.edu/RB/"
+DIR = os.path.join(str(Path.home()),"src", "tools",
+        "suitesparse-matrix-collection-website", "db", "collection_data",
+        "matrices")
+# it failed after
+# 5https://sparse.tamu.edu/PARSEC/SiH4.tar.gz   
+files = {}
+filepaths = {}
+for (dirpath, dirnames, filenames) in os.walk(DIR):
+    dir_name = (os.path.basename(dirpath))
+    files[dir_name] = []
+    filepaths[dir_name] = []
+    for filename in filenames:
+        if (filename.endswith('.rb')):
+            files[dir_name].append(filename)
+            filepaths[dir_name].append(os.path.join(dirpath, filename))
+
+
+rb_format = {}
+def parse_rbfile(fpath):
+    print ("parsing ", fpath)
+    with open (fpath, "r") as f:
+        fread = (f.read()) 
+        fread = fread.replace('\n', '').replace('\r', '')
+        for l in fread:
+            val  = l.split(':')
+            print (val)
+
+def parse_file(input_file):
+    with open (input_file, "r") as fin:
+        Lines = fin.readlines()
+        Lines = [i.strip() for i in Lines if i not in ['\n']]
+        s = "".join(Lines)
+        s = s.replace("\'", "\"")
+        s = s.replace(',",', '"')
+        d = literal_eval(json.dumps(s))
+
+def download_files():
+    data_dir = os.path.join(os.getcwd(), 'data')
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    for k, paths in files.items():
+        for path in paths:
+            pname = os.path.splitext(path)[0]
+            fname = os.path.join(data_dir, pname+".tar.gz")
+            if (not os.path.isfile(fname)):
+                url_download = os.path.join(URL, k, pname+ ".tar.gz")
+                try:
+                    print (url_download)
+                    # wget.download(url_download,fname)
+                    rurl = requests.get(url_download)
+                    open(fname, 'wb').write(rurl.content)
+                except:
+                    pass
+
+def file_to_dict(input_file):
+    dict_input = {}
+    with open (input_file, "r") as fin:
+        Line = fin.readline()
+        while Line:
+            if Line.strip() not in ["{", "}", "\n"]:
+                Line = Line.strip()[:-1]
+                Line = Line.replace("'", "")
+                if(Line.endswith(",")):
+                    Line = Line[:-1]
+                elements = Line.strip().split(':')
+                elements = [i.replace('"', '') for i in elements]
+                elements = [i.strip() for i in elements]
+                if(len(elements)>1):
+                    dict_input[elements[0]] = elements[1]
+                #
+            Line = fin.readline()
+    return dict_input
+
+def parse_file(input_file):
+    dict_input = file_to_dict(input_file)
+    df_input = pd.DataFrame.from_dict(dict_input, orient = 'index')
+    folder_name = input_file.split("/")[-2]
+    filename = input_file.split("/")[-1][:-3]
+    df_input['filename'] = filename
+    df_input['folder_name'] = folder_name
+    return df_input
+
+def download_pngs():
+    data_dir = os.path.join(os.getcwd(), 'data')
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+    for k, paths in files.items():
+        for path in paths:
+            pname = os.path.splitext(path)[0]
+            fname = os.path.join(data_dir, pname+".png")
+            if (not os.path.isfile(fname)):
+                url_download = os.path.join(URL, 'files',k, pname+ ".png")
+                print (url_download)
+                try:
+                    wget.download(url_download,fname)
+                except:
+                    pass
+    # for k, paths in filepaths.items():
+        # for path in paths:
+            # path_base = (os.path.basename(path))
+            # path_base = os.path.splitext(path_base)
+            # dict_input = file_to_dict(path)
+            # if ('image_files' in  dict_input and path_base in dict_input['image_files']):
+                # print (dict_input['image_files'])
+            # break
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+    if (args.download_files):
+        download_files()
+    if (args.download_images):
+        download_pngs()
+
