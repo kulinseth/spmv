@@ -382,13 +382,10 @@ run_workload_MatMult (const oski_matrix_t A, kerargs_MatMult_t * opt)
   int i;
 
   assert (A != INVALID_MAT && opt != NULL);
-  for (i = 0; i < opt->num_calls; i++)
-    {
-      int err = oski_MatMult (A, opt->op,
-			      opt->alpha, opt->x, opt->beta, opt->y);
-
-      ABORT (err != 0, run_workload_MatMult, err);
-    }
+  for (i = 0; i < opt->num_calls; i++) {
+    int err = oski_MatMult (A, opt->op, opt->alpha, opt->x, opt->beta, opt->y);
+    ABORT (err != 0, run_workload_MatMult, err);
+  }
 }
 
 static void
@@ -467,28 +464,28 @@ workload_Run (const oski_matrix_t A, const simplelist_t * workload)
 
       assert (opt != NULL);
       switch (opt->kernel)
-	{
-	case KERNEL_MatMult:
-	  run_workload_MatMult (A, &(opt->args.MatMult));
-	  break;
-	case KERNEL_MatTrisolve:
-	  run_workload_MatTrisolve (A, &(opt->args.MatTrisolve));
-	  break;
-	case KERNEL_MatTransMatMult:
-	  run_workload_MatTransMatMult (A, &(opt->args.MatTransMatMult));
-	  break;
-	case KERNEL_MatMultAndMatTransMult:
-	  run_workload_MatMultAndMatTransMult (A,
-					       &(opt->args.
-						 MatMultAndMatTransMult));
-	  break;
-	case KERNEL_MatPowMult:
-	  run_workload_MatPowMult (A, &(opt->args.MatPowMult));
-	  break;
-	default:
-	  assert (0);
-	  break;
-	}
+      {
+      case KERNEL_MatMult:
+        run_workload_MatMult (A, &(opt->args.MatMult));
+        break;
+      case KERNEL_MatTrisolve:
+        run_workload_MatTrisolve (A, &(opt->args.MatTrisolve));
+        break;
+      case KERNEL_MatTransMatMult:
+        run_workload_MatTransMatMult (A, &(opt->args.MatTransMatMult));
+        break;
+      case KERNEL_MatMultAndMatTransMult:
+        run_workload_MatMultAndMatTransMult (A,
+                         &(opt->args.
+                      MatMultAndMatTransMult));
+        break;
+      case KERNEL_MatPowMult:
+        run_workload_MatPowMult (A, &(opt->args.MatPowMult));
+        break;
+      default:
+        assert (0);
+        break;
+      }
     }
 }
 

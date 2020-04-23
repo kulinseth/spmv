@@ -6,18 +6,20 @@ import json
 from ast import literal_eval
 import argparse
 import requests
+import tarfile
+import shutil
 parser = argparse.ArgumentParser("Script to parse the TAMU sparse suite")
 parser.add_argument('--download_files', action='store_true',  default=False, 
         help="Download files")
 parser.add_argument('--download_images', action='store_true', default=False ,
         help="Download images")
+parser.add_argument('--extract_files', action='store_true', default=False ,
+        help="Extract tar files")
 
 URL = "https://sparse.tamu.edu/RB/"
-DIR = os.path.join(str(Path.home()),"src", "tools",
-        "suitesparse-matrix-collection-website", "db", "collection_data",
+DIR = os.path.join(os.getcwd(),"external",
+        "suite-sparse", "db", "collection_data",
         "matrices")
-# it failed after
-# 5https://sparse.tamu.edu/PARSEC/SiH4.tar.gz   
 files = {}
 filepaths = {}
 for (dirpath, dirnames, filenames) in os.walk(DIR):
@@ -29,12 +31,11 @@ for (dirpath, dirnames, filenames) in os.walk(DIR):
             files[dir_name].append(filename)
             filepaths[dir_name].append(os.path.join(dirpath, filename))
 
-
 rb_format = {}
 def parse_rbfile(fpath):
     print ("parsing ", fpath)
     with open (fpath, "r") as f:
-        fread = (f.read()) 
+        fread = (f.read())
         fread = fread.replace('\n', '').replace('\r', '')
         for l in fread:
             val  = l.split(':')
@@ -62,9 +63,9 @@ def download_files():
                 try:
                     print (url_download)
                     # wget.download(url_download,fname)
-                    rurl = requests.get(url_download)
+                    rurl = requests.get(url_download, timeout=60)
                     open(fname, 'wb').write(rurl.content)
-                except:
+                except :
                     pass
 
 def file_to_dict(input_file):
@@ -119,10 +120,26 @@ def download_pngs():
                 # print (dict_input['image_files'])
             # break
 
+def extract_files():
+    data_dir = os.path.join(os.getcwd(), 'data')
+    for (dirpath, dirnames, filenames) in os.walk(data_dir):
+        for filename in filenames:
+            basename = filename.split('.')[0]
+            if (filename.endswith('.tar.gz')):
+                print ("Extracting : ", filename)
+                outdir = os.path.join(dirpath, basename)
+                tar = tarfile.open(os.path.join(dirpath,filename), "r:gz")
+                if os.path.exists(outdir):
+                    shutil.rmtree(outdir)
+                tar.extractall(path=dirpath)
+                tar.close()
+
 if __name__ == '__main__':
     args = parser.parse_args()
     if (args.download_files):
         download_files()
     if (args.download_images):
         download_pngs()
+    if (args.extract_files):
+        extract_files()
 

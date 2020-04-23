@@ -645,38 +645,37 @@ count_workload_flops_per_nz (const simplelist_t * workload)
   size_t i;
   for (i = 1; i <= simplelist_GetLength (workload); i++)
     {
-      const kernel_t *opt =
-	(const kernel_t *) simplelist_GetElem (workload, i);
+      const kernel_t *opt = (const kernel_t *) simplelist_GetElem (workload, i);
       switch (opt->kernel)
-	{
-	case KERNEL_MatMult:
-	  flops += 2.0
-	    * opt->args.MatMult.num_vecs * opt->args.MatMult.num_calls;
-	  break;
-	case KERNEL_MatTrisolve:
-	  flops += 2.0
-	    * opt->args.MatTrisolve.num_vecs
-	    * opt->args.MatTrisolve.num_calls;
-	  break;
-	case KERNEL_MatTransMatMult:
-	  flops += 4.0
-	    * opt->args.MatTransMatMult.num_vecs
-	    * opt->args.MatTransMatMult.num_calls;
-	  break;
-	case KERNEL_MatMultAndMatTransMult:
-	  flops += 4.0
-	    * opt->args.MatMultAndMatTransMult.num_vecs
-	    * opt->args.MatMultAndMatTransMult.num_calls;
-	  break;
-	case KERNEL_MatPowMult:
-	  flops += 2.0
-	    * opt->args.MatPowMult.power
-	    * opt->args.MatPowMult.num_vecs * opt->args.MatPowMult.num_calls;
-	  break;
-	default:
-	  assert (0);
-	  break;
-	}
+      {
+      case KERNEL_MatMult:
+        flops += 2.0
+          * opt->args.MatMult.num_vecs * opt->args.MatMult.num_calls;
+        break;
+      case KERNEL_MatTrisolve:
+        flops += 2.0
+          * opt->args.MatTrisolve.num_vecs
+          * opt->args.MatTrisolve.num_calls;
+        break;
+      case KERNEL_MatTransMatMult:
+        flops += 4.0
+          * opt->args.MatTransMatMult.num_vecs
+          * opt->args.MatTransMatMult.num_calls;
+        break;
+      case KERNEL_MatMultAndMatTransMult:
+        flops += 4.0
+          * opt->args.MatMultAndMatTransMult.num_vecs
+          * opt->args.MatMultAndMatTransMult.num_calls;
+        break;
+      case KERNEL_MatPowMult:
+        flops += 2.0
+          * opt->args.MatPowMult.power
+          * opt->args.MatPowMult.num_vecs * opt->args.MatPowMult.num_calls;
+        break;
+      default:
+        assert (0);
+        break;
+      }
     }
 #if IS_VAL_COMPLEX
   flops *= 4.0;
