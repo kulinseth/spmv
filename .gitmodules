@@ -1,3 +1,6 @@
 [submodule "external/taco"]
 	path = external/taco
 	url = https://github.com/kulinseth/taco.git
+[submodule "bench/bindsnet"]
+	path = bench/bindsnet
+	url = https://github.com/BindsNET/bindsnet.git
