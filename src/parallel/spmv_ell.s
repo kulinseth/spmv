@@ -1,71 +1,66 @@
-	.file	"spmv_ell.c"
-	.text
-	.p2align 4,,15
-	.globl	spmv_ell
-	.type	spmv_ell, @function
-spmv_ell:
-.LFB14:
+	.section	__TEXT,__text,regular,pure_instructions
+	.build_version macos, 10, 16	sdk_version 10, 16
+	.globl	_spmv_ell               ## -- Begin function spmv_ell
+	.p2align	4, 0x90
+_spmv_ell:                              ## @spmv_ell
 	.cfi_startproc
+## %bb.0:
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r14
 	pushq	%rbx
-	.cfi_def_cfa_offset 24
-	.cfi_offset 3, -24
-	movq	24(%rsp), %r10
-	movq	32(%rsp), %rbp
+	.cfi_offset %rbx, -32
+	.cfi_offset %r14, -24
 	cmpl	%ecx, %edx
-	jge	.L1
+	jge	LBB0_7
+## %bb.1:
 	testl	%r8d, %r8d
-	jle	.L1
-	movslq	%edx, %rax
-	movslq	%r8d, %rbx
-	subl	$1, %ecx
-	subl	$1, %r8d
-	movq	%rax, %r11
-	subl	%edx, %ecx
-	leaq	0(%rbp,%rax,8), %r9
-	imulq	%rbx, %r11
-	addq	%rcx, %rax
-	leaq	8(%rbp,%rax,8), %rcx
-	addq	%r11, %r8
-	.p2align 4,,10
-	.p2align 3
-.L5:
-	movslq	(%rdi,%r11,4), %rax
-	testl	%eax, %eax
-	js	.L7
-	movsd	(%r9), %xmm1
-	movq	%r11, %rdx
-	jmp	.L4
-	.p2align 4,,10
-	.p2align 3
-.L6:
-	addq	$1, %rdx
-	movslq	(%rdi,%rdx,4), %rax
-	testl	%eax, %eax
-	js	.L7
-.L4:
-	movsd	(%r10,%rax,8), %xmm0
-	mulsd	(%rsi,%rdx,8), %xmm0
-	addsd	%xmm0, %xmm1
-	movsd	%xmm1, (%r9)
+	jle	LBB0_7
+## %bb.2:
+	movq	24(%rbp), %r10
+	movq	16(%rbp), %r9
+	movslq	%r8d, %rax
+	movslq	%edx, %rdx
+	movslq	%ecx, %r8
+	movq	%rax, %rcx
+	imulq	%rdx, %rcx
+	leaq	(%rsi,%rcx,8), %rsi
+	leaq	(,%rax,8), %r11
+	leaq	(%rdi,%rcx,4), %rdi
+	leaq	(,%rax,4), %r14
+	.p2align	4, 0x90
+LBB0_3:                                 ## =>This Loop Header: Depth=1
+                                        ##     Child Loop BB0_4 Depth 2
+	xorl	%ebx, %ebx
+	.p2align	4, 0x90
+LBB0_4:                                 ##   Parent Loop BB0_3 Depth=1
+                                        ## =>  This Inner Loop Header: Depth=2
+	movslq	(%rdi,%rbx,4), %rcx
+	testq	%rcx, %rcx
+	js	LBB0_6
+## %bb.5:                               ##   in Loop: Header=BB0_4 Depth=2
+	movsd	(%rsi,%rbx,8), %xmm0    ## xmm0 = mem[0],zero
+	mulsd	(%r9,%rcx,8), %xmm0
+	addsd	(%r10,%rdx,8), %xmm0
+	movsd	%xmm0, (%r10,%rdx,8)
+	incq	%rbx
+	cmpq	%rax, %rbx
+	jl	LBB0_4
+LBB0_6:                                 ##   in Loop: Header=BB0_3 Depth=1
+	incq	%rdx
+	addq	%r11, %rsi
+	addq	%r14, %rdi
 	cmpq	%r8, %rdx
-	jne	.L6
-.L7:
-	addq	$8, %r9
-	addq	%rbx, %r11
-	addq	%rbx, %r8
-	cmpq	%r9, %rcx
-	jne	.L5
-.L1:
+	jne	LBB0_3
+LBB0_7:
 	popq	%rbx
-	.cfi_def_cfa_offset 16
+	popq	%r14
 	popq	%rbp
-	.cfi_def_cfa_offset 8
-	ret
+	retq
 	.cfi_endproc
-.LFE14:
-	.size	spmv_ell, .-spmv_ell
-	.ident	"GCC: (GNU) 8.1.0"
-	.section	.note.GNU-stack,"",@progbits
+                                        ## -- End function
+
+.subsections_via_symbols

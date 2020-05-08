@@ -2,13 +2,13 @@
 set -e
 set -o pipefail
 set -o xtrace
+pushd $PWD/src/sequential
 if [ -f "results.txt" ]; then
    rm "results.txt"
 fi
 if [ -f "features.txt" ]; then
    rm "features.txt"
 fi
-pushd $PWD/src/sequential
 #if [ "$#" -ne 1 ]; then
    #echo "You must enter exactly 2 command line arguments"
    #echo $#
@@ -18,13 +18,13 @@ make clean
 make float
 make features
 make dense
-for d in ./data/data/*/ ; do
-   NAME=$(basename "$d")
-   echo $NAME
-   printf $NAME >> features.txt
-   $PWD/src/sequential/run_features ./data/data/$NAME/$NAME.mtx >> features.txt
-   printf "\n" >> features.txt
-done
+#for d in ../../data/data/*/ ; do
+   #NAME=$(basename "$d")
+   #echo $NAME
+   #printf $NAME >> features.txt
+   #./run_features ../../data/data/$NAME/$NAME.mtx >> features.txt
+   #printf "\n" >> features.txt
+#done
 
 printf "Phase\tBenchmark\tMode\tFeature\tValue" >> results.txt
 for d in ../../data/data/*/ ; do

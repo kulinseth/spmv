@@ -18,7 +18,7 @@
 #define NUM_EVENTS 5
 #endif
 
-#define OUTER_MAX 20
+#define OUTER_MAX 3
 
 int comp_float(const void *a, const void *b) {
   return (*(float*)a - *(float*)b);

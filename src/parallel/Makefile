@@ -2,14 +2,14 @@ SHELL := '/bin/bash'
 CC = gcc
 EMCC = emcc
 
-INCLUDES = -I./include -I/scratch/seth.k/tools/papi/include
+INCLUDES = -I./include
 
 SRCS = main.c spmv_coo.c spmv_csr.c spmv_dia.c spmv_diaii.c spmv_ell.c spmv_ellii.c conversions.c utils.c mmio.c
 
 OBJS = $(SRCS:.c=.o)
 ASMS = $(SRCS:.c=.s)
 
-LIBS = -L/scratch/seth.k/tools/papi/lib -lm -lrt -lpthread -lpapi -lpfm
+LIBS = -lm -lpthread
 
 CFLAGS = -m64 -O3 $(TEST)
 EMCCFLAGS = $(TEST) -m64 -O3 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=6 -s WASM=1 -s TOTAL_MEMORY=1GB -s  ALLOW_MEMORY_GROWTH=1 --no-heap-copy -s WASM_MEM_MAX=1GB -s NO_EXIT_RUNTIME=0 --preload-file $(FILE)

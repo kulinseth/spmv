@@ -18,7 +18,7 @@
 #include "conversions.h"
 #include "utils.h"
 #include "config.h"
-#include "papi.h"
+/*#include "papi.h"*/
 #include <sys/types.h>
 #include <sys/syscall.h>
 
@@ -27,11 +27,11 @@
 void *spmv_coo_wrapper(void *ptr){
   int inside;
   spmv_coo_struct *s = (spmv_coo_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+
+  /*int cpu = s->tid + 1;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
   
   int nz = s->len;
   int inside_max = s->inside_max;
@@ -44,11 +44,11 @@ void *spmv_coo_wrapper(void *ptr){
 void *spmv_csr_wrapper(void *ptr){
   int inside;
   spmv_csr_struct *s = (spmv_csr_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+  /*cpu_set_t cpuset; */
+  /*int cpu = s->tid + 1;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
 
   int N = s->len;
   int inside_max = s->inside_max;
@@ -61,11 +61,11 @@ void *spmv_csr_wrapper(void *ptr){
 void *spmv_dia_wrapper(void *ptr){
   int inside;
   spmv_dia_struct *s = (spmv_dia_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+  /*cpu_set_t cpuset; */
+  /*int cpu = s->tid + 1;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
 
   int inside_max = s->inside_max;
   for(inside = 0; inside < inside_max; inside++){
@@ -77,11 +77,11 @@ void *spmv_dia_wrapper(void *ptr){
 void *spmv_ell_wrapper(void *ptr){
   int inside;
   spmv_ell_struct *s = (spmv_ell_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+  /*cpu_set_t cpuset; */
+  /*int cpu = s->tid + 1;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
 
   int inside_max = s->inside_max;
   for(inside = 0; inside < inside_max; inside++){
@@ -92,56 +92,56 @@ void *spmv_ell_wrapper(void *ptr){
 
 void *spmv_diaii_wrapper(void *ptr){
   unsigned long int tid;
-  int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;
-  long long values[3];
-  if (PAPI_thread_init(pthread_self) != PAPI_OK)
-    exit(1);
-  if ((tid = PAPI_thread_id()) == (unsigned long int)-1)
-    exit(1);
-  PAPI_register_thread();
-  ret = PAPI_create_eventset(&event_set);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "create event set error\n");
-    exit(1);
-  }
-  ret = PAPI_add_events(event_set, events, 3);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "add event error\n");
-    exit(1);
-  }
-  int inside;
-  spmv_diaii_struct *s = (spmv_diaii_struct *) ptr;
-  int cpu = s->tid;
-  cpu_set_t cpuset;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+  /*int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;*/
+  /*long long values[3];*/
+  /*if (PAPI_thread_init(pthread_self) != PAPI_OK)*/
+    /*exit(1);*/
+  /*if ((tid = PAPI_thread_id()) == (unsigned long int)-1)*/
+    /*exit(1);*/
+  /*PAPI_register_thread();*/
+  /*ret = PAPI_create_eventset(&event_set);*/
+  /*if(ret != PAPI_OK){*/
+    /*fprintf(stderr, "create event set error\n");*/
+    /*exit(1);*/
+  /*}*/
+  /*ret = PAPI_add_events(event_set, events, 3);*/
+  /*if(ret != PAPI_OK){*/
+    /*fprintf(stderr, "add event error\n");*/
+    /*exit(1);*/
+  /*}*/
+  /*int inside;*/
+  /*spmv_diaii_struct *s = (spmv_diaii_struct *) ptr;*/
+  /*int cpu = s->tid;*/
+  /*cpu_set_t cpuset;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
 
-  //printf("%u %d\n", current_thread, sched_getcpu());
-  int inside_max = s->inside_max;
-  if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-    fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-    exit(1);
-  }
-  for(inside = 0; inside < inside_max; inside++){
-    spmv_diaii(s->offset, s->data, s->start_row, s->end_row, s->nd, s->N, s->stride, s->x, s->y);
-  }
-  if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-    fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-    exit(1);
-  }
-  PAPI_unregister_thread();
-  pthread_exit(NULL);
+  /*//printf("%u %d\n", current_thread, sched_getcpu());*/
+  /*int inside_max = s->inside_max;*/
+  /*if ((ret = PAPI_start(event_set)) != PAPI_OK) {*/
+    /*fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));*/
+    /*exit(1);*/
+  /*}*/
+  /*for(inside = 0; inside < inside_max; inside++){*/
+    /*spmv_diaii(s->offset, s->data, s->start_row, s->end_row, s->nd, s->N, s->stride, s->x, s->y);*/
+  /*}*/
+  /*if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {*/
+    /*fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));*/
+    /*exit(1);*/
+  /*}*/
+  /*PAPI_unregister_thread();*/
+  /*pthread_exit(NULL);*/
 }
 
 void *spmv_ellii_wrapper(void *ptr){
   int inside;
   spmv_ellii_struct *s = (spmv_ellii_struct *) ptr;
-  cpu_set_t cpuset; 
-  int cpu = s->tid + 1;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(cpu, &cpuset);
-  sched_setaffinity(0, sizeof(cpuset), &cpuset);
+  /*cpu_set_t cpuset; */
+  /*int cpu = s->tid + 1;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(cpu, &cpuset);*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset);*/
 
   int inside_max = s->inside_max;
   for(inside = 0; inside < inside_max; inside++){
@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
   double sum = 0, mean = 0, sd = 0, variance = 0;
   int inside = 0, inside_max = 1000000, outer_max = OUTER_MAX;
   double exec_arr[OUTER_MAX];
-  int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;
+  /*int events[3] = {PAPI_L1_DCM, PAPI_L2_DCM, PAPI_L3_TCM}, ret, event_set=PAPI_NULL;*/
   long long values[3];
 
  /* int numberOfProcessors = sysconf(_SC_NPROCESSORS_ONLN);
@@ -177,10 +177,10 @@ int main(int argc, char* argv[])
   //printf("The process id: %d\n", getpid());
   //printf("The thread id: %d\n", syscall(__NR_gettid));
 
-  cpu_set_t cpuset;
-  CPU_ZERO(&cpuset);       //clears the cpuset
-  CPU_SET(0, &cpuset);     //initialize cpuset to 0x0
-  sched_setaffinity(0, sizeof(cpuset), &cpuset); //initialize main thread to P0
+  /*cpu_set_t cpuset;*/
+  /*CPU_ZERO(&cpuset);       //clears the cpuset*/
+  /*CPU_SET(0, &cpuset);     //initialize cpuset to 0x0*/
+  /*sched_setaffinity(0, sizeof(cpuset), &cpuset); //initialize main thread to P0*/
 
   if(argc < 4){
     fprintf(stderr, "Usage: %s [martix-market-filename] format_num num_workers\n", argv[0]);
@@ -197,27 +197,27 @@ int main(int argc, char* argv[])
   }*/
 
 
-  ret = PAPI_library_init(PAPI_VER_CURRENT);
-  if (ret != PAPI_VER_CURRENT && ret > 0) {
-    fprintf(stderr,"PAPI library version mismatch!\n");
-    exit(1);
-  }
-  if (ret < 0) {
-    fprintf(stderr, "Initialization error!\n");
-    exit(1);
-  }
+  /*ret = PAPI_library_init(PAPI_VER_CURRENT);*/
+  /*if (ret != PAPI_VER_CURRENT && ret > 0) {*/
+    /*fprintf(stderr,"PAPI library version mismatch!\n");*/
+    /*exit(1);*/
+  /*}*/
+  /*if (ret < 0) {*/
+    /*fprintf(stderr, "Initialization error!\n");*/
+    /*exit(1);*/
+  /*}*/
 
-  ret = PAPI_create_eventset(&event_set);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "create event set error\n");
-    exit(1);
-  }
-  ret = PAPI_add_events(event_set, events, 3);
-  if(ret != PAPI_OK){
-    fprintf(stderr, "hi add event error\n");
-    fprintf(stderr, "%d %s\n", ret, PAPI_strerror(ret));
-    exit(1);
-  }
+  /*ret = PAPI_create_eventset(&event_set);*/
+  /*if(ret != PAPI_OK){*/
+    /*fprintf(stderr, "create event set error\n");*/
+    /*exit(1);*/
+  /*}*/
+  /*ret = PAPI_add_events(event_set, events, 3);*/
+  /*if(ret != PAPI_OK){*/
+    /*fprintf(stderr, "hi add event error\n");*/
+    /*fprintf(stderr, "%d %s\n", ret, PAPI_strerror(ret));*/
+    /*exit(1);*/
+  /*}*/
 
   int num_workers = atoi(argv[3]);  
 
@@ -467,10 +467,10 @@ int main(int argc, char* argv[])
     s[t-1]->len += rem;
     //printf("\n%d\n", fletcher_sum_1d_array_int(row, anz));
     int iret;
-    if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_start(event_set)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     /*if ((ret = PAPI_start_counters(events, 3)) != PAPI_OK) {
       fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
       exit(1);
@@ -507,10 +507,10 @@ int main(int argc, char* argv[])
       fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
       exit(1);
     }*/
-    if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     printf("coo\n");
     printf("Num_threads %d\n", num_workers);
     printf("Outer %d\n", outer_max);
@@ -568,10 +568,10 @@ int main(int argc, char* argv[])
     }
     s[t-1]->len += rem;
     int iret;
-    if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_start(event_set)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     for (i=0; i<outer_max; i++){
       zero_arr(N, y);
       //for(t = 0; t < num_workers; t++)
@@ -600,10 +600,10 @@ int main(int argc, char* argv[])
       exec_arr[i] = 1.0/1000000 * 2 * anz * inside_max/ ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0))); 
       sum += ((double)((stop_tp.tv_sec - start_tp.tv_sec)+ ((stop_tp.tv_nsec - start_tp.tv_nsec) / 1000000000.0)));
     }
-    if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     printf("csr\n");
     printf("Num_threads %d\n", num_workers);
     printf("Outer %d\n", outer_max);
@@ -851,10 +851,10 @@ int main(int argc, char* argv[])
       fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
       exit(1);
     }*/
-    if ((ret = PAPI_start(event_set)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_start(event_set)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to start counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     for (i=0; i<outer_max; i++){
       zero_arr(N, y);
       for(t = 0; t < num_workers; t++)
@@ -887,10 +887,10 @@ int main(int argc, char* argv[])
       fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
       exit(1);
     }*/
-    if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {
-      fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));
-      exit(1);
-    }
+    /*if ((ret = PAPI_read(event_set, values)) != PAPI_OK) {*/
+      /*fprintf(stderr, "PAPI failed to read counters: %s\n", PAPI_strerror(ret));*/
+      /*exit(1);*/
+    /*}*/
     mean  = 1.0/1000000 * 2 * anz * outer_max * inside_max/ ((double)(sum));
     for (i=0; i<outer_max; i++){
       variance += (mean - exec_arr[i]) * (mean - exec_arr[i]);

@@ -1,827 +1,781 @@
-	.file	"utils.c"
-	.text
-	.p2align 4,,15
-	.globl	swap
-	.type	swap, @function
-swap:
-.LFB14:
+	.section	__TEXT,__text,regular,pure_instructions
+	.build_version macos, 10, 16	sdk_version 10, 16
+	.globl	_swap                   ## -- Begin function swap
+	.p2align	4, 0x90
+_swap:                                  ## @swap
 	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
 	movl	(%rdi), %eax
-	movl	(%rsi), %edx
-	movl	%edx, (%rdi)
+	movl	(%rsi), %ecx
+	movl	%ecx, (%rdi)
 	movl	%eax, (%rsi)
-	ret
-	.cfi_endproc
-.LFE14:
-	.size	swap, .-swap
-	.p2align 4,,15
-	.globl	swap_val
-	.type	swap_val, @function
-swap_val:
-.LFB15:
-	.cfi_startproc
-	movsd	(%rdi), %xmm0
-	movsd	(%rsi), %xmm1
-	movsd	%xmm1, (%rdi)
-	movsd	%xmm0, (%rsi)
-	ret
-	.cfi_endproc
-.LFE15:
-	.size	swap_val, .-swap_val
-	.p2align 4,,15
-	.globl	quickSort
-	.type	quickSort, @function
-quickSort:
-.LFB16:
-	.cfi_startproc
-	pushq	%r15
-	.cfi_def_cfa_offset 16
-	.cfi_offset 15, -16
-	pushq	%r14
-	.cfi_def_cfa_offset 24
-	.cfi_offset 14, -24
-	movl	%ecx, %r14d
-	pushq	%r13
-	.cfi_def_cfa_offset 32
-	.cfi_offset 13, -32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
-	.cfi_offset 12, -40
-	movq	%rdi, %r12
-	pushq	%rbp
-	.cfi_def_cfa_offset 48
-	.cfi_offset 6, -48
-	movq	%rsi, %rbp
-	pushq	%rbx
-	.cfi_def_cfa_offset 56
-	.cfi_offset 3, -56
-	subq	$24, %rsp
-	.cfi_def_cfa_offset 80
-	movq	%rdx, 8(%rsp)
-	movl	%r8d, 4(%rsp)
-.L15:
-	movl	4(%rsp), %ebx
-	leal	(%rbx,%r14), %edx
-	movl	%ebx, %r8d
-	movl	%edx, %eax
-	shrl	$31, %eax
-	addl	%edx, %eax
-	sarl	%eax
-	cltq
-	movl	(%r12,%rax,4), %r9d
-	movl	0(%rbp,%rax,4), %ecx
-	movl	%ebx, %eax
-	movl	%r14d, %ebx
-	cmpl	%r14d, %eax
-	jl	.L12
-.L5:
-	movslq	%ebx, %rdx
-	leaq	(%r12,%rdx,4), %rdi
-	jmp	.L13
-	.p2align 4,,10
-	.p2align 3
-.L26:
-	cmpl	%ecx, 0(%rbp,%rdx,4)
-	jge	.L8
-.L7:
-	addq	$1, %rdx
-	addq	$4, %rdi
-.L13:
-	movl	(%rdi), %r10d
-	movl	%edx, %ebx
-	leaq	0(,%rdx,4), %r15
-	cmpl	%r9d, %r10d
-	jl	.L7
-	je	.L26
-.L8:
-	movslq	%r8d, %rax
-	leaq	(%r12,%rax,4), %rsi
-	jmp	.L9
-	.p2align 4,,10
-	.p2align 3
-.L27:
-	cmpl	%ecx, 0(%rbp,%rax,4)
-	jle	.L11
-.L10:
-	subq	$1, %rax
-	subq	$4, %rsi
-.L9:
-	movl	(%rsi), %r11d
-	movl	%eax, %r8d
-	leaq	0(,%rax,4), %r13
-	cmpl	%r9d, %r11d
-	jg	.L10
-	je	.L27
-.L11:
-	cmpl	%r8d, %ebx
-	jle	.L28
-.L12:
-	cmpl	%r14d, %r8d
-	jg	.L29
-.L14:
-	movl	%ebx, %r14d
-	cmpl	4(%rsp), %ebx
-	jl	.L15
-	addq	$24, %rsp
-	.cfi_remember_state
-	.cfi_def_cfa_offset 56
-	popq	%rbx
-	.cfi_def_cfa_offset 48
 	popq	%rbp
-	.cfi_def_cfa_offset 40
-	popq	%r12
-	.cfi_def_cfa_offset 32
-	popq	%r13
-	.cfi_def_cfa_offset 24
-	popq	%r14
-	.cfi_def_cfa_offset 16
-	popq	%r15
-	.cfi_def_cfa_offset 8
-	ret
-.L28:
-	.cfi_restore_state
-	addq	%rbp, %r13
-	addq	%rbp, %r15
-	movl	%r11d, (%rdi)
-	addl	$1, %ebx
-	movl	%r10d, (%rsi)
-	movl	(%r15), %esi
-	subl	$1, %r8d
-	movl	0(%r13), %edi
-	movl	%edi, (%r15)
-	movl	%esi, 0(%r13)
-	movq	8(%rsp), %rsi
-	leaq	(%rsi,%rax,8), %rax
-	leaq	(%rsi,%rdx,8), %rdx
-	movsd	(%rdx), %xmm0
-	movsd	(%rax), %xmm1
-	movsd	%xmm1, (%rdx)
-	movsd	%xmm0, (%rax)
-	cmpl	%r8d, %ebx
-	jle	.L5
-	cmpl	%r14d, %r8d
-	jle	.L14
-.L29:
-	movq	8(%rsp), %rdx
-	movl	%r14d, %ecx
-	movq	%rbp, %rsi
-	movq	%r12, %rdi
-	call	quickSort
-	jmp	.L14
+	retq
 	.cfi_endproc
-.LFE16:
-	.size	quickSort, .-quickSort
-	.section	.rodata.str1.1,"aMS",@progbits,1
-.LC0:
-	.string	"sorting started..."
-.LC1:
-	.string	"sorting ended..."
-	.text
-	.p2align 4,,15
-	.globl	sort_coo
-	.type	sort_coo, @function
-sort_coo:
-.LFB17:
+                                        ## -- End function
+	.globl	_swap_val               ## -- Begin function swap_val
+	.p2align	4, 0x90
+_swap_val:                              ## @swap_val
 	.cfi_startproc
-	pushq	%r15
-	.cfi_def_cfa_offset 16
-	.cfi_offset 15, -16
-	pushq	%r14
-	.cfi_def_cfa_offset 24
-	.cfi_offset 14, -24
-	movl	%esi, %r14d
-	pushq	%r13
-	.cfi_def_cfa_offset 32
-	.cfi_offset 13, -32
-	movq	%rcx, %r13
-	pushq	%r12
-	.cfi_def_cfa_offset 40
-	.cfi_offset 12, -40
-	movl	%edi, %r12d
-	movl	$.LC0, %edi
+## %bb.0:
 	pushq	%rbp
-	.cfi_def_cfa_offset 48
-	.cfi_offset 6, -48
-	movq	%r8, %rbp
-	pushq	%rbx
-	.cfi_def_cfa_offset 56
-	.cfi_offset 3, -56
-	movq	%rdx, %rbx
-	subq	$24, %rsp
-	.cfi_def_cfa_offset 80
-	call	puts
-	movl	%r14d, %eax
-	subl	%r12d, %eax
-	cmpl	$1, %eax
-	jle	.L31
-	movl	%r14d, %esi
-	leal	-1(%r14), %r8d
-	leaq	4(%r13), %rcx
-	movl	%r12d, %r14d
-	subl	%eax, %esi
-	movslq	%r12d, %rax
-	notl	%r14d
-	leaq	0(,%rax,4), %r15
-	addq	$1, %rax
-	movq	%rax, 8(%rsp)
-	.p2align 4,,10
-	.p2align 3
-.L32:
-	cmpl	%r8d, %r12d
-	jge	.L38
-	leal	(%r14,%r8), %r11d
-	addq	8(%rsp), %r11
-	movq	%r15, %rax
-	movl	%esi, 4(%rsp)
-	salq	$2, %r11
-	jmp	.L36
-	.p2align 4,,10
-	.p2align 3
-.L43:
-	leaq	(%rcx,%rax), %r9
-	leaq	0(%r13,%rax), %r10
-.L34:
-	movl	%edi, (%rbx,%rax)
-	movupd	0(%rbp,%rax,2), %xmm0
-	movl	%edx, 4(%rbx,%rax)
-	movl	(%r10), %edx
-	movl	(%r9), %edi
-	shufpd	$1, %xmm0, %xmm0
-	movl	%edi, (%r10)
-	movl	%edx, (%r9)
-	movups	%xmm0, 0(%rbp,%rax,2)
-.L35:
-	addq	$4, %rax
-	cmpq	%rax, %r11
-	je	.L42
-.L36:
-	movl	(%rbx,%rax), %edx
-	movl	4(%rbx,%rax), %edi
-	cmpl	%edi, %edx
-	jg	.L43
-	jne	.L35
-	leaq	(%rax,%r13), %r10
-	leaq	(%rcx,%rax), %r9
-	movl	4(%r13,%rax), %esi
-	cmpl	%esi, 0(%r13,%rax)
-	jg	.L34
-	addq	$4, %rax
-	cmpq	%rax, %r11
-	jne	.L36
-	.p2align 4,,10
-	.p2align 3
-.L42:
-	movl	4(%rsp), %esi
-.L38:
-	subl	$1, %r8d
-	cmpl	%esi, %r8d
-	jne	.L32
-.L31:
-	addq	$24, %rsp
-	.cfi_def_cfa_offset 56
-	movl	$.LC1, %edi
-	popq	%rbx
-	.cfi_def_cfa_offset 48
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movq	(%rdi), %rax
+	movq	(%rsi), %rcx
+	movq	%rcx, (%rdi)
+	movq	%rax, (%rsi)
 	popq	%rbp
-	.cfi_def_cfa_offset 40
-	popq	%r12
-	.cfi_def_cfa_offset 32
-	popq	%r13
-	.cfi_def_cfa_offset 24
-	popq	%r14
-	.cfi_def_cfa_offset 16
-	popq	%r15
-	.cfi_def_cfa_offset 8
-	jmp	puts
+	retq
 	.cfi_endproc
-.LFE17:
-	.size	sort_coo, .-sort_coo
-	.p2align 4,,15
-	.globl	init_arr
-	.type	init_arr, @function
-init_arr:
-.LFB18:
+                                        ## -- End function
+	.globl	_quickSort              ## -- Begin function quickSort
+	.p2align	4, 0x90
+_quickSort:                             ## @quickSort
 	.cfi_startproc
-	testl	%edi, %edi
-	jle	.L44
-	leal	-1(%rdi), %eax
-	cmpl	$2, %eax
-	jbe	.L49
-	movl	%edi, %edx
-	movdqa	.LC2(%rip), %xmm0
-	movdqa	.LC3(%rip), %xmm2
-	movq	%rsi, %rax
-	shrl	$2, %edx
-	salq	$5, %rdx
-	addq	%rsi, %rdx
-	.p2align 4,,10
-	.p2align 3
-.L47:
-	cvtdq2pd	%xmm0, %xmm1
-	movups	%xmm1, (%rax)
-	pshufd	$238, %xmm0, %xmm1
-	addq	$32, %rax
-	cvtdq2pd	%xmm1, %xmm1
-	movups	%xmm1, -16(%rax)
-	paddd	%xmm2, %xmm0
-	cmpq	%rdx, %rax
-	jne	.L47
-	movl	%edi, %eax
-	andl	$-4, %eax
-	cmpl	%eax, %edi
-	je	.L51
-.L46:
-	pxor	%xmm0, %xmm0
-	movslq	%eax, %rdx
-	cvtsi2sd	%eax, %xmm0
-	movsd	%xmm0, (%rsi,%rdx,8)
-	leal	1(%rax), %edx
-	cmpl	%edx, %edi
-	jle	.L44
-	pxor	%xmm0, %xmm0
-	movslq	%edx, %rcx
-	addl	$2, %eax
-	cvtsi2sd	%edx, %xmm0
-	movsd	%xmm0, (%rsi,%rcx,8)
-	cmpl	%eax, %edi
-	jle	.L44
-	pxor	%xmm0, %xmm0
-	movslq	%eax, %rdx
-	cvtsi2sd	%eax, %xmm0
-	movsd	%xmm0, (%rsi,%rdx,8)
-.L44:
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L51:
-	ret
-.L49:
-	xorl	%eax, %eax
-	jmp	.L46
-	.cfi_endproc
-.LFE18:
-	.size	init_arr, .-init_arr
-	.p2align 4,,15
-	.globl	zero_arr
-	.type	zero_arr, @function
-zero_arr:
-.LFB19:
-	.cfi_startproc
-	movq	%rsi, %rax
-	testl	%edi, %edi
-	jle	.L52
-	leal	-1(%rdi), %edx
-	xorl	%esi, %esi
-	movq	%rax, %rdi
-	leaq	8(,%rdx,8), %rdx
-	jmp	memset
-	.p2align 4,,10
-	.p2align 3
-.L52:
-	ret
-	.cfi_endproc
-.LFE19:
-	.size	zero_arr, .-zero_arr
-	.section	.rodata.str1.1
-.LC4:
-	.string	"\n%s\n"
-.LC5:
-	.string	"%g\t"
-	.text
-	.p2align 4,,15
-	.globl	print_arr
-	.type	print_arr, @function
-print_arr:
-.LFB20:
-	.cfi_startproc
-	pushq	%r15
-	.cfi_def_cfa_offset 16
-	.cfi_offset 15, -16
-	xorl	%eax, %eax
-	pushq	%r14
-	.cfi_def_cfa_offset 24
-	.cfi_offset 14, -24
-	movl	%edi, %r14d
-	movl	$.LC4, %edi
-	pushq	%r13
-	.cfi_def_cfa_offset 32
-	.cfi_offset 13, -32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
-	.cfi_offset 12, -40
+## %bb.0:
 	pushq	%rbp
-	.cfi_def_cfa_offset 48
-	.cfi_offset 6, -48
-	pushq	%rbx
-	.cfi_def_cfa_offset 56
-	.cfi_offset 3, -56
-	movq	%rdx, %rbx
-	subq	$8, %rsp
-	.cfi_def_cfa_offset 64
-	call	printf
-	testl	%r14d, %r14d
-	jle	.L54
-	leal	-1(%r14), %r13d
-	movslq	%r14d, %r15
-	xorl	%r12d, %r12d
-	leaq	8(%rbx,%r13,8), %rbp
-	notq	%r13
-	salq	$3, %r15
-	salq	$3, %r13
-	.p2align 4,,10
-	.p2align 3
-.L56:
-	leaq	0(%r13,%rbp), %rbx
-	.p2align 4,,10
-	.p2align 3
-.L57:
-	movsd	(%rbx), %xmm0
-	movl	$.LC5, %edi
-	movl	$1, %eax
-	addq	$8, %rbx
-	call	printf
-	cmpq	%rbx, %rbp
-	jne	.L57
-	movl	$10, %edi
-	addl	$1, %r12d
-	addq	%r15, %rbp
-	call	putchar
-	cmpl	%r12d, %r14d
-	jne	.L56
-.L54:
-	addq	$8, %rsp
-	.cfi_def_cfa_offset 56
-	popq	%rbx
-	.cfi_def_cfa_offset 48
-	popq	%rbp
-	.cfi_def_cfa_offset 40
-	popq	%r12
-	.cfi_def_cfa_offset 32
-	popq	%r13
-	.cfi_def_cfa_offset 24
-	popq	%r14
 	.cfi_def_cfa_offset 16
-	popq	%r15
-	.cfi_def_cfa_offset 8
-	ret
-	.cfi_endproc
-.LFE20:
-	.size	print_arr, .-print_arr
-	.p2align 4,,15
-	.globl	sort
-	.type	sort, @function
-sort:
-.LFB21:
-	.cfi_startproc
-	movl	%esi, %eax
-	subl	%edi, %eax
-	cmpl	$1, %eax
-	jle	.L60
-	leal	-1(%rsi), %r10d
-	subl	%eax, %esi
-	.p2align 4,,10
-	.p2align 3
-.L62:
-	movslq	%edi, %rax
-	cmpl	%edi, %r10d
-	jle	.L66
-	.p2align 4,,10
-	.p2align 3
-.L64:
-	movl	(%rdx,%rax,4), %r8d
-	movl	4(%rdx,%rax,4), %r9d
-	cmpl	%r9d, %r8d
-	jle	.L63
-	movupd	(%rcx,%rax,8), %xmm0
-	movl	%r9d, (%rdx,%rax,4)
-	movl	%r8d, 4(%rdx,%rax,4)
-	shufpd	$1, %xmm0, %xmm0
-	movups	%xmm0, (%rcx,%rax,8)
-.L63:
-	addq	$1, %rax
-	cmpl	%eax, %r10d
-	jg	.L64
-.L66:
-	subl	$1, %r10d
-	cmpl	%r10d, %esi
-	jne	.L62
-.L60:
-	ret
-	.cfi_endproc
-.LFE21:
-	.size	sort, .-sort
-	.section	.rodata.str1.8,"aMS",@progbits,1
-	.align 8
-.LC6:
-	.string	"values don't match at index %d"
-	.text
-	.p2align 4,,15
-	.globl	cmp
-	.type	cmp, @function
-cmp:
-.LFB22:
-	.cfi_startproc
-	testl	%edx, %edx
-	jle	.L77
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
 	pushq	%r13
-	.cfi_def_cfa_offset 16
-	.cfi_offset 13, -16
-	leal	-1(%rdx), %r13d
 	pushq	%r12
-	.cfi_def_cfa_offset 24
-	.cfi_offset 12, -24
+	pushq	%rbx
+	pushq	%rax
+	.cfi_offset %rbx, -56
+	.cfi_offset %r12, -48
+	.cfi_offset %r13, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	movl	%r8d, %r10d
+                                        ## kill: def $ecx killed $ecx def $rcx
+	movq	%rdx, %r15
 	movq	%rsi, %r12
-	pushq	%rbp
-	.cfi_def_cfa_offset 32
-	.cfi_offset 6, -32
-	movq	%rdi, %rbp
-	pushq	%rbx
-	.cfi_def_cfa_offset 40
-	.cfi_offset 3, -40
-	xorl	%ebx, %ebx
-	subq	$8, %rsp
-	.cfi_def_cfa_offset 48
-	jmp	.L73
-	.p2align 4,,10
-	.p2align 3
-.L71:
-	leaq	1(%rbx), %rax
-	cmpq	%rbx, %r13
-	je	.L80
-.L74:
-	movq	%rax, %rbx
-.L73:
-	movsd	0(%rbp,%rbx,8), %xmm0
-	ucomisd	(%r12,%rbx,8), %xmm0
-	movl	%ebx, %edx
-	jp	.L75
-	je	.L71
-.L75:
-	movq	stderr(%rip), %rdi
-	movl	$.LC6, %esi
-	xorl	%eax, %eax
-	call	fprintf
-	leaq	1(%rbx), %rax
-	cmpq	%rbx, %r13
-	jne	.L74
-.L80:
+	movq	%rdi, %r13
+	.p2align	4, 0x90
+LBB2_1:                                 ## =>This Loop Header: Depth=1
+                                        ##     Child Loop BB2_3 Depth 2
+                                        ##       Child Loop BB2_20 Depth 3
+                                        ##       Child Loop BB2_21 Depth 3
+	movl	%r10d, %r8d
+	movl	%ecx, %r14d
+	cmpl	%r10d, %ecx
+	jg	LBB2_16
+## %bb.2:                               ##   in Loop: Header=BB2_1 Depth=1
+	leal	(%rcx,%r10), %eax
+	movl	%eax, %edx
+	shrl	$31, %edx
+	addl	%eax, %edx
+	sarl	%edx
+	movslq	%edx, %rax
+	movl	(%r13,%rax,4), %ebx
+	movl	(%r12,%rax,4), %r9d
+	movl	%ecx, %r14d
+	movl	%r10d, %r8d
+	.p2align	4, 0x90
+LBB2_3:                                 ##   Parent Loop BB2_1 Depth=1
+                                        ## =>  This Loop Header: Depth=2
+                                        ##       Child Loop BB2_20 Depth 3
+                                        ##       Child Loop BB2_21 Depth 3
+	movslq	%r14d, %rsi
+	shlq	$2, %rsi
+	movl	(%r13,%rsi), %edi
+	cmpl	%ebx, %edi
+	jge	LBB2_5
+	.p2align	4, 0x90
+LBB2_20:                                ##   Parent Loop BB2_1 Depth=1
+                                        ##     Parent Loop BB2_3 Depth=2
+                                        ## =>    This Inner Loop Header: Depth=3
+	addq	$4, %rsi
+	incl	%r14d
+	movl	(%r13,%rsi), %edi
+	cmpl	%ebx, %edi
+	jl	LBB2_20
+LBB2_5:                                 ##   in Loop: Header=BB2_3 Depth=2
+	jne	LBB2_8
+## %bb.6:                               ##   in Loop: Header=BB2_3 Depth=2
+	cmpl	%r9d, (%r12,%rsi)
+	jl	LBB2_20
+## %bb.7:                               ##   in Loop: Header=BB2_3 Depth=2
+	movl	%ebx, %edi
+LBB2_8:                                 ##   in Loop: Header=BB2_3 Depth=2
+	movslq	%r8d, %rdx
+	shlq	$2, %rdx
+	movl	(%r13,%rdx), %eax
+	cmpl	%ebx, %eax
+	jle	LBB2_10
+	.p2align	4, 0x90
+LBB2_21:                                ##   Parent Loop BB2_1 Depth=1
+                                        ##     Parent Loop BB2_3 Depth=2
+                                        ## =>    This Inner Loop Header: Depth=3
+	addq	$-4, %rdx
+	decl	%r8d
+	movl	(%r13,%rdx), %eax
+	cmpl	%ebx, %eax
+	jg	LBB2_21
+LBB2_10:                                ##   in Loop: Header=BB2_3 Depth=2
+	jne	LBB2_13
+## %bb.11:                              ##   in Loop: Header=BB2_3 Depth=2
+	cmpl	%r9d, (%r12,%rdx)
+	jg	LBB2_21
+## %bb.12:                              ##   in Loop: Header=BB2_3 Depth=2
+	movl	%ebx, %eax
+LBB2_13:                                ##   in Loop: Header=BB2_3 Depth=2
+	cmpl	%r8d, %r14d
+	jg	LBB2_15
+## %bb.14:                              ##   in Loop: Header=BB2_3 Depth=2
+	movl	%eax, (%r13,%rsi)
+	movl	%edi, (%r13,%rdx)
+	movl	(%r12,%rsi), %eax
+	movl	(%r12,%rdx), %edi
+	movl	%edi, (%r12,%rsi)
+	movl	%eax, (%r12,%rdx)
+	movq	(%r15,%rsi,2), %rax
+	movq	(%r15,%rdx,2), %rdi
+	movq	%rdi, (%r15,%rsi,2)
+	movq	%rax, (%r15,%rdx,2)
+	incl	%r14d
+	decl	%r8d
+LBB2_15:                                ##   in Loop: Header=BB2_3 Depth=2
+	cmpl	%r8d, %r14d
+	jle	LBB2_3
+LBB2_16:                                ##   in Loop: Header=BB2_1 Depth=1
+	cmpl	%ecx, %r8d
+	jle	LBB2_18
+## %bb.17:                              ##   in Loop: Header=BB2_1 Depth=1
+	movq	%r13, %rdi
+	movq	%r12, %rsi
+	movq	%r15, %rdx
+                                        ## kill: def $ecx killed $ecx killed $rcx
+	movq	%r10, %rbx
+	callq	_quickSort
+	movq	%rbx, %r10
+LBB2_18:                                ##   in Loop: Header=BB2_1 Depth=1
+	movl	%r14d, %ecx
+	cmpl	%r10d, %r14d
+	jl	LBB2_1
+## %bb.19:
 	addq	$8, %rsp
-	.cfi_def_cfa_offset 40
 	popq	%rbx
-	.cfi_def_cfa_offset 32
-	popq	%rbp
-	.cfi_def_cfa_offset 24
 	popq	%r12
-	.cfi_def_cfa_offset 16
 	popq	%r13
-	.cfi_def_cfa_offset 8
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L77:
-	.cfi_restore 3
-	.cfi_restore 6
-	.cfi_restore 12
-	.cfi_restore 13
-	ret
+	popq	%r14
+	popq	%r15
+	popq	%rbp
+	retq
 	.cfi_endproc
-.LFE22:
-	.size	cmp, .-cmp
-	.p2align 4,,15
-	.globl	matlab_modulo
-	.type	matlab_modulo, @function
-matlab_modulo:
-.LFB23:
+                                        ## -- End function
+	.globl	_sort_coo               ## -- Begin function sort_coo
+	.p2align	4, 0x90
+_sort_coo:                              ## @sort_coo
 	.cfi_startproc
-	movapd	%xmm0, %xmm5
-	movsd	.LC8(%rip), %xmm4
-	movsd	.LC7(%rip), %xmm6
-	divsd	%xmm1, %xmm5
-	movapd	%xmm5, %xmm3
-	movapd	%xmm5, %xmm2
-	andpd	%xmm4, %xmm3
-	ucomisd	%xmm3, %xmm6
-	jbe	.L82
-	cvttsd2siq	%xmm5, %rax
-	pxor	%xmm3, %xmm3
-	movsd	.LC9(%rip), %xmm6
-	andnpd	%xmm5, %xmm4
-	cvtsi2sdq	%rax, %xmm3
-	movapd	%xmm3, %xmm7
-	cmpnlesd	%xmm5, %xmm7
-	movapd	%xmm7, %xmm2
-	andpd	%xmm6, %xmm2
-	subsd	%xmm2, %xmm3
-	movapd	%xmm3, %xmm2
-	orpd	%xmm4, %xmm2
-.L82:
-	mulsd	%xmm2, %xmm1
-	subsd	%xmm1, %xmm0
-	ret
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
+	pushq	%r13
+	pushq	%r12
+	pushq	%rbx
+	pushq	%rax
+	.cfi_offset %rbx, -56
+	.cfi_offset %r12, -48
+	.cfi_offset %r13, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	movq	%r8, %r14
+	movq	%rcx, %r15
+	movq	%rdx, %rbx
+	movl	%esi, %r12d
+	movl	%edi, %r13d
+	leaq	L_str(%rip), %rdi
+	callq	_puts
+	movl	%r13d, %r9d
+	notl	%r9d
+	addl	%r12d, %r9d
+	testl	%r9d, %r9d
+	jle	LBB3_10
+## %bb.1:
+	movslq	%r13d, %rax
+	movq	%rax, -48(%rbp)         ## 8-byte Spill
+	leal	-1(%r12), %r10d
+	xorl	%r11d, %r11d
+	.p2align	4, 0x90
+LBB3_2:                                 ## =>This Loop Header: Depth=1
+                                        ##     Child Loop BB3_4 Depth 2
+	movl	%r11d, %eax
+	notl	%eax
+	addl	%r12d, %eax
+	cmpl	%r13d, %eax
+	jle	LBB3_9
+## %bb.3:                               ##   in Loop: Header=BB3_2 Depth=1
+	movslq	%r10d, %rdi
+	movq	-48(%rbp), %rax         ## 8-byte Reload
+	.p2align	4, 0x90
+LBB3_4:                                 ##   Parent Loop BB3_2 Depth=1
+                                        ## =>  This Inner Loop Header: Depth=2
+	movq	%rax, %rcx
+	movl	(%rbx,%rax,4), %edx
+	movl	4(%rbx,%rax,4), %esi
+	incq	%rax
+	cmpl	%esi, %edx
+	jle	LBB3_5
+LBB3_7:                                 ##   in Loop: Header=BB3_4 Depth=2
+	movl	%esi, (%rbx,%rcx,4)
+	movl	%edx, 4(%rbx,%rcx,4)
+	movl	(%r15,%rcx,4), %edx
+	movl	4(%r15,%rcx,4), %esi
+	movl	%esi, (%r15,%rcx,4)
+	movl	%edx, 4(%r15,%rcx,4)
+	movdqu	(%r14,%rcx,8), %xmm0
+	pshufd	$78, %xmm0, %xmm0       ## xmm0 = xmm0[2,3,0,1]
+	movdqu	%xmm0, (%r14,%rcx,8)
+	cmpq	%rax, %rdi
+	jne	LBB3_4
+	jmp	LBB3_9
+	.p2align	4, 0x90
+LBB3_5:                                 ##   in Loop: Header=BB3_4 Depth=2
+	jne	LBB3_8
+## %bb.6:                               ##   in Loop: Header=BB3_4 Depth=2
+	movl	(%r15,%rcx,4), %r8d
+	cmpl	4(%r15,%rcx,4), %r8d
+	jg	LBB3_7
+	.p2align	4, 0x90
+LBB3_8:                                 ##   in Loop: Header=BB3_4 Depth=2
+	cmpq	%rax, %rdi
+	jne	LBB3_4
+LBB3_9:                                 ##   in Loop: Header=BB3_2 Depth=1
+	incl	%r11d
+	decl	%r10d
+	cmpl	%r9d, %r11d
+	jne	LBB3_2
+LBB3_10:
+	leaq	L_str.6(%rip), %rdi
+	addq	$8, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r13
+	popq	%r14
+	popq	%r15
+	popq	%rbp
+	jmp	_puts                   ## TAILCALL
 	.cfi_endproc
-.LFE23:
-	.size	matlab_modulo, .-matlab_modulo
-	.p2align 4,,15
-	.globl	fletcher_sum
-	.type	fletcher_sum, @function
-fletcher_sum:
-.LFB24:
+                                        ## -- End function
+	.globl	_init_arr               ## -- Begin function init_arr
+	.p2align	4, 0x90
+_init_arr:                              ## @init_arr
 	.cfi_startproc
-	testl	%esi, %esi
-	jle	.L88
-	movsd	.LC9(%rip), %xmm7
-	leal	-1(%rsi), %eax
-	movsd	.LC11(%rip), %xmm4
-	pxor	%xmm2, %xmm2
-	movsd	.LC7(%rip), %xmm6
-	movsd	.LC8(%rip), %xmm5
-	leaq	8(%rdi,%rax,8), %rdx
-	pxor	%xmm1, %xmm1
-	movapd	%xmm7, %xmm8
-	.p2align 4,,10
-	.p2align 3
-.L87:
-	addsd	(%rdi), %xmm1
-	movapd	%xmm1, %xmm0
-	divsd	%xmm4, %xmm0
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm9
-	andpd	%xmm5, %xmm3
-	ucomisd	%xmm3, %xmm6
-	jbe	.L85
-	cvttsd2siq	%xmm0, %rax
-	pxor	%xmm3, %xmm3
-	cvtsi2sdq	%rax, %xmm3
-	movapd	%xmm3, %xmm10
-	cmpnlesd	%xmm0, %xmm10
-	movapd	%xmm10, %xmm0
-	andpd	%xmm7, %xmm0
-	subsd	%xmm0, %xmm3
-	movapd	%xmm3, %xmm0
-	movapd	%xmm5, %xmm3
-	andnpd	%xmm9, %xmm3
-	orpd	%xmm3, %xmm0
-.L85:
-	mulsd	%xmm4, %xmm0
-	subsd	%xmm0, %xmm1
-	addsd	%xmm1, %xmm2
-	movapd	%xmm2, %xmm0
-	divsd	%xmm4, %xmm0
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm9
-	andpd	%xmm5, %xmm3
-	ucomisd	%xmm3, %xmm6
-	jbe	.L86
-	cvttsd2siq	%xmm0, %rax
-	pxor	%xmm3, %xmm3
-	cvtsi2sdq	%rax, %xmm3
-	movapd	%xmm3, %xmm11
-	cmpnlesd	%xmm0, %xmm11
-	movapd	%xmm11, %xmm0
-	andpd	%xmm8, %xmm0
-	subsd	%xmm0, %xmm3
-	movapd	%xmm3, %xmm0
-	movapd	%xmm5, %xmm3
-	andnpd	%xmm9, %xmm3
-	orpd	%xmm3, %xmm0
-.L86:
-	mulsd	%xmm4, %xmm0
-	addq	$8, %rdi
-	subsd	%xmm0, %xmm2
-	cmpq	%rdi, %rdx
-	jne	.L87
-	mulsd	.LC12(%rip), %xmm2
-	addsd	%xmm2, %xmm1
-	cvttsd2si	%xmm1, %eax
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L88:
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	testl	%edi, %edi
+	jle	LBB4_8
+## %bb.1:
+	movl	%edi, %edx
+	leaq	-1(%rdx), %rcx
+	movl	%edx, %eax
+	andl	$3, %eax
+	cmpq	$3, %rcx
+	jae	LBB4_3
+## %bb.2:
+	xorl	%ecx, %ecx
+	testq	%rax, %rax
+	jne	LBB4_6
+	jmp	LBB4_8
+LBB4_3:
+	subq	%rax, %rdx
+	xorl	%ecx, %ecx
+	.p2align	4, 0x90
+LBB4_4:                                 ## =>This Inner Loop Header: Depth=1
+	xorps	%xmm0, %xmm0
+	cvtsi2sdl	%ecx, %xmm0
+	leal	1(%rcx), %edi
+	xorps	%xmm1, %xmm1
+	cvtsi2sdl	%edi, %xmm1
+	movsd	%xmm0, (%rsi,%rcx,8)
+	leal	2(%rcx), %edi
+	xorps	%xmm0, %xmm0
+	cvtsi2sdl	%edi, %xmm0
+	movsd	%xmm1, 8(%rsi,%rcx,8)
+	leal	3(%rcx), %edi
+	xorps	%xmm1, %xmm1
+	cvtsi2sdl	%edi, %xmm1
+	movsd	%xmm0, 16(%rsi,%rcx,8)
+	movsd	%xmm1, 24(%rsi,%rcx,8)
+	addq	$4, %rcx
+	cmpq	%rcx, %rdx
+	jne	LBB4_4
+## %bb.5:
+	testq	%rax, %rax
+	je	LBB4_8
+LBB4_6:
+	negq	%rax
+	.p2align	4, 0x90
+LBB4_7:                                 ## =>This Inner Loop Header: Depth=1
+	xorps	%xmm0, %xmm0
+	cvtsi2sdl	%ecx, %xmm0
+	movsd	%xmm0, (%rsi,%rcx,8)
+	incq	%rcx
+	incq	%rax
+	jne	LBB4_7
+LBB4_8:
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_zero_arr               ## -- Begin function zero_arr
+	.p2align	4, 0x90
+_zero_arr:                              ## @zero_arr
+	.cfi_startproc
+## %bb.0:
+	testl	%edi, %edi
+	jle	LBB5_2
+## %bb.1:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movl	%edi, %eax
+	shlq	$3, %rax
+	movq	%rsi, %rdi
+	movq	%rax, %rsi
+	callq	___bzero
+	popq	%rbp
+LBB5_2:
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_print_arr              ## -- Begin function print_arr
+	.p2align	4, 0x90
+_print_arr:                             ## @print_arr
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
+	pushq	%r13
+	pushq	%r12
+	pushq	%rbx
+	pushq	%rax
+	.cfi_offset %rbx, -56
+	.cfi_offset %r12, -48
+	.cfi_offset %r13, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	movq	%rdx, %r12
+	movl	%edi, %r14d
+	leaq	L_.str.2(%rip), %rdi
 	xorl	%eax, %eax
-	ret
+	callq	_printf
+	testl	%r14d, %r14d
+	jle	LBB6_5
+## %bb.1:
+	movslq	%r14d, %rax
+	movl	%r14d, %ebx
+	shlq	$3, %rax
+	movq	%rax, -48(%rbp)         ## 8-byte Spill
+	xorl	%r13d, %r13d
+	leaq	L_.str.3(%rip), %r14
+	.p2align	4, 0x90
+LBB6_2:                                 ## =>This Loop Header: Depth=1
+                                        ##     Child Loop BB6_3 Depth 2
+	xorl	%r15d, %r15d
+	.p2align	4, 0x90
+LBB6_3:                                 ##   Parent Loop BB6_2 Depth=1
+                                        ## =>  This Inner Loop Header: Depth=2
+	movsd	(%r12,%r15,8), %xmm0    ## xmm0 = mem[0],zero
+	movq	%r14, %rdi
+	movb	$1, %al
+	callq	_printf
+	incq	%r15
+	cmpq	%r15, %rbx
+	jne	LBB6_3
+## %bb.4:                               ##   in Loop: Header=BB6_2 Depth=1
+	movl	$10, %edi
+	callq	_putchar
+	incq	%r13
+	addq	-48(%rbp), %r12         ## 8-byte Folded Reload
+	cmpq	%r15, %r13
+	jne	LBB6_2
+LBB6_5:
+	addq	$8, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r13
+	popq	%r14
+	popq	%r15
+	popq	%rbp
+	retq
 	.cfi_endproc
-.LFE24:
-	.size	fletcher_sum, .-fletcher_sum
-	.p2align 4,,15
-	.globl	fletcher_sum_1d_array_int
-	.type	fletcher_sum_1d_array_int, @function
-fletcher_sum_1d_array_int:
-.LFB25:
+                                        ## -- End function
+	.globl	_sort                   ## -- Begin function sort
+	.p2align	4, 0x90
+_sort:                                  ## @sort
 	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
+	pushq	%r13
+	pushq	%r12
+	pushq	%rbx
+	.cfi_offset %rbx, -56
+	.cfi_offset %r12, -48
+	.cfi_offset %r13, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	movq	%rcx, -48(%rbp)         ## 8-byte Spill
+                                        ## kill: def $esi killed $esi def $rsi
+	movl	%edi, %r8d
+	notl	%r8d
+	addl	%esi, %r8d
+	testl	%r8d, %r8d
+	jle	LBB7_17
+## %bb.1:
+	movslq	%edi, %r11
+	movq	%r11, %rcx
+	notq	%rcx
+	leaq	1(%r11), %rax
+	movq	%rax, -56(%rbp)         ## 8-byte Spill
+	leal	-1(%rsi), %r12d
+	leaq	8(%rdx), %rax
+	movq	%rax, -72(%rbp)         ## 8-byte Spill
+	movq	-48(%rbp), %rax         ## 8-byte Reload
+	leaq	8(%rax), %rax
+	movq	%rax, -64(%rbp)         ## 8-byte Spill
+	xorl	%r13d, %r13d
+	.p2align	4, 0x90
+LBB7_2:                                 ## =>This Loop Header: Depth=1
+                                        ##     Child Loop BB7_11 Depth 2
+	movl	%r13d, %eax
+	notl	%eax
+	addl	%esi, %eax
+	movl	%eax, %r9d
+	subl	%edi, %r9d
+	jle	LBB7_16
+## %bb.3:                               ##   in Loop: Header=BB7_2 Depth=1
+	movslq	%eax, %r10
+	movl	(%rdx,%r11,4), %ebx
+	testb	$1, %r9b
+	jne	LBB7_5
+## %bb.4:                               ##   in Loop: Header=BB7_2 Depth=1
+	movq	%r11, %r14
+	addq	%rcx, %r10
+	jne	LBB7_10
+	jmp	LBB7_16
+	.p2align	4, 0x90
+LBB7_5:                                 ##   in Loop: Header=BB7_2 Depth=1
+	movl	4(%rdx,%r11,4), %eax
+	cmpl	%eax, %ebx
+	jle	LBB7_6
+## %bb.7:                               ##   in Loop: Header=BB7_2 Depth=1
+	movl	%eax, (%rdx,%r11,4)
+	movl	%ebx, 4(%rdx,%r11,4)
+	movq	-48(%rbp), %rax         ## 8-byte Reload
+	movdqu	(%rax,%r11,8), %xmm0
+	pshufd	$78, %xmm0, %xmm0       ## xmm0 = xmm0[2,3,0,1]
+	movdqu	%xmm0, (%rax,%r11,8)
+	movq	-56(%rbp), %r14         ## 8-byte Reload
+	addq	%rcx, %r10
+	jne	LBB7_10
+	jmp	LBB7_16
+LBB7_6:                                 ##   in Loop: Header=BB7_2 Depth=1
+	movl	%eax, %ebx
+	movq	-56(%rbp), %r14         ## 8-byte Reload
+	addq	%rcx, %r10
+	je	LBB7_16
+LBB7_10:                                ##   in Loop: Header=BB7_2 Depth=1
+	movslq	%r12d, %r9
+	subq	%r14, %r9
+	movq	-72(%rbp), %rax         ## 8-byte Reload
+	leaq	(%rax,%r14,4), %r10
+	movq	-64(%rbp), %rax         ## 8-byte Reload
+	leaq	(%rax,%r14,8), %r14
+	xorl	%r15d, %r15d
+	.p2align	4, 0x90
+LBB7_11:                                ##   Parent Loop BB7_2 Depth=1
+                                        ## =>  This Inner Loop Header: Depth=2
+	movl	-4(%r10,%r15,4), %eax
+	cmpl	%eax, %ebx
+	jle	LBB7_12
+## %bb.13:                              ##   in Loop: Header=BB7_11 Depth=2
+	movl	%eax, -8(%r10,%r15,4)
+	movl	%ebx, -4(%r10,%r15,4)
+	movdqu	-8(%r14,%r15,8), %xmm0
+	pshufd	$78, %xmm0, %xmm0       ## xmm0 = xmm0[2,3,0,1]
+	movdqu	%xmm0, -8(%r14,%r15,8)
+	movl	(%r10,%r15,4), %eax
+	cmpl	%eax, %ebx
+	jg	LBB7_18
+LBB7_15:                                ##   in Loop: Header=BB7_11 Depth=2
+	movl	%eax, %ebx
+	addq	$2, %r15
+	cmpq	%r15, %r9
+	jne	LBB7_11
+	jmp	LBB7_16
+	.p2align	4, 0x90
+LBB7_12:                                ##   in Loop: Header=BB7_11 Depth=2
+	movl	%eax, %ebx
+	movl	(%r10,%r15,4), %eax
+	cmpl	%eax, %ebx
+	jle	LBB7_15
+LBB7_18:                                ##   in Loop: Header=BB7_11 Depth=2
+	movl	%eax, -4(%r10,%r15,4)
+	movl	%ebx, (%r10,%r15,4)
+	movdqu	(%r14,%r15,8), %xmm0
+	pshufd	$78, %xmm0, %xmm0       ## xmm0 = xmm0[2,3,0,1]
+	movdqu	%xmm0, (%r14,%r15,8)
+	addq	$2, %r15
+	cmpq	%r15, %r9
+	jne	LBB7_11
+	.p2align	4, 0x90
+LBB7_16:                                ##   in Loop: Header=BB7_2 Depth=1
+	incl	%r13d
+	decl	%r12d
+	cmpl	%r8d, %r13d
+	jne	LBB7_2
+LBB7_17:
+	popq	%rbx
+	popq	%r12
+	popq	%r13
+	popq	%r14
+	popq	%r15
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_cmp                    ## -- Begin function cmp
+	.p2align	4, 0x90
+_cmp:                                   ## @cmp
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
+	pushq	%r13
+	pushq	%r12
+	pushq	%rbx
+	pushq	%rax
+	.cfi_offset %rbx, -56
+	.cfi_offset %r12, -48
+	.cfi_offset %r13, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	testl	%edx, %edx
+	jle	LBB8_5
+## %bb.1:
+	movq	%rsi, %r14
+	movq	%rdi, %r12
+	movl	%edx, %r13d
+	leaq	L_.str.5(%rip), %r15
+	xorl	%ebx, %ebx
+	.p2align	4, 0x90
+LBB8_2:                                 ## =>This Inner Loop Header: Depth=1
+	movsd	(%r12,%rbx,8), %xmm0    ## xmm0 = mem[0],zero
+	ucomisd	(%r14,%rbx,8), %xmm0
+	jne	LBB8_3
+	jnp	LBB8_4
+LBB8_3:                                 ##   in Loop: Header=BB8_2 Depth=1
+	movq	___stderrp@GOTPCREL(%rip), %rax
+	movq	(%rax), %rdi
+	movq	%r15, %rsi
+	movl	%ebx, %edx
+	xorl	%eax, %eax
+	callq	_fprintf
+LBB8_4:                                 ##   in Loop: Header=BB8_2 Depth=1
+	incq	%rbx
+	cmpq	%rbx, %r13
+	jne	LBB8_2
+LBB8_5:
+	addq	$8, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r13
+	popq	%r14
+	popq	%r15
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_matlab_modulo          ## -- Begin function matlab_modulo
+	.p2align	4, 0x90
+_matlab_modulo:                         ## @matlab_modulo
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	movapd	%xmm0, %xmm2
+	divsd	%xmm1, %xmm2
+	roundsd	$9, %xmm2, %xmm2
+	mulsd	%xmm1, %xmm2
+	subsd	%xmm2, %xmm0
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.section	__TEXT,__literal8,8byte_literals
+	.p2align	3               ## -- Begin function fletcher_sum
+LCPI10_0:
+	.quad	4643176031446892544     ## double 255
+LCPI10_1:
+	.quad	4643211215818981376     ## double 256
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_fletcher_sum
+	.p2align	4, 0x90
+_fletcher_sum:                          ## @fletcher_sum
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
 	testl	%esi, %esi
-	jle	.L95
-	movsd	.LC9(%rip), %xmm7
-	leal	-1(%rsi), %eax
-	movsd	.LC11(%rip), %xmm4
-	pxor	%xmm2, %xmm2
-	movsd	.LC7(%rip), %xmm6
-	movsd	.LC8(%rip), %xmm5
-	leaq	4(%rdi,%rax,4), %rdx
-	pxor	%xmm1, %xmm1
-	movapd	%xmm7, %xmm8
-	.p2align 4,,10
-	.p2align 3
-.L94:
-	pxor	%xmm0, %xmm0
-	cvtsi2sd	(%rdi), %xmm0
+	jle	LBB10_1
+## %bb.4:
+	movl	%esi, %eax
+	xorpd	%xmm0, %xmm0
+	xorl	%ecx, %ecx
+	movsd	LCPI10_0(%rip), %xmm2   ## xmm2 = mem[0],zero
+	xorpd	%xmm1, %xmm1
+	.p2align	4, 0x90
+LBB10_5:                                ## =>This Inner Loop Header: Depth=1
+	addsd	(%rdi,%rcx,8), %xmm1
+	movapd	%xmm1, %xmm3
+	divsd	%xmm2, %xmm3
+	roundsd	$9, %xmm3, %xmm3
+	mulsd	%xmm2, %xmm3
+	subsd	%xmm3, %xmm1
+	addsd	%xmm1, %xmm0
+	movapd	%xmm0, %xmm3
+	divsd	%xmm2, %xmm3
+	roundsd	$9, %xmm3, %xmm3
+	mulsd	%xmm2, %xmm3
+	subsd	%xmm3, %xmm0
+	incq	%rcx
+	cmpq	%rcx, %rax
+	jne	LBB10_5
+## %bb.2:
+	mulsd	LCPI10_1(%rip), %xmm0
 	addsd	%xmm0, %xmm1
-	movapd	%xmm1, %xmm0
-	divsd	%xmm4, %xmm0
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm9
-	andpd	%xmm5, %xmm3
-	ucomisd	%xmm3, %xmm6
-	jbe	.L92
-	cvttsd2siq	%xmm0, %rax
-	pxor	%xmm3, %xmm3
-	cvtsi2sdq	%rax, %xmm3
-	movapd	%xmm3, %xmm10
-	cmpnlesd	%xmm0, %xmm10
-	movapd	%xmm10, %xmm0
-	andpd	%xmm7, %xmm0
-	subsd	%xmm0, %xmm3
-	movapd	%xmm3, %xmm0
-	movapd	%xmm5, %xmm3
-	andnpd	%xmm9, %xmm3
-	orpd	%xmm3, %xmm0
-.L92:
-	mulsd	%xmm4, %xmm0
-	subsd	%xmm0, %xmm1
-	addsd	%xmm1, %xmm2
-	movapd	%xmm2, %xmm0
-	divsd	%xmm4, %xmm0
-	movapd	%xmm0, %xmm3
-	movapd	%xmm0, %xmm9
-	andpd	%xmm5, %xmm3
-	ucomisd	%xmm3, %xmm6
-	jbe	.L93
-	cvttsd2siq	%xmm0, %rax
-	pxor	%xmm3, %xmm3
-	cvtsi2sdq	%rax, %xmm3
-	movapd	%xmm3, %xmm11
-	cmpnlesd	%xmm0, %xmm11
-	movapd	%xmm11, %xmm0
-	andpd	%xmm8, %xmm0
-	subsd	%xmm0, %xmm3
-	movapd	%xmm3, %xmm0
-	movapd	%xmm5, %xmm3
-	andnpd	%xmm9, %xmm3
-	orpd	%xmm3, %xmm0
-.L93:
-	mulsd	%xmm4, %xmm0
-	addq	$4, %rdi
-	subsd	%xmm0, %xmm2
-	cmpq	%rdi, %rdx
-	jne	.L94
-	mulsd	.LC12(%rip), %xmm2
-	addsd	%xmm2, %xmm1
 	cvttsd2si	%xmm1, %eax
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L95:
-	xorl	%eax, %eax
-	ret
+	popq	%rbp
+	retq
+LBB10_1:
+	xorpd	%xmm1, %xmm1
+	xorpd	%xmm0, %xmm0
+	addsd	%xmm0, %xmm1
+	cvttsd2si	%xmm1, %eax
+	popq	%rbp
+	retq
 	.cfi_endproc
-.LFE25:
-	.size	fletcher_sum_1d_array_int, .-fletcher_sum_1d_array_int
-	.section	.rodata.cst16,"aM",@progbits,16
-	.align 16
-.LC2:
-	.long	0
-	.long	1
-	.long	2
-	.long	3
-	.align 16
-.LC3:
-	.long	4
-	.long	4
-	.long	4
-	.long	4
-	.section	.rodata.cst8,"aM",@progbits,8
-	.align 8
-.LC7:
-	.long	0
-	.long	1127219200
-	.section	.rodata.cst16
-	.align 16
-.LC8:
-	.long	4294967295
-	.long	2147483647
-	.long	0
-	.long	0
-	.section	.rodata.cst8
-	.align 8
-.LC9:
-	.long	0
-	.long	1072693248
-	.align 8
-.LC11:
-	.long	0
-	.long	1081073664
-	.align 8
-.LC12:
-	.long	0
-	.long	1081081856
-	.ident	"GCC: (GNU) 8.1.0"
-	.section	.note.GNU-stack,"",@progbits
+                                        ## -- End function
+	.section	__TEXT,__literal8,8byte_literals
+	.p2align	3               ## -- Begin function fletcher_sum_1d_array_int
+LCPI11_0:
+	.quad	4643176031446892544     ## double 255
+LCPI11_1:
+	.quad	4643211215818981376     ## double 256
+	.section	__TEXT,__text,regular,pure_instructions
+	.globl	_fletcher_sum_1d_array_int
+	.p2align	4, 0x90
+_fletcher_sum_1d_array_int:             ## @fletcher_sum_1d_array_int
+	.cfi_startproc
+## %bb.0:
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	testl	%esi, %esi
+	jle	LBB11_1
+## %bb.4:
+	movl	%esi, %eax
+	xorpd	%xmm0, %xmm0
+	xorl	%ecx, %ecx
+	movsd	LCPI11_0(%rip), %xmm2   ## xmm2 = mem[0],zero
+	xorpd	%xmm1, %xmm1
+	.p2align	4, 0x90
+LBB11_5:                                ## =>This Inner Loop Header: Depth=1
+	xorps	%xmm3, %xmm3
+	cvtsi2sdl	(%rdi,%rcx,4), %xmm3
+	addsd	%xmm3, %xmm1
+	movapd	%xmm1, %xmm3
+	divsd	%xmm2, %xmm3
+	roundsd	$9, %xmm3, %xmm3
+	mulsd	%xmm2, %xmm3
+	subsd	%xmm3, %xmm1
+	addsd	%xmm1, %xmm0
+	movapd	%xmm0, %xmm3
+	divsd	%xmm2, %xmm3
+	roundsd	$9, %xmm3, %xmm3
+	mulsd	%xmm2, %xmm3
+	subsd	%xmm3, %xmm0
+	incq	%rcx
+	cmpq	%rcx, %rax
+	jne	LBB11_5
+## %bb.2:
+	mulsd	LCPI11_1(%rip), %xmm0
+	addsd	%xmm0, %xmm1
+	cvttsd2si	%xmm1, %eax
+	popq	%rbp
+	retq
+LBB11_1:
+	xorpd	%xmm1, %xmm1
+	xorpd	%xmm0, %xmm0
+	addsd	%xmm0, %xmm1
+	cvttsd2si	%xmm1, %eax
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.section	__TEXT,__cstring,cstring_literals
+L_.str.2:                               ## @.str.2
+	.asciz	"\n%s\n"
+
+L_.str.3:                               ## @.str.3
+	.asciz	"%g\t"
+
+L_.str.5:                               ## @.str.5
+	.asciz	"values don't match at index %d"
+
+L_str:                                  ## @str
+	.asciz	"sorting started..."
+
+L_str.6:                                ## @str.6
+	.asciz	"sorting ended..."
+
+
+.subsections_via_symbols
