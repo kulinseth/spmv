@@ -10,6 +10,9 @@ import requests
 import tarfile
 import shutil
 import subprocess
+import psutil
+import platform
+from datetime import datetime
 parser = argparse.ArgumentParser("Script to run the OSKI bench suite")
 parser.add_argument('--matmul', action='store_true',  default=False, 
         help="Download files")
@@ -69,7 +72,11 @@ def main():
         print (filepaths)
     random.seed(SEED)
     random.shuffle(filepaths)
-    with open("autotune_detailed.log", 'w') as fout:
+    uname = platform.uname()
+    proc = uname.processor
+    cpu_count = psutil.cpu_count()
+    proc_name = "_" + str(proc) + "_" + str(cpu_count)
+    with open("autotune_detailed" + proc_name + ".log", 'w') as fout:
         for f in filepaths:
             sub_args = ["./poski/oski/build_oski/bench/.libs/lt-oskibench_autotune_Tid",
                     "--tune",  "aggressive", f, "MatMult", "--op", "normal"]
@@ -89,19 +96,18 @@ def main():
             fout.write(stderr)
             # print (tmp)
 
-    with open("autotune_results.txt", 'w') as fout:
+    with open("autotune_results" + proc_name + ".txt", 'w') as fout:
         fout.write(json.dumps(metric_dict))
         df = pd.DataFrame.from_dict(metric_dict, orient='index')
         df.transpose()
         df = df.fillna(0)
         df = df.reset_index()
-        df.columns = ["Name", "MFLOPS_observed", "MFLOPS_tuned", "Time", "Row", "Col",
-        "BlockRow", "BlockCol"]
+        df.columns = ["Name", "MFLOPS_observed", "MFLOPS_tuned", "Time", "Row", "Col", "BlockRow", "BlockCol"]
         df["BlockRow"] = df["BlockRow"].astype(int)
         df["BlockCol"] = df["BlockCol"].astype(int)
         with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             print(df)
-            df.to_csv("autotune_results.csv", index=None)
+            df.to_csv("autotune_results" + proc_name + ".csv", index=None)
 
 
 if __name__ == '__main__':

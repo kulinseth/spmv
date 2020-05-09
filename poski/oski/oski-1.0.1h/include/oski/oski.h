@@ -10,19 +10,19 @@
 /** \name Library build parameters. */
 /*@{*/
 #if !defined(OSKI_CC)
-#  define OSKI_CC "icc"
+#  define OSKI_CC "cc"
 #endif
 #if !defined(OSKI_CFLAGS)
-#  define OSKI_CFLAGS "-O3 -std=c99"
+#  define OSKI_CFLAGS "-O3 -malign-double -msse2 -std=c99 -msse4"
 #endif
 #if !defined(OSKI_LDFLAGS)
 #  define OSKI_LDFLAGS " -lm"
 #endif
 #if !defined(OSKI_BUILD_HOST)
-#  define OSKI_BUILD_HOST "i686-pc-linux-gnu"
+#  define OSKI_BUILD_HOST "x86_64-unknown-linux-gnu"
 #endif
 #if !defined(OSKI_PREFIX)
-#  define OSKI_PREFIX "/home/vuduc2/projects/bebop/oski/src-1.0/_install-icc-Tld_only"
+#  define OSKI_PREFIX "/scratch/seth.k/spmv/poski/oski/oski-1.0.1h"
 #endif
 #if !defined(OSKI_VERSION)
 #  define OSKI_VERSION "1.0.1h"
