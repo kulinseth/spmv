@@ -10,3 +10,9 @@
 [submodule "external/fait-maison"]
 	path = external/fait-maison
 	url = https://github.com/Sable/fait-maison-spmv.git
+[submodule "external/csr5"]
+	path = external/csr5
+	url = https://github.com/bhSPARSE/Benchmark_SpMV_using_CSR5.git
+[submodule "external/spmv-wrapper"]
+	path = external/spmv-wrapper
+	url = https://github.com/Yao1993/SpMVWrapper.git
