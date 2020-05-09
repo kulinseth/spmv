@@ -52,3 +52,9 @@ Mkfile.old
 dkms.conf
 data
 poski/oski/build_oski
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
