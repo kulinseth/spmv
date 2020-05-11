@@ -347,7 +347,7 @@ void spmv_csr5_calibrate_kernel(const uiT *d_partition_pointer,
         }
 
         if (!local_id)
-            atomicAdd(&d_y[s_partition_pointer[0]], sum);
+            my_atomicAdd(&d_y[s_partition_pointer[0]], sum);
 
         return;
     }
@@ -374,7 +374,7 @@ void spmv_csr5_calibrate_kernel(const uiT *d_partition_pointer,
             }
 
             if (row_start_target == s_partition_pointer[0] || row_start_target == s_partition_pointer[ANONYMOUSLIB_THREAD_GROUP-1])
-                atomicAdd(&d_y[row_start_target], sum);
+                my_atomicAdd(&d_y[row_start_target], sum);
             else
                 d_y[row_start_target] += sum;
         }
