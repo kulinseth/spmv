@@ -14,16 +14,16 @@ class Toolchain_GCC:
         Recompile the library. This does an incremental build.
         This returns the output from the operation.
         """
-        print "Starting compile"
+        print("Starting compile")
         make = subprocess.Popen(["make"],
                                 cwd=self.Autotuner.BuildDir,
                                 stdout = subprocess.PIPE,
                                 stderr = subprocess.PIPE)
         
-        print " ... waiting for compile"
+        print(" ... waiting for compile")
         (makeout, makeerr) = make.communicate()
-        print " ... compile completed"
-        print makeout
+        print(" ... compile completed")
+        print(makeout)
         
     def Clean(self):
         """
@@ -31,15 +31,15 @@ class Toolchain_GCC:
         The next compile will start from scratch.
         This returns the output from the operation.
         """
-        print "Starting clean"
+        print("Starting clean")
         make = subprocess.Popen(["make", "clean"],
                                 cwd=self.Autotuner.BuildDir,
                                 stdout = subprocess.PIPE,
                                 stderr = subprocess.PIPE)
         
-        print " ... waiting for clean"
+        print(" ... waiting for clean")
         (makeout, makeerr) = make.communicate()
-        print " ... clean completed"
+        print(" ... clean completed")
         
     def GetInstructionSupport(self):
         """

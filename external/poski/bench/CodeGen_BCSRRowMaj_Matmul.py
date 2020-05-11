@@ -292,7 +292,7 @@ if __name__ == '__main__':
     or for the default value of r=3, c=5, and the x86 SSE4 vector instructions.
     """
     CodeGenerator = CodeGen_BCSRRowMaj_Matmul()
-    print CodeGenerator.GenerateCode(
+    print(CodeGenerator.GenerateCode(
       InstSet_Double_x86_SSE4.InstSet_Double_x86_SSE4(),
       3, 5,
-      {'MultiplyOrder':'Normal', 'ReduceStyle':'DotProduct', 'PrefetchDist':64})
+      {'MultiplyOrder':'Normal', 'ReduceStyle':'DotProduct', 'PrefetchDist':64}))

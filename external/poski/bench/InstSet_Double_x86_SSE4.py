@@ -1,13 +1,11 @@
 # InstSet_Double_x86_SSE4.py
 # -------
-import exceptions
-
-class CodeGeneratorException(exceptions.Exception):
+class CodeGeneratorException():
     def __init__(self):
         return
         
     def __str__(self):
-        print "Code generator exception."
+        print("Code generator exception.")
 
 class InstSet_Double_x86_SSE4:
     """
@@ -79,7 +77,8 @@ class InstSet_Double_x86_SSE4:
         This loads up to num scalar elements into the vector.
         """
         if (num != 1):
-            raise CodeGeneratorException
+            print (" the num of scalar elements should be == 1")
+            return
         return "_mm_load_sd(" + addr + ")"
     
     def SIMDStoreMultiple(self, addr, arg1):

@@ -57,7 +57,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = c / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = c // vectorLen;                        # Number of whole SIMD vectors per row
         partialLen = c % inst.SIMDGetVectorLength();    # Number of leftover scalars per row after all SIMD vectors filled
         
         
@@ -136,7 +136,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         code += nl
         
         # generate diagonal block multiply
-        simdLen = r / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = r // vectorLen;                        # Number of whole SIMD vectors per row
         partialLen = r % inst.SIMDGetVectorLength();    # Number of leftover scalars per row after all SIMD vectors filled
         
         code += tab + "/* Diagonal block multiply */" + nl
@@ -206,7 +206,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = c / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = c // vectorLen;                        # Number of whole SIMD vectors per row
         
         # Do multiply operations
         for i in range(0, r):
@@ -239,7 +239,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = c / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = c // vectorLen;                        # Number of whole SIMD vectors per row
         
         # Do multiply operations
         for j in range(0, simdLen):
@@ -275,7 +275,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = c / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = c // vectorLen;                        # Number of whole SIMD vectors per row
         
         # Accumulate output vector into single variable and multiply by alpha
         code += tab*tabs + inst.VectorType() + " alpha_simd;" + nl
@@ -324,7 +324,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = c / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = c // vectorLen;                        # Number of whole SIMD vectors per row
         
         # Accumulate output vector into single variable and multiply by alpha
         code += tab*tabs + inst.VectorType() + " alpha_simd;" + nl
@@ -356,7 +356,7 @@ class CodeGen_MBCSRRowMaj_Matmul:
         
         code = ""
         vectorLen = inst.SIMDGetVectorLength();
-        simdLen = r / vectorLen;                        # Number of whole SIMD vectors per row
+        simdLen = r // vectorLen;                        # Number of whole SIMD vectors per row
         
         # Do multiply operations
         for i in range(0, r):
@@ -385,7 +385,7 @@ if __name__ == '__main__':
     or for the default value of r=3, c=5, and the x86 SSE4 vector instructions.
     """
     CodeGenerator = CodeGen_MBCSRRowMaj_Matmul()
-    print CodeGenerator.GenerateCode(
+    print (CodeGenerator.GenerateCode(
       InstSet_Double_x86_SSE4.InstSet_Double_x86_SSE4(),
       {'r':3, 'c':2},
-      {'MultiplyOrder':'Normal', 'ReduceStyle':'HAdd', 'PrefetchDist':64})
+      {'MultiplyOrder':'Normal', 'ReduceStyle':'HAdd', 'PrefetchDist':64}))

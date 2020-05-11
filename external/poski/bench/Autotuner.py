@@ -2,8 +2,6 @@
 THE Autotuner.
 Run this to automatically tune the OSKI library to the target machine.
 """
-import exceptions
-
 import os
 import shutil
 
@@ -15,12 +13,12 @@ import CodeGen_BCSRRowMaj_Matmul
 import CodeGen_MBCSRRowMaj_Matmul
 import CodeInjector
 
-class PathErrorException(exceptions.Exception):
+class PathErrorException():
     def __init__(self):
         return
         
     def __str__(self):
-        print "Path error exception: unable to locate the OSKI source directory"
+        print("Path error exception: unable to locate the OSKI source directory")
 
 class Autotuner:
     def __init__(self, codeGen, instSet,
@@ -35,9 +33,9 @@ class Autotuner:
             self.BuildDir = buildDir
             
         if not(os.path.isdir(self.BuildDir)):
-            print "ERR: Invalid OSKI build directory '" + self.BuildDir + "'"
-            raise PathErrorException
-        print "Using OSKI build directory '" + self.BuildDir + "'"
+            print("ERR: Invalid OSKI build directory '" + self.BuildDir + "'")
+            return
+        print("Using OSKI build directory '" + self.BuildDir + "'")
         
         self.SrcDir = srcDir
         # if source directory was not specified, generate it from the build directory config
@@ -47,14 +45,14 @@ class Autotuner:
             for line in configFile:
                 if line[0:8] == "srcdir='":
                     path = line[8:-2]
+                    self.SrcDir = path
                     #self.SrcDir = self.BuildDir + "/" + path
-		    self.SrcDir = path
-                    print self.SrcDir
+                    print(self.SrcDir)
 
         if not(os.path.isdir(self.SrcDir)):
-            print "ERR: Invalid OSKI source directory '" + self.SrcDir + "'"
-            raise PathErrorException
-        print "Using OSKI source directory '" + self.SrcDir + "'"
+            print("ERR: Invalid OSKI source directory '" + self.SrcDir + "'")
+            return
+        print("Using OSKI source directory '" + self.SrcDir + "'")
             
         # initialize parameter space - related variables        
         self.CodeGen = codeGen;
@@ -105,25 +103,26 @@ class Autotuner:
                         done = True;
                 else:
                     break;
-        print paramList
+        print(paramList)
         return paramList
             
     def Autotune(self):
-        print "Beginning autotune operations"
+        print("Beginning autotune operations")
         for tuneParams in self.TuneParamSpace:
-            print "Autotunung tuneParams=" + str(tuneParams)
+            print("Autotunung tuneParams=" + str(tuneParams))
             self.GenerateAllCode(tuneParams)
             self.Toolchain.Compile()
             self.Benchmarker.RunBenchmark(self.CodeGen, self.InstSet, tuneParams)
             
         for codeParams in self.CodeParamSpace:
             bestTuneParams = self.Benchmarker.GetBest(codeParams)
-            print "Generating best code for " + str(codeParams) + ": " + str(bestTuneParams)
+            print("Generating best code for " + str(codeParams) + ": " +
+                    str(bestTuneParams))
             self.GenerateCode(codeParams, bestTuneParams)
             
             
     def CreateCodeBackups(self):
-        print "Generating original code backups"
+        print("Generating original code backups")
         
         codePath = self.SrcDir + self.CodeGen.GetCodePath() + "/"
         
@@ -131,15 +130,16 @@ class Autotuner:
             fileName = self.CodeGen.GetCodeName(codeParam) 
             if (os.path.isfile(codePath + fileName)):
                 if not(os.path.isfile(codePath + fileName + ".orig")):
-                    print "* Backing up " + fileName + " to " + fileName + ".orig ... "
+                    print("* Backing up " + fileName + " to " + fileName +
+                            ".orig ... ")
                     shutil.copy(codePath + fileName, codePath + fileName + ".orig")
                 else:
-                    print "* Backup of " + fileName + " already exists"
+                    print("* Backup of " + fileName + " already exists")
             else:
-                print "* Warning: original " + codePath + fileName + " not found"
+                print("* Warning: original " + codePath + fileName + " not found")
         
     def GenerateAllCode(self, tuneParams):
-        print "Generating code with tuneParams=" + str(tuneParams)
+        print("Generating code with tuneParams=" + str(tuneParams))
         
         for codeParam in self.CodeParamSpace:
             self.GenerateCode(codeParam, tuneParams)
@@ -152,7 +152,7 @@ class Autotuner:
           
         CodeInjector.CodeInject(codePath+fileName+".orig", codePath+fileName, "MBCSR_MatMult_v1_aX_b1_xs1_ysX", genCode)
             
-        print "* Created " + fileName
+        print("* Created " + fileName)
 
 if __name__ == '__main__':
     """
