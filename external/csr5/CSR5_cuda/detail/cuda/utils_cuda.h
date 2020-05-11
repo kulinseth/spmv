@@ -65,36 +65,36 @@ void sum_32(volatile  T *s_sum,
     s_sum[local_id] += s_sum[local_id + 1];
 }
 
-#if __CUDA_ARCH__ <= 300
+//#if __CUDA_ARCH__ <= 300
 
-__device__ __forceinline__
-double __shfl_down(double var, unsigned int srcLane, int width=32)
-{
-    int2 a = *reinterpret_cast<int2*>(&var);
-    a.x = __shfl_down(a.x, srcLane, width);
-    a.y = __shfl_down(a.y, srcLane, width);
-    return *reinterpret_cast<double*>(&a);
-}
+//__device__ __forceinline__
+//double __shfl_down(double var, unsigned int srcLane, int width=32)
+//{
+    //int2 a = *reinterpret_cast<int2*>(&var);
+    //a.x = __shfl_down(a.x, srcLane, width);
+    //a.y = __shfl_down(a.y, srcLane, width);
+    //return *reinterpret_cast<double*>(&a);
+//}
 
-__device__ __forceinline__
-double __shfl_up(double var, unsigned int srcLane, int width=32)
-{
-    int2 a = *reinterpret_cast<int2*>(&var);
-    a.x = __shfl_up(a.x, srcLane, width);
-    a.y = __shfl_up(a.y, srcLane, width);
-    return *reinterpret_cast<double*>(&a);
-}
+//__device__ __forceinline__
+//double __shfl_up(double var, unsigned int srcLane, int width=32)
+//{
+    //int2 a = *reinterpret_cast<int2*>(&var);
+    //a.x = __shfl_up(a.x, srcLane, width);
+    //a.y = __shfl_up(a.y, srcLane, width);
+    //return *reinterpret_cast<double*>(&a);
+//}
 
-__device__ __forceinline__
-double __shfl_xor(double var, int srcLane, int width=32)
-{
-    int2 a = *reinterpret_cast<int2*>(&var);
-    a.x = __shfl_xor(a.x, srcLane, width);
-    a.y = __shfl_xor(a.y, srcLane, width);
-    return *reinterpret_cast<double*>(&a);
-}
+//__device__ __forceinline__
+//double __shfl_xor(double var, int srcLane, int width=32)
+//{
+    //int2 a = *reinterpret_cast<int2*>(&var);
+    //a.x = __shfl_xor(a.x, srcLane, width);
+    //a.y = __shfl_xor(a.y, srcLane, width);
+    //return *reinterpret_cast<double*>(&a);
+//}
 
-#endif
+//#endif
 
 template<typename vT>
 __forceinline__ __device__
@@ -337,7 +337,7 @@ void fetch_x(cudaTextureObject_t  d_x_tex,
 }
 
 __forceinline__ __device__
-static double atomicAdd(double *addr, double val)
+static double my_atomicAdd(double *addr, double val)
 {
     double old = *addr, assumed;
     do
