@@ -11,12 +11,14 @@ import shutil
 parser = argparse.ArgumentParser("Script to parse the TAMU sparse suite")
 parser.add_argument('--download_files', action='store_true',  default=False, 
         help="Download files")
+parser.add_argument('--file_format', type=str,  default="MM", 
+        help="Download files of format")
 parser.add_argument('--download_images', action='store_true', default=False ,
         help="Download images")
 parser.add_argument('--extract_files', action='store_true', default=False ,
         help="Extract tar files")
 
-URL = "https://sparse.tamu.edu/RB/"
+URL = "https://sparse.tamu.edu/"
 DIR = os.path.join(os.getcwd(),"external",
         "suite-sparse", "db", "collection_data",
         "matrices")
@@ -51,7 +53,7 @@ def parse_file(input_file):
         d = literal_eval(json.dumps(s))
 
 def download_files():
-    data_dir = os.path.join(os.getcwd(), 'data')
+    data_dir = os.path.join(os.getcwd(), 'data', args.file_format)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
     for k, paths in files.items():
@@ -59,7 +61,7 @@ def download_files():
             pname = os.path.splitext(path)[0]
             fname = os.path.join(data_dir, pname+".tar.gz")
             if (not os.path.isfile(fname)):
-                url_download = os.path.join(URL, k, pname+ ".tar.gz")
+                url_download = os.path.join(URL, args.file_format, k, pname+ ".tar.gz")
                 try:
                     print (url_download)
                     # wget.download(url_download,fname)
@@ -105,7 +107,7 @@ def download_pngs():
             pname = os.path.splitext(path)[0]
             fname = os.path.join(data_dir, pname+".png")
             if (not os.path.isfile(fname)):
-                url_download = os.path.join(URL, 'files',k, pname+ ".png")
+                url_download = os.path.join(URL, args.file_format, 'files',k, pname+ ".png")
                 print (url_download)
                 try:
                     wget.download(url_download,fname)
@@ -135,6 +137,7 @@ def extract_files():
                 tar.close()
 
 if __name__ == '__main__':
+    global args
     args = parser.parse_args()
     if (args.download_files):
         download_files()
