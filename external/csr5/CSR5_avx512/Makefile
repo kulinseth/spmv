@@ -10,4 +10,4 @@ NUM_RUN = 1000
 #export OMP_NUM_THREADS=236;export KMP_AFFINITY=default
 
 phi:
-	$(CC) -O3 -xCORE-AVX512 -qopenmp main.cpp -o spmv -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)
+	$(CC) -O3 -xCORE-AVX512 -qopenmp main.cpp -o ../spmv -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)

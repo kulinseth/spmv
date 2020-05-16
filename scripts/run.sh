@@ -15,9 +15,7 @@ fi
    #exit 0
 #fi
 make clean
-make float
-make features
-make dense
+make double
 #for d in ../../data/data/*/ ; do
    #NAME=$(basename "$d")
    #echo $NAME
@@ -32,12 +30,12 @@ for d in ../../data/data/*/ ; do
    NAME=$(basename "$d")
    echo $NAME
    ./run_float ../../data/data/$NAME/$NAME.mtx "csr" >> results.txt
-   ./run_float ../../data/data/$NAME/$NAME.mtx "coo" >> results.txt
-   ./run_float ../../data/data/$NAME/$NAME.mtx "dia" >> results.txt
-   ./run_float ../../data/data/$NAME/$NAME.mtx "ell" >> results.txt
-   ./run_dense ../../data/data/$NAME/$NAME.mtx "csr" >> results.txt
-   ./run_dense ../../data/data/$NAME/$NAME.mtx "dia" >> results.txt
-   ./run_dense ../../data/data/$NAME/$NAME.mtx "ell" >> results.txt
-   ./run_dense ../../data/data/$NAME/$NAME.mtx "coo" >> results.txt
+   #./run_float ../../data/data/$NAME/$NAME.mtx "coo" >> results.txt
+   #./run_float ../../data/data/$NAME/$NAME.mtx "dia" >> results.txt
+   #./run_float ../../data/data/$NAME/$NAME.mtx "ell" >> results.txt
+   #./run_dense ../../data/data/$NAME/$NAME.mtx "csr" >> results.txt
+   #./run_dense ../../data/data/$NAME/$NAME.mtx "dia" >> results.txt
+   #./run_dense ../../data/data/$NAME/$NAME.mtx "ell" >> results.txt
+   #./run_dense ../../data/data/$NAME/$NAME.mtx "coo" >> results.txt
 done
 popd

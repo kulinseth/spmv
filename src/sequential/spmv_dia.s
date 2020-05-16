@@ -1,214 +1,246 @@
-	.section	__TEXT,__text,regular,pure_instructions
-	.build_version macos, 10, 16	sdk_version 10, 16
-	.globl	_spmv_dia               ## -- Begin function spmv_dia
-	.p2align	4, 0x90
-_spmv_dia:                              ## @spmv_dia
+	.file	"spmv_dia.c"
+	.text
+	.p2align 4,,15
+	.globl	spmv_dia
+	.type	spmv_dia, @function
+spmv_dia:
+.LFB37:
 	.cfi_startproc
-## %bb.0:
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
-	.cfi_offset %rbp, -16
+	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register %rbp
+	.cfi_def_cfa_register 6
 	pushq	%r15
 	pushq	%r14
 	pushq	%r13
 	pushq	%r12
 	pushq	%rbx
-	.cfi_offset %rbx, -56
-	.cfi_offset %r12, -48
-	.cfi_offset %r13, -40
-	.cfi_offset %r14, -32
-	.cfi_offset %r15, -24
-	movq	%r9, -88(%rbp)          ## 8-byte Spill
-	movq	%rsi, -104(%rbp)        ## 8-byte Spill
+	andq	$-32, %rsp
+	.cfi_offset 15, -24
+	.cfi_offset 14, -32
+	.cfi_offset 13, -40
+	.cfi_offset 12, -48
+	.cfi_offset 3, -56
+	movq	%rsi, -16(%rsp)
+	movq	16(%rbp), %r10
 	testl	%ecx, %ecx
-	jle	LBB0_14
-## %bb.1:
-	movl	%edx, %r11d
-	movq	16(%rbp), %rax
+	jle	.L24
+	leal	-1(%rdx), %eax
 	subl	%r8d, %edx
-	movl	%edx, -92(%rbp)         ## 4-byte Spill
-	addl	$-1, %r11d
-	movslq	%r8d, %rdx
-	movl	%ecx, %r9d
-	leaq	4(%rax), %rcx
-	movq	%rcx, -144(%rbp)        ## 8-byte Spill
-	movq	-104(%rbp), %rsi        ## 8-byte Reload
-	leaq	4(%rsi), %rcx
-	movq	%rcx, -136(%rbp)        ## 8-byte Spill
-	movq	-88(%rbp), %rcx         ## 8-byte Reload
-	leaq	4(%rcx), %rbx
-	movq	%rbx, -128(%rbp)        ## 8-byte Spill
-	leaq	192(%rsi), %r8
-	movq	%rdx, -152(%rbp)        ## 8-byte Spill
-	leaq	(,%rdx,4), %r12
-	leaq	192(%rcx), %rcx
-	movq	%rcx, -120(%rbp)        ## 8-byte Spill
-	leaq	192(%rax), %rcx
-	movq	%rcx, -112(%rbp)        ## 8-byte Spill
-	xorl	%r13d, %r13d
-	movl	%r11d, -44(%rbp)        ## 4-byte Spill
-	movq	%rdi, -80(%rbp)         ## 8-byte Spill
-	movq	%r9, -64(%rbp)          ## 8-byte Spill
-	movq	%r12, -56(%rbp)         ## 8-byte Spill
-	.p2align	4, 0x90
-LBB0_2:                                 ## =>This Loop Header: Depth=1
-                                        ##     Child Loop BB0_9 Depth 2
-                                        ##     Child Loop BB0_12 Depth 2
-	movslq	(%rdi,%r13,4), %r14
-	movl	%r14d, %ebx
-	negl	%ebx
-	movl	%r11d, %ecx
-	subl	%r14d, %ecx
-	movl	%r14d, %edx
-	sarl	$31, %edx
-	andl	%ebx, %edx
-	cmpl	%ecx, %r11d
-	cmovlel	%r11d, %ecx
-	cmpl	%ecx, %edx
-	jg	LBB0_13
-## %bb.3:                               ##   in Loop: Header=BB0_2 Depth=1
-	movl	%r14d, %ebx
-	sarl	$31, %ebx
-	andl	-92(%rbp), %ebx         ## 4-byte Folded Reload
-	movslq	%ebx, %rbx
-	movslq	%edx, %r12
-	movslq	%ecx, %r15
-	cmpq	%r15, %r12
-	movq	%r15, %r9
-	cmovgeq	%r12, %r9
-	addq	$1, %r9
-	subq	%r12, %r9
-	cmpq	$64, %r9
-	jae	LBB0_5
-## %bb.4:                               ##   in Loop: Header=BB0_2 Depth=1
-	movq	%r12, %r10
-	movq	-64(%rbp), %r9          ## 8-byte Reload
-	movq	-56(%rbp), %r12         ## 8-byte Reload
-	jmp	LBB0_11
-	.p2align	4, 0x90
-LBB0_5:                                 ##   in Loop: Header=BB0_2 Depth=1
-	movq	%r13, %rcx
-	imulq	-152(%rbp), %rcx        ## 8-byte Folded Reload
-	leaq	(%rax,%r12,4), %r10
-	cmpq	%r15, %r12
-	movq	%r15, %rdi
-	cmovgeq	%r12, %rdi
-	movq	-144(%rbp), %rdx        ## 8-byte Reload
-	leaq	(%rdx,%rdi,4), %r11
-	leaq	(%rcx,%r12), %rdx
-	subq	%rbx, %rdx
-	addq	%rdi, %rcx
-	movq	%rbx, -72(%rbp)         ## 8-byte Spill
-	subq	%rbx, %rcx
-	movq	-136(%rbp), %rbx        ## 8-byte Reload
-	leaq	(%rbx,%rcx,4), %rcx
-	addq	%r14, %rdi
-	cmpq	%rcx, %r10
-	movq	-104(%rbp), %rcx        ## 8-byte Reload
-	leaq	(%rcx,%rdx,4), %rcx
-	movq	-128(%rbp), %rdx        ## 8-byte Reload
-	leaq	(%rdx,%rdi,4), %rdx
-	setb	%dil
-	cmpq	%r11, %rcx
-	setb	%bl
-	cmpq	%rdx, %r10
-	leaq	(%r14,%r12), %rdx
-	movq	-88(%rbp), %rcx         ## 8-byte Reload
-	movq	%rdx, -160(%rbp)        ## 8-byte Spill
-	leaq	(%rcx,%rdx,4), %rdx
-	setb	%cl
-	cmpq	%r11, %rdx
-	setb	%r10b
-	testb	%bl, %dil
-	jne	LBB0_6
-## %bb.7:                               ##   in Loop: Header=BB0_2 Depth=1
-	andb	%r10b, %cl
-	jne	LBB0_6
-## %bb.8:                               ##   in Loop: Header=BB0_2 Depth=1
-	movq	%r9, %r11
-	andq	$-64, %r11
-	leaq	(%r11,%r12), %r10
-	movq	-112(%rbp), %rcx        ## 8-byte Reload
-	leaq	(%rcx,%r12,4), %rdi
-	subq	-72(%rbp), %r12         ## 8-byte Folded Reload
-	leaq	(%r8,%r12,4), %rcx
-	movq	-120(%rbp), %rdx        ## 8-byte Reload
-	movq	-160(%rbp), %rbx        ## 8-byte Reload
-	leaq	(%rdx,%rbx,4), %rbx
+	movq	%rdi, -8(%rsp)
+	movl	%eax, -44(%rsp)
+	movslq	%r8d, %rax
+	movq	%rax, -32(%rsp)
+	leal	-1(%rcx), %eax
+	leaq	4(%rdi,%rax,4), %rax
+	movl	%edx, -48(%rsp)
+	movq	%rax, -40(%rsp)
+	movq	$0, -24(%rsp)
+	.p2align 4,,10
+	.p2align 3
+.L5:
+	movq	-8(%rsp), %rax
+	movl	(%rax), %r11d
+	testl	%r11d, %r11d
+	js	.L27
+	movl	-44(%rsp), %r8d
+	xorl	%ecx, %ecx
+	xorl	%eax, %eax
+	subl	%r11d, %r8d
+.L14:
+	cmpl	%ecx, %r8d
+	jl	.L10
+	movq	-24(%rsp), %rbx
+	movslq	%ecx, %rdx
+	movslq	%r11d, %r13
+	movq	-16(%rsp), %r14
+	leaq	0(,%rdx,4), %r12
+	leaq	(%rdx,%r13), %rsi
+	leaq	(%r9,%rsi,4), %rsi
+	subq	%rax, %rbx
+	leaq	(%rbx,%rdx), %rdi
+	leaq	(%r14,%rdi,4), %rdi
+	leaq	8(%r13,%rdx), %r14
+	leaq	(%r10,%r12), %rax
+	leaq	(%r9,%r14,4), %r14
+	cmpq	%r14, %rax
+	leaq	32(%r10,%r12), %r14
+	setnb	%r15b
+	cmpq	%r14, %rsi
+	setnb	%r12b
+	orl	%r15d, %r12d
+	movl	%r8d, %r15d
+	subl	%ecx, %r15d
+	cmpl	$6, %r15d
+	seta	%r15b
+	testb	%r15b, %r12b
+	je	.L7
+	movq	-16(%rsp), %r15
+	leaq	8(%rbx,%rdx), %r12
+	leaq	(%r15,%r12,4), %r12
+	cmpq	%r12, %rax
+	setnb	%r12b
+	cmpq	%r14, %rdi
+	setnb	%r14b
+	orb	%r14b, %r12b
+	je	.L7
+	leal	1(%r8), %r13d
 	xorl	%edx, %edx
-	.p2align	4, 0x90
-LBB0_9:                                 ##   Parent Loop BB0_2 Depth=1
-                                        ## =>  This Inner Loop Header: Depth=2
-	vmovups	-192(%rcx,%rdx,4), %zmm0
-	vmovups	-128(%rcx,%rdx,4), %zmm1
-	vmovups	-64(%rcx,%rdx,4), %zmm2
-	vmovups	(%rcx,%rdx,4), %zmm3
-	vmulps	-192(%rbx,%rdx,4), %zmm0, %zmm0
-	vmulps	-128(%rbx,%rdx,4), %zmm1, %zmm1
-	vmulps	-64(%rbx,%rdx,4), %zmm2, %zmm2
-	vmulps	(%rbx,%rdx,4), %zmm3, %zmm3
-	vaddps	-192(%rdi,%rdx,4), %zmm0, %zmm0
-	vaddps	-128(%rdi,%rdx,4), %zmm1, %zmm1
-	vaddps	-64(%rdi,%rdx,4), %zmm2, %zmm2
-	vaddps	(%rdi,%rdx,4), %zmm3, %zmm3
-	vmovups	%zmm0, -192(%rdi,%rdx,4)
-	vmovups	%zmm1, -128(%rdi,%rdx,4)
-	vmovups	%zmm2, -64(%rdi,%rdx,4)
-	vmovups	%zmm3, (%rdi,%rdx,4)
-	addq	$64, %rdx
-	cmpq	%rdx, %r11
-	jne	LBB0_9
-## %bb.10:                              ##   in Loop: Header=BB0_2 Depth=1
-	cmpq	%r11, %r9
-	movl	-44(%rbp), %r11d        ## 4-byte Reload
-	movq	-80(%rbp), %rdi         ## 8-byte Reload
-	movq	-64(%rbp), %r9          ## 8-byte Reload
-	movq	-56(%rbp), %r12         ## 8-byte Reload
-	movq	-72(%rbp), %rbx         ## 8-byte Reload
-	jne	LBB0_11
-	jmp	LBB0_13
-LBB0_6:                                 ##   in Loop: Header=BB0_2 Depth=1
-	movq	%r12, %r10
-	movl	-44(%rbp), %r11d        ## 4-byte Reload
-	movq	-80(%rbp), %rdi         ## 8-byte Reload
-	movq	-64(%rbp), %r9          ## 8-byte Reload
-	movq	-56(%rbp), %r12         ## 8-byte Reload
-	movq	-72(%rbp), %rbx         ## 8-byte Reload
-LBB0_11:                                ##   in Loop: Header=BB0_2 Depth=1
-	addq	$-1, %r10
-	shlq	$2, %rbx
-	movq	%rsi, %rcx
-	subq	%rbx, %rcx
-	movq	-88(%rbp), %rdx         ## 8-byte Reload
-	leaq	(%rdx,%r14,4), %rdx
-	.p2align	4, 0x90
-LBB0_12:                                ##   Parent Loop BB0_2 Depth=1
-                                        ## =>  This Inner Loop Header: Depth=2
-	vmovss	4(%rcx,%r10,4), %xmm0   ## xmm0 = mem[0],zero,zero,zero
-	vmulss	4(%rdx,%r10,4), %xmm0, %xmm0
-	vaddss	4(%rax,%r10,4), %xmm0, %xmm0
-	vmovss	%xmm0, 4(%rax,%r10,4)
-	addq	$1, %r10
-	cmpq	%r15, %r10
-	jl	LBB0_12
-LBB0_13:                                ##   in Loop: Header=BB0_2 Depth=1
-	addq	$1, %r13
-	addq	%r12, %r8
-	addq	%r12, %rsi
-	cmpq	%r9, %r13
-	jne	LBB0_2
-LBB0_14:
+	subl	%ecx, %r13d
+	movl	%r13d, %r12d
+	shrl	$3, %r12d
+	salq	$5, %r12
+	.p2align 4,,10
+	.p2align 3
+.L8:
+	vmovups	(%rdi,%rdx), %xmm2
+	vinsertf128	$0x1, 16(%rdi,%rdx), %ymm2, %ymm0
+	vmovups	(%rsi,%rdx), %xmm3
+	vinsertf128	$0x1, 16(%rsi,%rdx), %ymm3, %ymm1
+	vmulps	%ymm1, %ymm0, %ymm0
+	vmovups	(%rax,%rdx), %xmm4
+	vinsertf128	$0x1, 16(%rax,%rdx), %ymm4, %ymm1
+	vaddps	%ymm1, %ymm0, %ymm0
+	vmovups	%xmm0, (%rax,%rdx)
+	vextractf128	$0x1, %ymm0, 16(%rax,%rdx)
+	addq	$32, %rdx
+	cmpq	%r12, %rdx
+	jne	.L8
+	movl	%r13d, %eax
+	andl	$-8, %eax
+	addl	%eax, %ecx
+	cmpl	%eax, %r13d
+	je	.L10
+	movq	-16(%rsp), %rdi
+	leal	(%r11,%rcx), %edx
+	movslq	%ecx, %rax
+	leaq	(%r10,%rax,4), %rsi
+	movslq	%edx, %rdx
+	addq	%rbx, %rax
+	vmovss	(%rdi,%rax,4), %xmm0
+	leal	1(%rcx), %eax
+	vmulss	(%r9,%rdx,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	vmovss	%xmm0, (%rsi)
+	cmpl	%eax, %r8d
+	jl	.L10
+	movslq	%eax, %rdx
+	addl	%r11d, %eax
+	leaq	(%r10,%rdx,4), %rsi
+	cltq
+	addq	%rbx, %rdx
+	vmovss	(%rdi,%rdx,4), %xmm0
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	leal	2(%rcx), %eax
+	vmovss	%xmm0, (%rsi)
+	cmpl	%eax, %r8d
+	jl	.L10
+	movslq	%eax, %rdx
+	addl	%r11d, %eax
+	leaq	(%r10,%rdx,4), %rsi
+	cltq
+	addq	%rbx, %rdx
+	vmovss	(%rdi,%rdx,4), %xmm0
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	leal	3(%rcx), %eax
+	vmovss	%xmm0, (%rsi)
+	cmpl	%eax, %r8d
+	jl	.L10
+	movslq	%eax, %rdx
+	addl	%r11d, %eax
+	leaq	(%r10,%rdx,4), %rsi
+	cltq
+	addq	%rbx, %rdx
+	vmovss	(%rdi,%rdx,4), %xmm0
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	leal	4(%rcx), %eax
+	vmovss	%xmm0, (%rsi)
+	cmpl	%eax, %r8d
+	jl	.L10
+	movslq	%eax, %rdx
+	addl	%r11d, %eax
+	leaq	(%r10,%rdx,4), %rsi
+	cltq
+	addq	%rbx, %rdx
+	vmovss	(%rdi,%rdx,4), %xmm0
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	leal	5(%rcx), %eax
+	vmovss	%xmm0, (%rsi)
+	cmpl	%eax, %r8d
+	jl	.L10
+	movslq	%eax, %rdx
+	addl	%r11d, %eax
+	addl	$6, %ecx
+	leaq	(%r10,%rdx,4), %rsi
+	cltq
+	addq	%rbx, %rdx
+	vmovss	(%rdi,%rdx,4), %xmm0
+	vmulss	(%r9,%rax,4), %xmm0, %xmm0
+	vaddss	(%rsi), %xmm0, %xmm0
+	vmovss	%xmm0, (%rsi)
+	cmpl	%ecx, %r8d
+	jl	.L10
+	movslq	%ecx, %rdx
+	addl	%r11d, %ecx
+	leaq	(%r10,%rdx,4), %rax
+	addq	%rdx, %rbx
+	movslq	%ecx, %rcx
+	vmovss	(%rdi,%rbx,4), %xmm0
+	vmulss	(%r9,%rcx,4), %xmm0, %xmm0
+	vaddss	(%rax), %xmm0, %xmm0
+	vmovss	%xmm0, (%rax)
+.L10:
+	addq	$4, -8(%rsp)
+	movq	-32(%rsp), %rcx
+	movq	-8(%rsp), %rax
+	addq	%rcx, -24(%rsp)
+	cmpq	-40(%rsp), %rax
+	jne	.L5
+	vzeroupper
+.L24:
+	leaq	-40(%rbp), %rsp
 	popq	%rbx
 	popq	%r12
 	popq	%r13
 	popq	%r14
 	popq	%r15
 	popq	%rbp
-	vzeroupper
-	retq
+	.cfi_remember_state
+	.cfi_def_cfa 7, 8
+	ret
+	.p2align 4,,10
+	.p2align 3
+.L27:
+	.cfi_restore_state
+	movl	%r11d, %ecx
+	movslq	-48(%rsp), %rax
+	negl	%ecx
+	movl	-44(%rsp), %r8d
+	jmp	.L14
+	.p2align 4,,10
+	.p2align 3
+.L7:
+	movq	-16(%rsp), %rax
+	leaq	(%rax,%rbx,4), %rcx
+	leaq	(%r9,%r13,4), %rax
+	.p2align 4,,10
+	.p2align 3
+.L12:
+	vmovss	(%rcx,%rdx,4), %xmm0
+	vmulss	(%rax,%rdx,4), %xmm0, %xmm0
+	vaddss	(%r10,%rdx,4), %xmm0, %xmm0
+	vmovss	%xmm0, (%r10,%rdx,4)
+	addq	$1, %rdx
+	cmpl	%edx, %r8d
+	jge	.L12
+	jmp	.L10
 	.cfi_endproc
-                                        ## -- End function
-
-.subsections_via_symbols
+.LFE37:
+	.size	spmv_dia, .-spmv_dia
+	.ident	"GCC: (GNU) 8.1.0"
+	.section	.note.GNU-stack,"",@progbits
