@@ -52,6 +52,16 @@ def parse_file(input_file):
         s = s.replace(',",', '"')
         d = literal_eval(json.dumps(s))
 
+def download_file(fname, url_download) :
+   if (not os.path.isfile(fname)):
+       try:
+           print (url_download)
+           # wget.download(url_download,fname)
+           rurl = requests.get(url_download, timeout=60)
+           open(fname, 'wb').write(rurl.content)
+       except :
+           pass
+
 def download_files():
     data_dir = os.path.join(os.getcwd(), 'data', args.file_format)
     if not os.path.exists(data_dir):
@@ -122,19 +132,33 @@ def download_pngs():
                 # print (dict_input['image_files'])
             # break
 
-def extract_files():
-    data_dir = os.path.join(os.getcwd(), 'data')
-    for (dirpath, dirnames, filenames) in os.walk(data_dir):
-        for filename in filenames:
-            basename = filename.split('.')[0]
-            if (filename.endswith('.tar.gz')):
-                print ("Extracting : ", filename)
-                outdir = os.path.join(dirpath, basename)
-                tar = tarfile.open(os.path.join(dirpath,filename), "r:gz")
-                if os.path.exists(outdir):
-                    shutil.rmtree(outdir)
-                tar.extractall(path=dirpath)
-                tar.close()
+def extract_files(files, data_dir):
+    if (not files):
+       for (dirpath, dirnames, filenames) in os.walk(data_dir):
+           for filename in filenames:
+               basename = filename.split('.')[0]
+               if (filename.endswith('.tar.gz')):
+                   print ("Extracting : ", filename)
+                   outdir = os.path.join(dirpath, basename)
+                   tar = tarfile.open(os.path.join(dirpath,filename), "r:gz")
+                   if os.path.exists(outdir):
+                       shutil.rmtree(outdir)
+                   tar.extractall(path=dirpath)
+                   tar.close()
+    else:
+       for (dirpath, dirnames, filenames) in os.walk(data_dir):
+           for filename in filenames:
+               basename = filename.split('.')[0]
+               if (filename.endswith('.tar.gz')):
+                   print ("Extracting : ", filename)
+                   outdir = os.path.join(dirpath, basename)
+                   tar = tarfile.open(os.path.join(dirpath,filename), "r:gz")
+                   if os.path.exists(outdir):
+                       shutil.rmtree(outdir)
+                   tar.extractall(path=dirpath)
+                   tar.close()
+
+
 
 if __name__ == '__main__':
     global args
@@ -143,6 +167,6 @@ if __name__ == '__main__':
         download_files()
     if (args.download_images):
         download_pngs()
+    data_dir = os.path.join(os.getcwd(), 'data', 'MM')
     if (args.extract_files):
-        extract_files()
-
+        extract_files([], data_dir)

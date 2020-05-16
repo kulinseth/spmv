@@ -25,7 +25,7 @@ double sum_f(float *arr, int n)
   int i;
   double sum = 0.0;
   for(i = 0; i < n; i++)
-    sum += arr[i]; 
+    sum += arr[i];
   return sum;
 }
 
@@ -176,9 +176,10 @@ int main(int argc, char* argv[])
   double v;
   int *row, *col, *col_width, *first_col_row, *last_col_row, last_col = -1;
   int *x_used, *nnz_row, *diff_nnz_row;
-  float *scatter_row, *misses;
+  float *scatter_row, *misses, *nnz_per_row;
   int total_misses;
-  int min_nnz_row, max_nnz_row, min_col_width, max_col_width;
+  int min_nnz_row, max_nnz_row, min_col_width, max_col_width, min_diff_nnz_row, max_diff_nnz_row;
+  float min_scatter_row, max_scatter_row;
   int empty_rows = 0;
   int zero_rows = 0, one_rows = 0, two_rows = 0, three_rows = 0, four_rows = 0, five_rows = 0;
   MYTYPE *coo_val;
@@ -253,6 +254,11 @@ int main(int argc, char* argv[])
     fprintf(stderr, "couldn't allocate last col row using malloc");
     exit(1);
   }
+  nnz_per_row = (float*)calloc(N, sizeof(float));
+  if(nnz_per_row == NULL){
+    fprintf(stderr, "couldn't allocate scatter_row using malloc");
+    exit(1);
+  }
   scatter_row = (float*)calloc(N, sizeof(float));
   if(scatter_row == NULL){
     fprintf(stderr, "couldn't allocate scatter_row using malloc");
@@ -316,7 +322,7 @@ int main(int argc, char* argv[])
           k++;
         }
         else{
-          row[k+1] = col[k]; 
+          row[k+1] = col[k];
           col[k+1] = row[k];
           coo_val[k+1] = 1.0;
           k = k + 2;
@@ -389,7 +395,6 @@ int main(int argc, char* argv[])
       last_col = col[i];
     }
   }
-  
   total_misses = 0;
   for(i = 0; i < N; i++){
     if(nnz_row[i] > max_nnz_row)
@@ -424,44 +429,58 @@ int main(int argc, char* argv[])
       four_rows++;
     if(nnz_row[i] == 5)
       five_rows++;
-    /*nnz_row[i] = (float)nnz_row[i]/N;
+    nnz_per_row[i] = (float)nnz_row[i]/N;
     if(nnz_row[i] == 0)
-      nnz_row[i] = 0.1/N;
+      nnz_per_row[i] = 0.1/N;
     if(misses[i] == 0)
       misses[i] = 0.1/N;
     if(scatter_row[i] == 0)
-      scatter_row[i] = 0.1/N;*/
+      scatter_row[i] = 0.1/N;
   }
-  
+  min_scatter_row = scatter_row[0];
+  max_scatter_row = scatter_row[0];
+  min_diff_nnz_row = diff_nnz_row[0];
+  max_diff_nnz_row = diff_nnz_row[0];
+  for (int i = 1; i < N; i++) {
+     if (scatter_row[i] < min_scatter_row)
+        min_scatter_row = scatter_row[i];
+     if (scatter_row[i] > max_scatter_row)
+        max_scatter_row = scatter_row[i];
+     if (diff_nnz_row[i] < min_diff_nnz_row)
+        min_diff_nnz_row = diff_nnz_row[i];
+     if (diff_nnz_row[i] > max_diff_nnz_row)
+        max_diff_nnz_row = diff_nnz_row[i];
+  }
+
   int total_small_rows = empty_rows + one_rows + two_rows + three_rows + four_rows + five_rows;
   int total_elems_small_rows = one_rows * 1 + two_rows * 2 + three_rows * 3 + four_rows * 4 + five_rows * 5;
   int num_diags = 0;
   long long diag_elem = count_diag_elems(row, col, coo_val, anz, N,&num_diags);
   long long ell_elem = 2 * max_nnz_row * N;
-  if ( 2 * max_nnz_row != ell_elem / N) 
+  if ( 2 * max_nnz_row != ell_elem / N)
     ell_elem = -1;
 
 
-  printf("N %d\n", N);
-  printf("NNZ %d\n", anz);
-  printf("Nonzeros(nnz/N) %g\n", anz/((float)N));
-  printf("Density %g\n", anz/((float)N*N));
+  printf("N,%d\n", N);
+  printf("NNZ,%d\n", anz);
+  printf("Nonzeros(nnz/N),%g\n", anz/((float)N));
+  printf("Density,%g\n", anz/((float)N*N));
   /*printf("%f,", ((float)sum*100)/anz);*/
-  printf("Diags %d\n", num_diags);
-  printf("Diag_elem(num_diag_elem, num_diag_elem/NNZ) %lld,%f\n", diag_elem, (double)diag_elem/anz); 
-  printf("ELL_elem(num_ell_elem, num_ell_elem/NNZ) %lld,%f\n", ell_elem, (double)ell_elem/anz);
+  printf("Diags,%d\n", num_diags);
+  printf("Num_diag_elem,%lld\nNum_diag_elem_per_NNZ,%f\n", diag_elem, (double)diag_elem/anz); 
+  /*printf("ELL_elem(num_ell_elem, num_ell_elem/NNZ) %lld,%f\n", ell_elem, (double)ell_elem/anz);*/
   /*printf("Empty_rows(percentage) %f,%f,%f,%f,%f,%f,%f,",(float)empty_rows*100/N, (float)one_rows*100/N, (float)two_rows*100/N, (float)three_rows*100/N, (float)four_rows*100/N, (float)five_rows*100/N, (float)total_small_rows*100/N);*/
-  printf("Empty_rows(percentage) %f\n",(float)empty_rows*100/N);
-  printf("Total_small_rows(percentage) %f\n", (float)total_small_rows*100/N);
-  printf("Total_small_rows_elem(percentage) %f\n", (float)total_elems_small_rows*100/anz);
+  /*printf("Empty_rows(percentage) %f\n",(float)empty_rows*100/N);*/
+  printf("Small_rows_percentage,%f\n", (float)total_small_rows*100/N);
+  printf("Small_rows_elem_percentage,%f\n", (float)total_elems_small_rows*100/anz);
   /*printf("%f,", mean_i(diff_nnz_row, N-1));*/
-  /*printf("%d,%d,%f,%f,%f", min_nnz_row, max_nnz_row, mean_i(nnz_row, N), vr_i(nnz_row, N, mean_i(nnz_row, N)), sd_i(nnz_row, N, mean_i(nnz_row, N)));*/
-  /*printf("%e,%e,%e,", (float)min_col_width/N, (float)max_col_width/N, mean_i(col_width, N));
-  printf("%.3f,", geo_mean(scatter_row, N)); 
-  printf("%e,", geo_mean(misses, N));
-  printf("%e\n", (float)(2 * anz)/(8 * anz + 12 * N));
-*/
-  printf("\n");
+  printf("NNZ_min,%d\nNNZ_max,%d\nNNZ_mean,%f\nNNZ_sd,%f\n", min_nnz_row, max_nnz_row, mean_i(nnz_row, N), sd_i(nnz_row, N, mean_i(nnz_row, N)));
+  printf("DiffNNZ_min,%d\nDiffNNZ_max,%d\nDiffNNZ_mean,%f\nDiffNNZ_sd,%f\n", min_diff_nnz_row, max_diff_nnz_row, mean_i(diff_nnz_row, N), sd_i(diff_nnz_row, N, mean_i(diff_nnz_row, N)));
+  float mean_col_width = mean_i(col_width, N);
+  printf("BW_min,%f\nBW_max,%f\nBW_mean,%f\nBW_sd,%f\n", (float)min_col_width/N, (float)max_col_width/N, mean_col_width/N, sd_i(col_width, N, mean_col_width));
+  printf("Scatter_min,%f\nScatter_max,%f\nScatter_mean,%f\nScatter_geom,%f\nScatter_sd,%f\n", min_scatter_row, max_scatter_row, mean_f(scatter_row, N), geo_mean(scatter_row, N), sd_f(scatter_row,N, mean_f(scatter_row, N)));
+  printf("Misses,%f\n", geo_mean(misses, N));
+  printf("FLOPS_byte,%f\n", (float)(2 * anz)/(8 * anz + 12 * N));
   free(row);
   free(col);
   free(coo_val);
