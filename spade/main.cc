@@ -104,7 +104,6 @@ int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::spmv(const ANONYMOUSLI
 {
     int err = ANONYMOUSLIB_SUCCESS;
 
-    if (_format == ANONYMOUSLIB_FORMAT_CSR) {
       ANONYMOUSLIB_IT i, j;
       ANONYMOUSLIB_VT temp;
       for(i = 0; i < _m ; i++) {
@@ -114,7 +113,6 @@ int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::spmv(const ANONYMOUSLI
         }
         y[i] = temp;
       }
-    }
     return err;
 }
 
@@ -162,7 +160,7 @@ int call_anonymouslib(int m, int n, int nnzA,
 
     if (NUM_RUN)
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
             err = A.spmv(alpha, y_bench);
 
         anonymouslib_timer CSR5Spmv_timer;

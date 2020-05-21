@@ -12,7 +12,7 @@ EMCCFLAGS = -m64 -O3 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=6 -s WASM=1 -s TOTAL
 VALUE_TYPE = double
 NUM_RUN = 1000
 avx2:
-	$(CC) -march=native -std=c++11 -O3 -Wno-unused-result main.cc -o ./spmv -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)
+	$(CC) -march=native -mtune=native -std=c++11 -O3 -Wno-unused-result main.cc -o ./spmv -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
