@@ -37,27 +37,27 @@ MatMultDefault_Normal (const oski_matBCSR_t * A,
 
       oski_index_t I;
       for (I = 0; I < A->num_block_rows; I++)
-	{
-	  oski_index_t K;
-	  for (K = A->bptr[I]; K < A->bptr[I + 1]; K++)
-	    {
-	      oski_index_t j0;
-	      const oski_value_t *xpp;
+      {
+        oski_index_t K;
+        for (K = A->bptr[I]; K < A->bptr[I + 1]; K++)
+          {
+            oski_index_t j0;
+            const oski_value_t *xpp;
 
-	      j0 = A->bind[K];
-	      xpp = xp + j0 * x_view->rowinc;
+            j0 = A->bind[K];
+            xpp = xp + j0 * x_view->rowinc;
 
-	      BLAS_xGEMV (&op_blas,
-			  &(A->col_block_size), &(A->row_block_size),
-			  &alpha,
-			  ap, &(A->col_block_size),
-			  xpp, &(x_view->rowinc),
-			  &TVAL_ONE, yp, &(y_view->rowinc));
+            BLAS_xGEMV (&op_blas,
+            &(A->col_block_size), &(A->row_block_size),
+            &alpha,
+            ap, &(A->col_block_size),
+            xpp, &(x_view->rowinc),
+            &TVAL_ONE, yp, &(y_view->rowinc));
 
-	      ap += A->row_block_size * A->col_block_size;
-	    }
-	  yp += A->row_block_size * y_view->rowinc;
-	}
+            ap += A->row_block_size * A->col_block_size;
+          }
+        yp += A->row_block_size * y_view->rowinc;
+      }
     }
 
   return 0;
