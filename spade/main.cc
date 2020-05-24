@@ -14,57 +14,46 @@
 #include "utils.h"
 #include "mmio.h"
 
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-class anonymouslibHandle
+template <typename IndexType, typename ValueType>
+class SpadeSpmv
 {
 public:
-    anonymouslibHandle(ANONYMOUSLIB_IT m, ANONYMOUSLIB_IT n) { _m = m; _n = n; }
-    int warmup();
-    int inputCSR(ANONYMOUSLIB_IT  nnz, ANONYMOUSLIB_IT *csr_row_pointer, ANONYMOUSLIB_IT *csr_column_index, ANONYMOUSLIB_VT *csr_value);
-    int asCSR();
-    int setX(ANONYMOUSLIB_VT *x);
-    int spmv(const ANONYMOUSLIB_VT alpha, ANONYMOUSLIB_VT *y);
-    int destroy();
-    void setSigma(int sigma);
+    SpadeSpmv(IndexType m, IndexType n) { _m = m; _n = n; }
+    int inputCSR(IndexType  nnz, IndexType *csr_row_pointer, IndexType *csr_column_index, ValueType *csr_value);
+    int setX(ValueType *x);
+    static int spmv_baseline(int m, const ValueType  alpha,
+                             ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                             IndexType* csr_column_index, ValueType* csr_val);
+    static int spmv_avx256(int m, const ValueType  alpha,
+                             ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                             IndexType* csr_column_index, ValueType* csr_val);
 
 private:
-    int computeSigma();
     int _format;
-    ANONYMOUSLIB_IT _m;
-    ANONYMOUSLIB_IT _n;
-    ANONYMOUSLIB_IT _nnz;
+    IndexType _m;
+    IndexType _n;
+    IndexType _nnz;
 
-    ANONYMOUSLIB_IT *_csr_row_pointer;
-    ANONYMOUSLIB_IT *_csr_column_index;
-    ANONYMOUSLIB_VT *_csr_value;
+    IndexType *_csr_row_pointer;
+    IndexType *_csr_column_index;
+    ValueType *_csr_value;
 
-    int         _csr5_sigma;
     int         _bit_y_offset;
     int         _bit_scansum_offset;
     int         _num_packet;
-    ANONYMOUSLIB_IT _tail_partition_start;
+    IndexType _tail_partition_start;
 
-    ANONYMOUSLIB_IT _p;
+    IndexType _p;
 
-    ANONYMOUSLIB_IT   _num_offsets;
-    ANONYMOUSLIB_IT  *_csr5_partition_descriptor_offset_pointer;
-    ANONYMOUSLIB_IT  *_csr5_partition_descriptor_offset;
-    ANONYMOUSLIB_VT  *_temp_calibrator;
-
-    ANONYMOUSLIB_VT         *_x;
+    IndexType   _num_offsets;
+    ValueType         *_x;
 };
 
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::warmup()
-{
-    return ANONYMOUSLIB_SUCCESS;
-}
-
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::inputCSR(ANONYMOUSLIB_IT  nnz,
-                                                                     ANONYMOUSLIB_IT *csr_row_pointer,
-                                                                     ANONYMOUSLIB_IT *csr_column_index,
-                                                                     ANONYMOUSLIB_VT *csr_value)
+template <class IndexType, class ValueType>
+int SpadeSpmv<IndexType, ValueType>::inputCSR(IndexType  nnz,
+                                              IndexType *csr_row_pointer,
+                                              IndexType *csr_column_index,
+                                              ValueType *csr_value)
 {
     _format = ANONYMOUSLIB_FORMAT_CSR;
 
@@ -77,96 +66,80 @@ int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::inputCSR(ANONYMOUSLIB_
     return ANONYMOUSLIB_SUCCESS;
 }
 
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::asCSR()
+template <class IndexType, class ValueType>
+int SpadeSpmv<IndexType, ValueType>::setX(ValueType *x)
 {
     int err = ANONYMOUSLIB_SUCCESS;
-
-    if (_format == ANONYMOUSLIB_FORMAT_CSR)
-        return err;
-
-}
-
-
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::setX(ANONYMOUSLIB_VT *x)
-{
-    int err = ANONYMOUSLIB_SUCCESS;
-
     _x = x;
-
     return err;
 }
 
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::spmv(const ANONYMOUSLIB_VT  alpha,
-                                                                 ANONYMOUSLIB_VT       *y)
+template <class IndexType, class ValueType>
+int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int m, const ValueType  alpha,
+                                                  ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                                                  IndexType* csr_column_index, ValueType* csr_value)
 {
     int err = ANONYMOUSLIB_SUCCESS;
 
-      ANONYMOUSLIB_IT i, j;
-      ANONYMOUSLIB_VT temp;
-      for(i = 0; i < _m ; i++) {
-        temp = 0;
-        for(j = _csr_row_pointer[i]; j < _csr_row_pointer[i+1]; j++){
-          temp += _csr_value[j] * _x[_csr_column_index[j]] * alpha;
-        }
-        y[i] = temp;
+    IndexType i, j;
+    ValueType temp;
+    for(i = 0; i < m ; i++) {
+      __m256d _y0 = _mm_setzero_pd();
+      for(j = csr_row_pointer[i]; j < csr_row_pointer[i+1]; j++){
+        temp += csr_value[j] * x[csr_column_index[j]] * alpha;
       }
+      y[i] = temp;
+    }
     return err;
 }
 
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::destroy()
+template <class IndexType, class ValueType>
+int SpadeSpmv<IndexType, ValueType>::spmv_baseline(int m, const ValueType  alpha,
+                                                  ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                                                  IndexType* csr_column_index, ValueType* csr_value)
 {
-    return asCSR();
+    int err = ANONYMOUSLIB_SUCCESS;
+
+    IndexType i, j;
+    ValueType temp;
+    for(i = 0; i < m ; i++) {
+      temp = 0;
+      for(j = csr_row_pointer[i]; j < csr_row_pointer[i+1]; j++){
+        temp += csr_value[j] * x[csr_column_index[j]] * alpha;
+      }
+      y[i] = temp;
+    }
+    return err;
 }
-
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-void anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::setSigma(int sigma)
-{
-    _csr5_sigma = sigma;
-}
-
-template <class ANONYMOUSLIB_IT, class ANONYMOUSLIB_VT>
-int anonymouslibHandle<ANONYMOUSLIB_IT, ANONYMOUSLIB_VT>::computeSigma()
-{
-    return _csr5_sigma;
-}
-
-
-int call_anonymouslib(int m, int n, int nnzA,
+typedef int (*Spmv)(int m, const VALUE_TYPE  alpha,
+                    VALUE_TYPE *x, VALUE_TYPE  *y, int* csr_row_pointer,
+                    int* csr_column_index, VALUE_TYPE* csr_val);
+int call_baseline(int m, int n, int nnzA,
                   int *csrRowPtrA, int *csrColIdxA, VALUE_TYPE *csrValA,
-                  VALUE_TYPE *x, VALUE_TYPE *y, VALUE_TYPE alpha)
+                  VALUE_TYPE *x, VALUE_TYPE *y, VALUE_TYPE *y_ref, VALUE_TYPE alpha,
+                  Spmv spmv)
 {
-    int err = 0;
 
+  int err = 0;
     memset(y, 0, sizeof(VALUE_TYPE) * m);
 
     double gb = getB<int, VALUE_TYPE>(m, nnzA);
     double gflop = getFLOP<int>(nnzA);
 
-    anonymouslibHandle<int, VALUE_TYPE> A(m, n);
-    err = A.inputCSR(nnzA, csrRowPtrA, csrColIdxA, csrValA);
-    err = A.setX(x); // you only need to do it once!
-    cout << "setX err = " << err << endl;
 
     VALUE_TYPE *y_bench = (VALUE_TYPE *)malloc(m * sizeof(VALUE_TYPE));
 
-    //cout << "asCSR5 err = " << err << endl;
-
-    // check correctness by running 1 time
-    err = A.spmv(alpha, y);
+    err = spmv(m, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
 
     if (NUM_RUN)
     {
         for (int i = 0; i < 50; i++)
-            err = A.spmv(alpha, y_bench);
+            err = spmv(m, alpha, x, y_bench, csrRowPtrA, csrColIdxA, csrValA);
 
         anonymouslib_timer CSR5Spmv_timer;
         CSR5Spmv_timer.start();
         for (int i = 0; i < NUM_RUN; i++) {
-            err = A.spmv(alpha, y_bench);
+         err = spmv(m, alpha, x, y_bench, csrRowPtrA, csrColIdxA, csrValA);
         }
 
         double CSR5Spmv_time = CSR5Spmv_timer.stop() / (double)NUM_RUN;
@@ -176,9 +149,28 @@ int call_anonymouslib(int m, int n, int nnzA,
              << " GB/s. GFlops = " << gflop/(1.0e+6 * CSR5Spmv_time)  << " GFlops." << endl;
     }
 
-    free(y_bench);
-    A.destroy();
+     int error_count = 0;
+     for (int i = 0; i < m; i++)
+         if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i]))
+         {
+             error_count++;
+   //            cout << "ROW [ " << i << " ], NNZ SPAN: "
+   //                 << csrRowPtrA[i] << " - "
+   //                 << csrRowPtrA[i+1]
+   //                 << "\t ref = " << y_ref[i]
+   //                 << ", \t csr5 = " << y[i]
+   //                 << ", \t error = " << y_ref[i] - y[i]
+   //                 << endl;
+   //            break;
+         }
 
+     if (error_count == 0)
+         cout << "Check... PASS!" << endl;
+     else
+         cout << "Check... NO PASS! #Error = " << error_count << " out of " << m << " entries." << endl;
+
+     cout << "------------------------------------------------------" << endl;
+    free(y_bench);
     return err;
 }
 
@@ -409,31 +401,16 @@ int main(int argc, char* argv[])
        << " ms. Bandwidth = " << gb/(1.0e+6 * ref_time)
        << " GB/s. GFlops = " << gflop/(1.0e+6 * ref_time)  << " GFlops." << endl << endl;
 
+  int err = 0;
+  SpadeSpmv<int, VALUE_TYPE> A(m, n);
+  err = A.inputCSR(nnzA, csrRowPtrA, csrColIdxA, csrValA);
+  err = A.setX(x); // you only need to do it once!
+  cout << "setX err = " << err << endl;
   // launch compute
-  call_anonymouslib(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, alpha);
+  call_baseline(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
+                &SpadeSpmv<int, VALUE_TYPE>::spmv_baseline);
 
   // compare reference and anonymouslib results
-  int error_count = 0;
-  for (int i = 0; i < m; i++)
-      if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i]))
-      {
-          error_count++;
-//            cout << "ROW [ " << i << " ], NNZ SPAN: "
-//                 << csrRowPtrA[i] << " - "
-//                 << csrRowPtrA[i+1]
-//                 << "\t ref = " << y_ref[i]
-//                 << ", \t csr5 = " << y[i]
-//                 << ", \t error = " << y_ref[i] - y[i]
-//                 << endl;
-//            break;
-      }
-
-  if (error_count == 0)
-      cout << "Check... PASS!" << endl;
-  else
-      cout << "Check... NO PASS! #Error = " << error_count << " out of " << m << " entries." << endl;
-
-  cout << "------------------------------------------------------" << endl;
 
   _mm_free(csrRowPtrA);
   _mm_free(csrColIdxA);

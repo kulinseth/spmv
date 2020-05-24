@@ -387,5 +387,5 @@ if __name__ == '__main__':
     CodeGenerator = CodeGen_MBCSRRowMaj_Matmul()
     print (CodeGenerator.GenerateCode(
       InstSet_Double_x86_SSE4.InstSet_Double_x86_SSE4(),
-      {'r':3, 'c':2},
+      {'r':1, 'c':1},
       {'MultiplyOrder':'Normal', 'ReduceStyle':'HAdd', 'PrefetchDist':64}))
