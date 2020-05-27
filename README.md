@@ -21,6 +21,10 @@ For emitting code for CPU:
 ./build/bin/taco "a(i) = B(i,j) * c(j)"
 
 ./bin/taco "a(i) = B(i,j) * c(j)" -f=B:ds -i=B:/scratch/seth.k/spmv/data/MM/Baumann/Baumann.mtx -g=c:d -o=a:tmp.mtx -verify -print-concrete -time=2 -write-time=<file>
+
+
+Running pOSKI autotuner
+
 ## External Frameworks
 
 Following are the kernels which were benchmarked with:
