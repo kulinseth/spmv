@@ -1,16 +1,3 @@
-#include <stdio.h>
-#include <iostream>
-#include <pthread.h>
-#include <time.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sched.h>
-#include <math.h>
-#include <libgen.h>
-#include <sys/types.h>
-#include <sys/syscall.h>
-#include <cmath>
 #include "utils.h"
 #include "mmio.h"
 
@@ -27,7 +14,6 @@ public:
     static int spmv_avx256(int m, const ValueType  alpha,
                              ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
                              IndexType* csr_column_index, ValueType* csr_val);
-
 private:
     int _format;
     IndexType _m;
@@ -39,14 +25,11 @@ private:
     ValueType *_csr_value;
 
     int         _bit_y_offset;
-    int         _bit_scansum_offset;
     int         _num_packet;
-    IndexType _tail_partition_start;
-
     IndexType _p;
 
     IndexType   _num_offsets;
-    ValueType         *_x;
+    ValueType   *_x;
 };
 
 template <class IndexType, class ValueType>
@@ -56,7 +39,6 @@ int SpadeSpmv<IndexType, ValueType>::inputCSR(IndexType  nnz,
                                               ValueType *csr_value)
 {
     _format = ANONYMOUSLIB_FORMAT_CSR;
-
     _nnz = nnz;
 
     _csr_row_pointer  = csr_row_pointer;
@@ -75,20 +57,32 @@ int SpadeSpmv<IndexType, ValueType>::setX(ValueType *x)
 }
 
 template <class IndexType, class ValueType>
-int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int m, const ValueType  alpha,
+int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
                                                   ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
                                                   IndexType* csr_column_index, ValueType* csr_value)
 {
     int err = ANONYMOUSLIB_SUCCESS;
 
-    IndexType i, j;
     ValueType temp;
-    for(i = 0; i < m ; i++) {
-      __m256d _y0 = _mm_setzero_pd();
-      for(j = csr_row_pointer[i]; j < csr_row_pointer[i+1]; j++){
-        temp += csr_value[j] * x[csr_column_index[j]] * alpha;
+    ValueType *yp;
+    IndexType i;
+    int incy = 4;
+    // Still need to loop through all the rows, which are cache aligned
+    for(i = 0, yp = y; i < M ; i++, yp += 1*incy) {
+      __m256d _y0 = _mm256_setzero_pd();
+      for(IndexType j = csr_row_pointer[i]; j < csr_row_pointer[i+1]; j++, csr_value += 1) {
+        IndexType j0 = csr_column_index[j];
+        __m256d _x0 = _mm256_loadu_pd(x + j0);
+        _y0 = _mm256_add_pd(_y0, _mm256_mul_pd(_x0, _mm256_loadu_pd(csr_value)));
       }
-      y[i] = temp;
+
+      ValueType a_vector[4] = {alpha, alpha, alpha, alpha};
+      __m256d alpha_simd = _mm256_load_pd(&a_vector[0]);
+      _y0 = _mm256_mul_pd(_y0, alpha_simd);
+
+      ValueType R[4] __attribute((aligned(32)));
+      _mm256_storeu_pd((&R[0]), y0);
+      yp[0] += R[0];
     }
     return err;
 }
@@ -111,13 +105,16 @@ int SpadeSpmv<IndexType, ValueType>::spmv_baseline(int m, const ValueType  alpha
     }
     return err;
 }
-typedef int (*Spmv)(int m, const VALUE_TYPE  alpha,
-                    VALUE_TYPE *x, VALUE_TYPE  *y, int* csr_row_pointer,
-                    int* csr_column_index, VALUE_TYPE* csr_val);
-int call_baseline(int m, int n, int nnzA,
+
+template<typename IndexType, typename ValueType>
+using Spmv = int (*)(int m, const ValueType  alpha,
+                    ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                    IndexType* csr_column_index, ValueType* csr_val);
+
+int compute_spmv(int m, int n, int nnzA,
                   int *csrRowPtrA, int *csrColIdxA, VALUE_TYPE *csrValA,
                   VALUE_TYPE *x, VALUE_TYPE *y, VALUE_TYPE *y_ref, VALUE_TYPE alpha,
-                  Spmv spmv)
+                  Spmv<int, double> spmv)
 {
 
   int err = 0;
@@ -407,8 +404,10 @@ int main(int argc, char* argv[])
   err = A.setX(x); // you only need to do it once!
   cout << "setX err = " << err << endl;
   // launch compute
-  call_baseline(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
+  compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                 &SpadeSpmv<int, VALUE_TYPE>::spmv_baseline);
+  compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
+                &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
 
   // compare reference and anonymouslib results
 
