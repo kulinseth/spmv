@@ -8,7 +8,7 @@ LIBS = -L/scratch/seth.k/tools/papi/lib -lm -lrt -lpthread -lpapi -lpfm
 
 VALUE_TYPE = double
 NUM_RUN = 1000
-CFLAGS = -march=native -mtune=native -O3 -Wno-unused-result -std=c++11
+CFLAGS = -march=native -mtune=native -ggdb -Wno-unused-result -std=c++11
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)

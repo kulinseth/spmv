@@ -14,6 +14,9 @@ public:
     static int spmv_avx256(int m, const ValueType  alpha,
                              ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
                              IndexType* csr_column_index, ValueType* csr_val);
+    static int spmv_mkl(int m, const ValueType  alpha,
+                             ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                             IndexType* csr_column_index, ValueType* csr_val);
 private:
     int _format;
     IndexType _m;
@@ -57,6 +60,31 @@ int SpadeSpmv<IndexType, ValueType>::setX(ValueType *x)
 }
 
 template <class IndexType, class ValueType>
+int SpadeSpmv<IndexType, ValueType>::spmv_mkl(int M, const ValueType  alpha,
+                                                  ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
+                                                  IndexType* csr_column_index, ValueType* csr_value)
+{
+    int err = ANONYMOUSLIB_SUCCESS;
+
+    ValueType temp;
+    ValueType *yp;
+    IndexType i;
+
+		//sparse_matrix_t A;
+		//mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, row_offsets, row_offsets+1, column_indices, values);
+		//matrix_descr desr;
+		//desr.type = SPARSE_MATRIX_TYPE_GENERAL;
+		//mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0f, A, desr, x, 0.0f, y);
+    return err;
+}
+
+void print_val(__m256d val) {
+  double tmp[4];
+  _mm256_storeu_pd(&tmp[0], val);
+  printf("%lf, %lf, %lf, %lf\n", tmp[0], tmp[1], tmp[2], tmp[3]);
+}
+
+template <class IndexType, class ValueType>
 int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
                                                   ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
                                                   IndexType* csr_column_index, ValueType* csr_value)
@@ -66,24 +94,37 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
     ValueType temp;
     ValueType *yp;
     IndexType i;
-    int incy = 4;
     // Still need to loop through all the rows, which are cache aligned
-    for(i = 0, yp = y; i < M ; i++, yp += 1*incy) {
+    for(i = 0; i < M ; i++) {
       __m256d _y0 = _mm256_setzero_pd();
-      for(IndexType j = csr_row_pointer[i]; j < csr_row_pointer[i+1]; j++, csr_value += 1) {
-        IndexType j0 = csr_column_index[j];
-        __m256d _x0 = _mm256_loadu_pd(x + j0);
-        _y0 = _mm256_add_pd(_y0, _mm256_mul_pd(_x0, _mm256_loadu_pd(csr_value)));
+      IndexType j = csr_row_pointer[i];
+
+      while(j < ((csr_row_pointer[i+1]+1)>>2)<<2) {
+        //IndexType j0 = csr_column_index[j];
+        __m128i vIdx = _mm_setr_epi32(csr_column_index[j], csr_column_index[j+1],
+                                         csr_column_index[j+2], csr_column_index[j+3]);
+        //__m256d _x0 = _mm256_loadu_pd(x + j0);
+        __m256d _x0 = _mm256_i32gather_pd(x, vIdx, 1);
+        __m256d _vals = _mm256_loadu_pd(csr_value);
+        _y0 = _mm256_fmadd_pd(_x0, _vals, _y0);
+        j += 4;
+      }
+      ValueType temp = 0.0;
+      while (j < csr_row_pointer[i+1]){
+        temp += csr_value[j] * x[csr_column_index[j]] *alpha;
+        j++;
       }
 
-      ValueType a_vector[4] = {alpha, alpha, alpha, alpha};
-      __m256d alpha_simd = _mm256_load_pd(&a_vector[0]);
-      _y0 = _mm256_mul_pd(_y0, alpha_simd);
+      //ValueType a_vector[4] = {alpha, alpha, alpha, alpha};
+      //__m256d alpha_simd = _mm256_load_pd(&a_vector[0]);
+      //_y0 = _mm256_mul_pd(_y0, alpha_simd);
 
       ValueType R[4] __attribute((aligned(32)));
-      _mm256_storeu_pd((&R[0]), y0);
-      yp[0] += R[0];
+      _mm256_store_pd((&R[0]), _y0);
+      print_val(_y0);
+      y[i] = R[0] + R[1] + R[2] + R[3] + temp;
     }
+
     return err;
 }
 
@@ -151,14 +192,13 @@ int compute_spmv(int m, int n, int nnzA,
          if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i]))
          {
              error_count++;
-   //            cout << "ROW [ " << i << " ], NNZ SPAN: "
-   //                 << csrRowPtrA[i] << " - "
-   //                 << csrRowPtrA[i+1]
-   //                 << "\t ref = " << y_ref[i]
-   //                 << ", \t csr5 = " << y[i]
-   //                 << ", \t error = " << y_ref[i] - y[i]
-   //                 << endl;
-   //            break;
+               cout << "ROW [ " << i << " ], NNZ SPAN: "
+                    << csrRowPtrA[i] << " - "
+                    << csrRowPtrA[i+1]
+                    << "\t ref = " << y_ref[i]
+                    << ", \t csr5 = " << y[i]
+                    << ", \t error = " << y_ref[i] - y[i]
+                    << endl;
          }
 
      if (error_count == 0)
@@ -188,12 +228,11 @@ int main(int argc, char* argv[])
   cout << "------------------------------------------------------" << endl;
 
   int m, n, nnzA;
-  int *csrRowPtrA;
-  int *csrColIdxA;
-  VALUE_TYPE *csrValA;
 
   //ex: ./spmv webbase-1M.mtx
   int argi = 1;
+  VALUE_TYPE alpha = 1.0;
+  int err = 0;
 
   char  *filename;
   if(argc > 1) {
@@ -201,7 +240,34 @@ int main(int argc, char* argv[])
     argi++;
   } else {
     std::cout << "Usage : ./spmv <webbase-1M.mtx" << std::endl;
+    std::cout << "Running a test mtx matrix " << std::endl;
+    m = 3;
+    n = 3;
+    nnzA = 6;
+    int *csrRowPtr = (int *)_mm_malloc((m+1) * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
+    csrRowPtr[0] = 0; csrRowPtr[1] = 2; csrRowPtr[2] = 3; csrRowPtr[3] = 6;
+    int *csrColIdx = (int *)_mm_malloc(nnzA * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
+    csrColIdx[0] = 0; csrColIdx[1] = 2; csrColIdx[2] = 2; csrColIdx[3] = 0; csrColIdx[4] = 1; csrColIdx[5] =2;
+    VALUE_TYPE *csrVal = (VALUE_TYPE *)_mm_malloc(nnzA * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+
+    csrVal[0] = 1.0; csrVal[1] = 2.0; csrVal[2] = 3.0; csrVal[3] = 4.0; csrVal[4] = 5.0; csrVal[5] = 6.0;
+    VALUE_TYPE *x = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+    x[0] = 1.0; x[1] = 1.0; x[2] = 1.0;
+    VALUE_TYPE *y = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+    VALUE_TYPE *y_ref = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+    y_ref[0] = 3.0;y_ref[1] =  3.0; y_ref[2] = 15.0;
+
+    SpadeSpmv<int, VALUE_TYPE> A(m, n);
+    err = A.inputCSR(nnzA, csrRowPtr, csrColIdx, csrVal);
+    err = A.setX(x); // you only need to do it once!
+    compute_spmv(m, n, nnzA, csrRowPtr, csrColIdx, csrVal, x, y, y_ref, alpha,
+                  &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
+    return 0;
   }
+
+  int *csrRowPtrA;
+  int *csrColIdxA;
+  VALUE_TYPE *csrValA;
   cout << "--------------" << filename << "--------------" << endl;
 
   // read matrix from mtx file
@@ -375,7 +441,6 @@ int main(int argc, char* argv[])
   double gb = getB<int, VALUE_TYPE>(m, nnzA);
   double gflop = getFLOP<int>(nnzA);
 
-  VALUE_TYPE alpha = 1.0;
 
   // compute reference results on a cpu core
   anonymouslib_timer ref_timer;
@@ -398,7 +463,6 @@ int main(int argc, char* argv[])
        << " ms. Bandwidth = " << gb/(1.0e+6 * ref_time)
        << " GB/s. GFlops = " << gflop/(1.0e+6 * ref_time)  << " GFlops." << endl << endl;
 
-  int err = 0;
   SpadeSpmv<int, VALUE_TYPE> A(m, n);
   err = A.inputCSR(nnzA, csrRowPtrA, csrColIdxA, csrValA);
   err = A.setX(x); // you only need to do it once!
