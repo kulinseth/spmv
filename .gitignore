@@ -51,7 +51,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-data
+data/*
 !data/test.mtx
 !data/test.csv
 external/poski/oski/build_oski
