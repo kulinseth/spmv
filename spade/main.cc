@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "mmio.h"
+#include <fstream>
 
 template <typename IndexType, typename ValueType>
 class SpadeSpmv
@@ -99,7 +100,7 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
       __m256d _y0 = _mm256_setzero_pd();
       IndexType j = csr_row_pointer[i];
 
-      while(j < ((csr_row_pointer[i+1]+1)>>2)<<2) {
+      while(j < ((csr_row_pointer[i+1])>>2)<<2) {
         //IndexType j0 = csr_column_index[j];
         __m128i vIdx = _mm_setr_epi32(csr_column_index[j], csr_column_index[j+1],
                                          csr_column_index[j+2], csr_column_index[j+3]);
@@ -241,27 +242,57 @@ int main(int argc, char* argv[])
   } else {
     std::cout << "Usage : ./spmv <webbase-1M.mtx" << std::endl;
     std::cout << "Running a test mtx matrix " << std::endl;
-    m = 3;
-    n = 3;
-    nnzA = 6;
-    int *csrRowPtr = (int *)_mm_malloc((m+1) * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
-    csrRowPtr[0] = 0; csrRowPtr[1] = 2; csrRowPtr[2] = 3; csrRowPtr[3] = 6;
-    int *csrColIdx = (int *)_mm_malloc(nnzA * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
-    csrColIdx[0] = 0; csrColIdx[1] = 2; csrColIdx[2] = 2; csrColIdx[3] = 0; csrColIdx[4] = 1; csrColIdx[5] =2;
-    VALUE_TYPE *csrVal = (VALUE_TYPE *)_mm_malloc(nnzA * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
 
-    csrVal[0] = 1.0; csrVal[1] = 2.0; csrVal[2] = 3.0; csrVal[3] = 4.0; csrVal[4] = 5.0; csrVal[5] = 6.0;
-    VALUE_TYPE *x = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
-    x[0] = 1.0; x[1] = 1.0; x[2] = 1.0;
-    VALUE_TYPE *y = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
-    VALUE_TYPE *y_ref = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
-    y_ref[0] = 3.0;y_ref[1] =  3.0; y_ref[2] = 15.0;
+    /*
+     * >>> indptr = np.array([0, 2, 3, 6])
+     * >>> indices = np.array([0, 2, 2, 0, 1, 2])
+     * >>> data = np.array([1, 2, 3, 4, 5, 6])
+     * >>> csr_matrix((data, indices, indptr), shape=(3, 3)).toarray()
+     * array([[1, 0, 2],
+     *        [0, 0, 3],
+     *        [4, 5, 6]])
+     * indices = array([0, 2, 2, 0, 1, 2, 3], dtype=int32)
+     * indptr = array([0, 2, 3, 6, 7], dtype=int32)
+     * val = array([1, 2, 3, 4, 5, 6, 7])
+     * array([[1, 0, 2, 0],
+     *        [0, 0, 3, 0],
+     *        [4, 5, 6, 0],
+     *        [0, 0, 0, 7]])
+     */
+    std::ifstream f("../data/test.csv");
+    if (f) {
+      f >> m >> n >> nnzA;
+      int *csrRowPtr = (int *)_mm_malloc((m+1) * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
+      VALUE_TYPE *x = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+      for (int i = 0; i < m; i++) {
+        f >> csrRowPtr[i];
+        x[i] = 1.0;
+      }
+      int *csrColIdx = (int *)_mm_malloc(nnzA * sizeof(int), ANONYMOUSLIB_X86_CACHELINE);
+      for (int i = 0; i < nnzA; i++) {
+        f >> csrColIdx[i];
+      }
+      VALUE_TYPE *csrVal = (VALUE_TYPE *)_mm_malloc(nnzA * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+      for (int i = 0; i < nnzA; i++) {
+        f >> csrVal[i];
+      }
 
-    SpadeSpmv<int, VALUE_TYPE> A(m, n);
-    err = A.inputCSR(nnzA, csrRowPtr, csrColIdx, csrVal);
-    err = A.setX(x); // you only need to do it once!
-    compute_spmv(m, n, nnzA, csrRowPtr, csrColIdx, csrVal, x, y, y_ref, alpha,
-                  &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
+      VALUE_TYPE *y = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+      VALUE_TYPE *y_ref = (VALUE_TYPE *)_mm_malloc(m * sizeof(VALUE_TYPE), ANONYMOUSLIB_X86_CACHELINE);
+      for (int i = 0; i < m; i++)
+      {
+          VALUE_TYPE sum = 0;
+          for (int j = csrRowPtr[i]; j < csrRowPtr[i+1]; j++)
+              sum += x[csrColIdx[j]] * csrVal[j] * alpha;
+          y_ref[i] = sum;
+      }
+
+      SpadeSpmv<int, VALUE_TYPE> A(m, n);
+      err = A.inputCSR(nnzA, csrRowPtr, csrColIdx, csrVal);
+      err = A.setX(x); // you only need to do it once!
+      compute_spmv(m, n, nnzA, csrRowPtr, csrColIdx, csrVal, x, y, y_ref, alpha,
+                    &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
+    }
     return 0;
   }
 

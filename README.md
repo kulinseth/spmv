@@ -25,6 +25,7 @@ For emitting code for CPU:
 
 Running pOSKI autotuner
 
+`python external/poski/bench/CodeGen_MBCSRRowMaj_Matmul.py`
 ## External Frameworks
 
 Following are the kernels which were benchmarked with:
