@@ -122,7 +122,7 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
 
       ValueType R[4] __attribute((aligned(32)));
       _mm256_store_pd((&R[0]), _y0);
-      print_val(_y0);
+      //print_val(_y0);
       y[i] = R[0] + R[1] + R[2] + R[3] + temp;
     }
 
@@ -193,13 +193,13 @@ int compute_spmv(int m, int n, int nnzA,
          if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i]))
          {
              error_count++;
-               cout << "ROW [ " << i << " ], NNZ SPAN: "
-                    << csrRowPtrA[i] << " - "
-                    << csrRowPtrA[i+1]
-                    << "\t ref = " << y_ref[i]
-                    << ", \t csr5 = " << y[i]
-                    << ", \t error = " << y_ref[i] - y[i]
-                    << endl;
+               //cout << "ROW [ " << i << " ], NNZ SPAN: "
+                    //<< csrRowPtrA[i] << " - "
+                    //<< csrRowPtrA[i+1]
+                    //<< "\t ref = " << y_ref[i]
+                    //<< ", \t csr5 = " << y[i]
+                    //<< ", \t error = " << y_ref[i] - y[i]
+                    //<< endl;
          }
 
      if (error_count == 0)

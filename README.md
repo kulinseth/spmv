@@ -26,6 +26,11 @@ For emitting code for CPU:
 Running pOSKI autotuner
 
 `python external/poski/bench/CodeGen_MBCSRRowMaj_Matmul.py`
+
+Testing :
+
+`spade/spmv ../data/test.mtx`
+`spade/spmv`  <= this tests the test.csv file which has a small sparse matrix
 ## External Frameworks
 
 Following are the kernels which were benchmarked with:
