@@ -1,40 +1,54 @@
-CC = g++
+CC=g++
+OBJDIR := obj
+DEPDIR := $(OBJDIR)/.deps
 
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 INCLUDES = utils.h
-SRCS = main.cc
-OBJS = $(SRCS:.cc=.o)
-ASMS = $(SRCS:.cc=.s)
-LIBS = -L/scratch/seth.k/tools/papi/lib -lm -lrt -lpthread -lpapi -lpfm
+SRCS := main.cpp
+OBJS := $(SRCS:.cpp=.o)
+DEPS := $(OBJS:.o=.d)
 
-VALUE_TYPE = double
-NUM_RUN = 1000
-CFLAGS = -march=native -mtune=native -ggdb -Wno-unused-result -std=c++11
-
+VALUE_TYPE ?= double
+NUM_RUN ?= 1000
+CFLAGS = -march=native -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN)
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-  CFLAGS += -DDEBUG 
-  LIBS += -L/scratch/seth.k/tools/papi/lib -lpapi -lpfm
-  INCLUDES += -I/scratch/seth.k/tools/papi/include
+  CFLAGS += -DDEBUG -ggdb
+  #LIBS += -L/scratch/seth.k/tools/papi/lib -lpapi -lpfm
+  #INCLUDES += -I/scratch/seth.k/tools/papi/include
 endif
 
-spmv:
-	$(CC) $(CFLAGS) -mavx2 main.cc -o spmv -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)
+COMPILE.c = $(CC) $(DEPFLAGS) $(INCLUDES) $(CFLAGS) -c
 
-%.o: %.cc
-	$(CC) $(CFLAGS) $(INCLUDES) -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN) -o $@ -c $<
+%.o: %.cpp
+	g++ -I$(INCLUDES) $(CFLAGS) -o $@ -c $<
 
-%.s: %.cc
-	$(CC) $(CFLAGS) -S $(INCLUDES) $< 
-
+spmv: $(OBJS)
+	g++ $(CFLAGS) -o $@ $^
 
 test:
 	./spmv ../data/test.mtx
 
 cscope :
-		find  .  -name "*.[cphm]" -print -o -name "*.cc" -print > cscope.files
-		cscope -b -q -k
+	find  .  -name "*.[cphm]" -print -o -name "*.cc" -print > cscope.files
+	cscope -b -q -k
+
 ctags:
 	ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .
 
+LIBS := -L/scratch/seth.k/tools/papi/lib -lm -lrt -lpthread -lpapi -lpfm
+
+.PHONY:clean
 clean:
-	-rm -f spmv *.o *.s
+	rm -f spmv *.o
+
+.PHONY: cleandep
+cleandep:
+	rm -f $(dep)
+
+#$(DEPDIR): ; @mkdir -p $@
+#DEPFILES := $(SRCS:%.cc=$(DEPDIR)/%.d)
+#$(DEPFILES):
+#include $(wildcard $(DEPFILES))
+
+
