@@ -10,7 +10,7 @@ DEPS := $(OBJS:.o=.d)
 
 VALUE_TYPE ?= double
 NUM_RUN ?= 1000
-CFLAGS = -march=native -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN)
+CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN)
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
   CFLAGS += -DDEBUG -ggdb

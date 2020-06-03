@@ -128,14 +128,14 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
       std::cout << "Row ptr[ " << i << "] " << "(" << j <<  ", " << row_ptr_upper << ") ";
 #endif
       while(j < (row_ptr_upper-3)) {
-        IndexType j0 = csr_column_index[j], j1 = csr_column_index[j+1], j2 = csr_column_index[j+2], j3 = csr_column_index[j+3];
-        __m256d _x0 = _mm256_set_pd(x[j3], x[j2], x[j1], x[j0]);
+        //IndexType j0 = csr_column_index[j], j1 = csr_column_index[j+1], j2 = csr_column_index[j+2], j3 = csr_column_index[j+3];
+        //__m256d _x0 = _mm256_set_pd(x[j3], x[j2], x[j1], x[j0]);
 
-        // This is the gather implementation which is not any faster.
-        //__m128i vIdx = _mm_set_epi32(csr_column_index[j+3], csr_column_index[j+2], csr_column_index[j+1],
-                                      //csr_column_index[j]);
-        //__m256d _x0 = _mm256_i32gather_pd(x, vIdx, 8);
-        __m256d _vals = _mm256_loadu_pd(&csr_value[j]);
+        // This is the gather implementation which is slightly faster.
+        __m128i vIdx = _mm_set_epi32(csr_column_index[j+3], csr_column_index[j+2], csr_column_index[j+1],
+                                      csr_column_index[j]);
+        __m256d _x0 = _mm256_i32gather_pd(x, vIdx, 8);
+        __m256d _vals = _mm256_load_pd(&csr_value[j]);
         _y0 = _mm256_fmadd_pd(_x0, _vals, _y0);
 #if DEBUG
         std::cout << "Col Idx (" << csr_column_index[j] << ", " << csr_column_index[j+1]  << ", " << csr_column_index[j+2] << ", " << csr_column_index[j+3] <<") ";

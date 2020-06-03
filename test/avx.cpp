@@ -116,5 +116,7 @@ int main() {
   res = m256_reduce_sum1(ymm0);
   std::cout << "Res : " << res << std::endl;
   check(ref_result, avx2_result, N);
+
+  //simd_load_gather
   return 0;
 }
