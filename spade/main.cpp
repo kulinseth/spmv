@@ -1,6 +1,10 @@
 #include "utils.h"
 #include "mmio.h"
 #include <fstream>
+#include <mkl.h>
+#include <mkl_spblas.h>
+
+std::ofstream outf("output.csv");
 
 template <typename IndexType, typename ValueType>
 class SpadeSpmv
@@ -9,24 +13,18 @@ public:
     SpadeSpmv(IndexType m, IndexType n) { _m = m; _n = n; }
     int inputCSR(IndexType  nnz, IndexType *csr_row_pointer, IndexType *csr_column_index, ValueType *csr_value);
     int setX(ValueType *x);
-    static int spmv_baseline(int m, const ValueType  alpha,
-                             const ValueType * const x, ValueType  *y,
-                             const IndexType* const csr_row_pointer,
-                             const IndexType* const csr_column_index, const ValueType* const csr_val);
-    static int spmv_avx256(int m, const ValueType  alpha,
-                             const ValueType * const x, ValueType  *y,
-                             const IndexType* const csr_row_pointer,
-                             const IndexType* const csr_column_index, const ValueType* const csr_val);
-    static int spmv_mkl(int m, const ValueType  alpha,
-                             const ValueType * const x, ValueType  *y,
-                             const IndexType* const csr_row_pointer,
-                             const IndexType* const csr_column_index, const ValueType* const csr_val);
-    //static int spmv_avx256(int m, const ValueType  alpha,
-                             //ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
-                             //IndexType* csr_column_index, ValueType* csr_val);
-    //static int spmv_mkl(int m, const ValueType  alpha,
-                             //ValueType *x, ValueType  *y, IndexType* csr_row_pointer,
-                             //IndexType* csr_column_index, ValueType* csr_val);
+    static int spmv_baseline(int m, int n, ValueType  alpha,
+                              ValueType * x, ValueType  *y,
+                              IndexType*  csr_row_pointer,
+                              IndexType*  csr_column_index,  ValueType*  csr_val);
+    static int spmv_avx256(int m, int n,  ValueType  alpha,
+                              ValueType *  x, ValueType  *y,
+                              IndexType*  csr_row_pointer,
+                              IndexType*  csr_column_index,  ValueType*  csr_val);
+    //static int spmv_mkl(int m, int n,  ValueType  alpha,
+                             //ValueType *  x, ValueType  *y,
+                             //IndexType*  csr_row_pointer,
+                             //IndexType*  csr_column_index, ValueType*  csr_val);
 private:
     int _format;
     IndexType _m;
@@ -70,22 +68,85 @@ int SpadeSpmv<IndexType, ValueType>::setX(ValueType *x)
 }
 
 template <class IndexType, class ValueType>
-int SpadeSpmv<IndexType, ValueType>::spmv_mkl(int M, const ValueType  alpha,
-                                              const ValueType * const x, ValueType * y, const IndexType* const csr_row_pointer,
-                                              const IndexType* const csr_column_index, const ValueType* const csr_value)
+void spmv_mkl(int m, int n,  ValueType  alpha,
+             ValueType *  x, ValueType * y, sparse_matrix_t A, matrix_descr desr)
 {
-    int err = ANONYMOUSLIB_SUCCESS;
+    mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, alpha, A, desr, x, 0.0f, y);
+}
 
-    ValueType temp;
-    ValueType *yp;
-    IndexType i;
+int compute_mkl(int m, int n, int nnzA,
+                   int *  csr_row_pointer,  int *  csr_column_index,
+                   VALUE_TYPE *  csr_value,
+                   VALUE_TYPE *  x, VALUE_TYPE * y,
+                   VALUE_TYPE *  y_ref, VALUE_TYPE alpha)
+{
 
-		//sparse_matrix_t A;
-		//mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, row_offsets, row_offsets+1, column_indices, values);
-		//matrix_descr desr;
-		//desr.type = SPARSE_MATRIX_TYPE_GENERAL;
-		//mkl_sparse_d_mv(SPARSE_OPERATION_NON_TRANSPOSE, 1.0f, A, desr, x, 0.0f, y);
-    return err;
+  memset(y, 0, sizeof(VALUE_TYPE) * m);
+
+  double gb = getB<int, VALUE_TYPE>(m, nnzA);
+  double gflop = getFLOP<int>(nnzA);
+
+  VALUE_TYPE *y_bench = (VALUE_TYPE *)malloc(m * sizeof(VALUE_TYPE));
+  sparse_matrix_t A;
+  sparse_status_t err;
+  err = mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ZERO, m, n, csr_row_pointer, csr_row_pointer+1, csr_column_index, csr_value);
+  if (err != SPARSE_STATUS_SUCCESS) {
+     return 1;
+  }
+
+  matrix_descr desr;
+  desr.type = SPARSE_MATRIX_TYPE_GENERAL;
+  err = mkl_sparse_set_mv_hint(A, SPARSE_OPERATION_NON_TRANSPOSE, desr, 10*NUM_RUN);
+  err = mkl_sparse_set_memory_hint(A, SPARSE_MEMORY_AGGRESSIVE);
+  err = mkl_sparse_optimize(A);
+
+  spmv_mkl<int, VALUE_TYPE>(m, n, alpha, x, y, A, desr);
+
+  if (NUM_RUN)
+  {
+#ifndef DEBUG
+      for (int i = 0; i < 50; i++)
+         spmv_mkl<int, VALUE_TYPE>(m, n, alpha, x, y, A, desr);
+#endif
+      anonymouslib_timer CSR5Spmv_timer;
+      CSR5Spmv_timer.start();
+      for (int i = 0; i < NUM_RUN; i++) {
+         spmv_mkl<int, VALUE_TYPE>(m, n, alpha, x, y, A, desr);
+      }
+
+      double CSR5Spmv_time = CSR5Spmv_timer.stop() / (double)NUM_RUN;
+
+      double gb_bw = gb/(1.0e+6 * CSR5Spmv_time);
+      double gb_flops = gflop/(1.0e+6 * CSR5Spmv_time);
+      cout << "CSR SpMV time = " << CSR5Spmv_time
+           << " ms. Bandwidth = " << gb_bw
+           << " GB/s. GFlops = " << gb_flops  << " GFlops." << endl;
+      outf << CSR5Spmv_time << "," << gb_bw << "," << gb_flops << ",";
+  }
+
+  int error_count = 0;
+  for (int i = 0; i < m; i++) {
+      if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i])) {
+          error_count++;
+#if DEBUG
+            cout << "ROW [ " << i << " ], NNZ SPAN: "
+                 << csrRowPtrA[i] << " - "
+                 << csrRowPtrA[i+1]
+                 << " ref = " << y_ref[i]
+                 << ", calc = " << y[i]
+                 << endl;
+#endif
+      }
+  }
+
+  if (error_count == 0)
+      cout << "Check... PASS!" << endl;
+  else
+      cout << "Check... NO PASS! #Error = " << error_count << " out of " << m << " entries." << endl;
+
+  cout << "------------------------------------------------------" << endl;
+  free(y_bench);
+  return err;
 }
 
 void print_val(__m256d val) {
@@ -102,24 +163,24 @@ static inline double m256_reduce_sum1(__m256d a) {
 }
 
 template <typename IndexType, typename ValueType>
-void print_csr_vals(const IndexType *const row_ptr, const IndexType *const col_ind, const ValueType * const vals) {
+void print_csr_vals(const IndexType *const row_ptr, const IndexType *const col_ind,  ValueType * const vals) {
 
 }
 
 template <typename IndexType, typename ValueType>
-int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
-                                                  const ValueType *const x, ValueType  *y, const IndexType* const csr_row_pointer,
-                                                  const IndexType* const csr_column_index, const ValueType* const csr_value)
+int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int m, int n,  ValueType  alpha,
+                                                   ValueType * x, ValueType  *y,  IndexType*  csr_row_pointer,
+                                                   IndexType*  csr_column_index,  ValueType*  csr_value)
 {
     int err = ANONYMOUSLIB_SUCCESS;
 #if DEBUG
     print_csr_vals<IndexType, ValueType>(csr_row_pointer, csr_column_index, csr_value);
-    std::cout << "M " << M << std::endl;
+    std::cout << "m " << m << std::endl;
     std::cout << "Row ptr : ";
 #endif
     ValueType temp;
     // Still need to loop through all the rows, which are cache aligned
-    for(IndexType i = 0; i < M ; i++) {
+    for(IndexType i = 0; i < m ; i++) {
       temp = 0.0;
       __m256d _y0 = _mm256_setzero_pd();
       IndexType j = csr_row_pointer[i];
@@ -156,9 +217,9 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int M, const ValueType  alpha,
 }
 
 template <class IndexType, class ValueType>
-int SpadeSpmv<IndexType, ValueType>::spmv_baseline(int m, const ValueType  alpha,
-                                                  const ValueType * const x, ValueType  *y, const IndexType* const csr_row_pointer,
-                                                  const IndexType* const csr_column_index, const ValueType* const csr_value)
+int SpadeSpmv<IndexType, ValueType>::spmv_baseline(int m, int n,  ValueType  alpha,
+                                                   ValueType *  x, ValueType  *y,  IndexType*  csr_row_pointer,
+                                                   IndexType*  csr_column_index,  ValueType*  csr_value)
 {
     int err = ANONYMOUSLIB_SUCCESS;
 
@@ -182,15 +243,16 @@ int SpadeSpmv<IndexType, ValueType>::spmv_baseline(int m, const ValueType  alpha
 }
 
 template<typename IndexType, typename ValueType>
-using Spmv = int (*)(int m, const ValueType  alpha,
-                    const ValueType * const x, ValueType  *y, const IndexType* const csr_row_pointer,
-                    const IndexType* const csr_column_index, const ValueType* const csr_val);
+using Spmv = int (*)(int m, int n,  ValueType  alpha,
+                     ValueType *  x, ValueType  *y,  IndexType*  csr_row_pointer,
+                     IndexType*  csr_column_index,  ValueType*  csr_val);
+
 
 int compute_spmv(int m, int n, int nnzA,
-                  const int * const csrRowPtrA, const int * const csrColIdxA,
-                  const VALUE_TYPE * const csrValA,
-                  const VALUE_TYPE * const x, VALUE_TYPE * y,
-                  const VALUE_TYPE const *y_ref, VALUE_TYPE alpha,
+                   int *  csrRowPtrA,  int *  csrColIdxA,
+                   VALUE_TYPE *  csrValA,
+                   VALUE_TYPE *  x, VALUE_TYPE * y,
+                   VALUE_TYPE *  y_ref, VALUE_TYPE alpha,
                   Spmv<int, double> spmv)
 {
 
@@ -202,25 +264,28 @@ int compute_spmv(int m, int n, int nnzA,
 
   VALUE_TYPE *y_bench = (VALUE_TYPE *)malloc(m * sizeof(VALUE_TYPE));
 
-  err = spmv(m, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
+  err = spmv(m, n, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
 
   if (NUM_RUN)
   {
 #ifndef DEBUG
       for (int i = 0; i < 50; i++)
-          err = spmv(m, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
+          err = spmv(m, n, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
 #endif
       anonymouslib_timer CSR5Spmv_timer;
       CSR5Spmv_timer.start();
       for (int i = 0; i < NUM_RUN; i++) {
-       err = spmv(m, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
+       err = spmv(m, n, alpha, x, y, csrRowPtrA, csrColIdxA, csrValA);
       }
 
       double CSR5Spmv_time = CSR5Spmv_timer.stop() / (double)NUM_RUN;
 
+      double gb_bw = gb/(1.0e+6 * CSR5Spmv_time);
+      double gb_flops = gflop/(1.0e+6 * CSR5Spmv_time);
       cout << "CSR SpMV time = " << CSR5Spmv_time
-           << " ms. Bandwidth = " << gb/(1.0e+6 * CSR5Spmv_time)
-           << " GB/s. GFlops = " << gflop/(1.0e+6 * CSR5Spmv_time)  << " GFlops." << endl;
+           << " ms. Bandwidth = " << gb_bw
+           << " GB/s. GFlops = " << gb_flops  << " GFlops." << endl;
+      outf << CSR5Spmv_time << "," << gb_bw << "," << gb_flops << ",";
   }
 
   int error_count = 0;
@@ -342,7 +407,8 @@ int main(int argc, char* argv[])
   int *csrColIdxA;
   VALUE_TYPE *csrValA;
   cout << "--------------" << filename << "--------------" << endl;
-
+  outf << "Name,Baseline ms,Baseline BW, Baseline GFlops,SPADE ms, SPADE BW, SPADE GFLOPs,MKL ms, MKL BW, MKL GFLOPs" << endl;
+  outf << filename << ",";
   // read matrix from mtx file
   int ret_code;
   MM_typecode matcode;
@@ -544,10 +610,12 @@ int main(int argc, char* argv[])
   // launch compute
   compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                 &SpadeSpmv<int, VALUE_TYPE>::spmv_baseline);
-  cout << "AVX " << endl;
+  cout << "Spade AVX baseline " << endl;
   compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                 &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
-
+  cout << "MKL " << endl;
+  compute_mkl(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha);
+   outf << endl;
   // compare reference and anonymouslib results
 
   _mm_free(csrRowPtrA);
