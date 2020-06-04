@@ -29,7 +29,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 *.i*86
 *.x86_64
@@ -59,4 +58,3 @@ external/poski/oski/build_oski
 .DS_Store
 .AppleDouble
 .LSOverride
-
