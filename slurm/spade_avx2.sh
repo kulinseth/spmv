@@ -11,17 +11,16 @@
 module load intel/2020.1.217
 module load cuda/10.0
 module unload gcc/8.1.0
-rm slurm*
 pushd  /home/seth.k/src/research/spmv/spade
 make clean
-CC=icc make
+MKL=1 CC=icc make
 
 #while IFS="" read -r p || [ -n "$p" ]
 #do
      #printf '%s\n' "$p"
 #done < peptides.txt
 
-./spmv ../results/elafrou.exp
+./spmv ../results/spade_spmv.exp spade_icc.csv
 #make test
 popd
 # For AVX512

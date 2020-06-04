@@ -41,7 +41,6 @@
 *.pdb
 *.pyc
 
-# Kernel Module Compile Results
 *.mod*
 *.cmd
 .tmp_versions/
@@ -49,6 +48,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+spade/spmv
 data/*
 !data/test.mtx
 !data/test.csv
