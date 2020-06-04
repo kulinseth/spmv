@@ -13,14 +13,14 @@ module load cuda/10.0
 module unload gcc/8.1.0
 pushd  /home/seth.k/src/research/spmv/spade
 make clean
-MKL=1 CC=icc make
+MKL=1 CC=g++ make
 
 #while IFS="" read -r p || [ -n "$p" ]
 #do
      #printf '%s\n' "$p"
 #done < peptides.txt
 
-./spmv ../results/spade_spmv.exp spade_icc.csv
+./spmv ../results/spade_spmv.exp spade_mkl_gcc.csv
 #make test
 popd
 # For AVX512
