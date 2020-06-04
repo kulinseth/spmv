@@ -5,7 +5,7 @@
 #include <mkl_spblas.h>
 #include <string>
 std::ofstream outf("output.csv");
-
+using namespace std;
 template <typename IndexType, typename ValueType>
 class SpadeSpmv
 {
@@ -34,12 +34,6 @@ private:
     IndexType *_csr_row_pointer;
     IndexType *_csr_column_index;
     ValueType *_csr_value;
-
-    int         _bit_y_offset;
-    int         _num_packet;
-    IndexType _p;
-
-    IndexType   _num_offsets;
     ValueType   *_x;
 };
 

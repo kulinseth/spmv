@@ -3,6 +3,9 @@
 This repository contains framework for efficient computation of sparse tensors
 in deep learning networks.
 
+Running SPADE:
+
+CC=icc make
 
 Building TACO:
 
@@ -43,7 +46,7 @@ Following are the kernels which were benchmarked with:
 6. Custom library
 
 For CPU the comparison will be done with:
-1. Intel MKL
+1. Intel MKL and Inspector-Executor
 2. TACO CPU generated code
 3. pOSKI and OSKI libraries
 4. Custom
