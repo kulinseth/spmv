@@ -10,13 +10,17 @@ DEPS := $(OBJS:.o=.d)
 
 VALUE_TYPE ?= double
 NUM_RUN ?= 10000
-CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -Wl,--no-as-needed
+MKL ?= 1
+CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 \
+				 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=$(MKL)
 LIBS = -lm -lpthread 
 ifeq ($(CC), icc)
-	CFLAGS = -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -D VALUE_TYPE=$(VALUE_TYPE) -D NUM_RUN=$(NUM_RUN)
+	CFLAGS = -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=1
   LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
 else
-	LIBS += -L$(MKLROOT)/lib -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
+	ifeq ($(MKL), 1)
+		LIBS += -L$(MKLROOT)/lib -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -DMKL=1
+	endif
 endif
 
 DEBUG ?= 0
@@ -35,7 +39,7 @@ spmv: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 test:
-	./spmv ../data/test.mtx
+	./spmv ../results/test.exp tmp.csv
 
 cscope :
 	find  .  -name "*.[cphm]" -print -o -name "*.cc" -print > cscope.files

@@ -1,11 +1,15 @@
 #include "utils.h"
 #include "mmio.h"
 #include <fstream>
+#if MKL
 #include <mkl.h>
 #include <mkl_spblas.h>
+#endif
 #include <string>
-std::ofstream outf("output.csv");
 using namespace std;
+
+std::ofstream outf;
+
 template <typename IndexType, typename ValueType>
 class SpadeSpmv
 {
@@ -21,10 +25,6 @@ public:
                               ValueType *  x, ValueType  *y,
                               IndexType*  csr_row_pointer,
                               IndexType*  csr_column_index,  ValueType*  csr_val);
-    //static int spmv_mkl(int m, int n,  ValueType  alpha,
-                             //ValueType *  x, ValueType  *y,
-                             //IndexType*  csr_row_pointer,
-                             //IndexType*  csr_column_index, ValueType*  csr_val);
 private:
     int _format;
     IndexType _m;
@@ -61,6 +61,7 @@ int SpadeSpmv<IndexType, ValueType>::setX(ValueType *x)
     return err;
 }
 
+#if MKL
 template <class IndexType, class ValueType>
 void spmv_mkl(int m, int n,  ValueType  alpha,
              ValueType *  x, ValueType * y, sparse_matrix_t A, matrix_descr desr)
@@ -142,6 +143,7 @@ int compute_mkl(int m, int n, int nnzA,
   free(y_bench);
   return err;
 }
+#endif
 
 void print_val(__m256d val) {
   double tmp[4];
@@ -332,8 +334,9 @@ int main(int argc, char* argv[])
 
   char  *filename;
   if(argc > 1) {
-    filename = argv[argi];
-    argi++;
+    filename = argv[argi++];
+    outf.open(argv[argi++]);
+    if (!outf.is_open()) return -1;
   } else {
     std::cout << "Usage : ./spmv <webbase-1M.mtx" << std::endl;
     std::cout << "Running a test mtx matrix " << std::endl;
@@ -397,11 +400,14 @@ int main(int argc, char* argv[])
     return 0;
   }
   cout << "--------------" << filename << "--------------" << endl;
-  outf << "Name,Baseline ms,Baseline BW, Baseline GFlops,SPADE ms, SPADE BW, SPADE GFLOPs,MKL ms, MKL BW, MKL GFLOPs" << endl;
+  outf << "Name,Baseline ms,Baseline BW, Baseline GFlops,SPADE ms, SPADE BW, SPADE GFLOPs,";
+#if MKL
+  outf << "MKL ms, MKL BW, MKL GFLOPs";
+#endif
+  outf << endl;
   std::ifstream in_file(filename);
   std::string s;
   while ( in_file >> s) {
-     outf << s << ",";
      int *csrRowPtrA;
      int *csrColIdxA;
      VALUE_TYPE *csrValA;
@@ -418,6 +424,8 @@ int main(int argc, char* argv[])
          cout << "Can't open " << s << endl;
          continue;
      }
+     std::string last_element(s.substr(s.rfind("/") + 1));
+     outf << last_element << ",";
 
      if (mm_read_banner(f, &matcode) != 0)
      {
@@ -610,8 +618,10 @@ int main(int argc, char* argv[])
      cout << "Spade AVX baseline " << endl;
      compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                    &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
+#if MKL
      cout << "MKL " << endl;
      compute_mkl(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha);
+#endif
       outf << endl;
      _mm_free(csrRowPtrA);
      _mm_free(csrColIdxA);
