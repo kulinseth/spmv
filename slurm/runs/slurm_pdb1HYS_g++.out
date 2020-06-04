@@ -1,0 +1,19 @@
+~/src/research/spmv/spade ~/scripts/spmv
+g++ -Iutils.h -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=double -DNUM_RUN=1000 -o main.o -c main.cpp
+g++ -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 -DVALUE_TYPE=double -DNUM_RUN=1000 -o spmv main.o
+------------------------------------------------------
+64-bit Double Precision------------------------------------------------------
+--------------/scratch/seth.k/spmv/data/MM/pdb1HYS/pdb1HYS.mtx--------------
+symmetric = true
+ ( 36417, 36417 ) nnz = 4344765
+cpu sequential time = 6.995 ms. Bandwidth = 12.485 GB/s. GFlops = 1.24225 GFlops.
+
+Baseline 
+CSR SpMV time = 6.35649 ms. Bandwidth = 13.7391 GB/s. GFlops = 1.36703 GFlops.
+Check... PASS!
+------------------------------------------------------
+AVX 
+CSR SpMV time = 4.18191 ms. Bandwidth = 20.8834 GB/s. GFlops = 2.07789 GFlops.
+Check... PASS!
+------------------------------------------------------
+~/scripts/spmv

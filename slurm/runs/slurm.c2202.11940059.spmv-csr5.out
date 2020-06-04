@@ -1,0 +1,18 @@
+~/src/research/spmv/spade ~/scripts/spmv
+icc -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -D VALUE_TYPE=double -D NUM_RUN=1000 -o spmv main.o
+------------------------------------------------------
+64-bit Double Precision------------------------------------------------------
+--------------/scratch/seth.k/spmv/data/MM/pdb1HYS/pdb1HYS.mtx--------------
+symmetric = true
+ ( 36417, 36417 ) nnz = 4344765
+cpu sequential time = 4.014 ms. Bandwidth = 21.7569 GB/s. GFlops = 2.16481 GFlops.
+
+Baseline 
+CSR SpMV time = 3.49638 ms. Bandwidth = 24.978 GB/s. GFlops = 2.4853 GFlops.
+Check... PASS!
+------------------------------------------------------
+AVX 
+CSR SpMV time = 3.82551 ms. Bandwidth = 22.8289 GB/s. GFlops = 2.27147 GFlops.
+Check... PASS!
+------------------------------------------------------
+~/scripts/spmv

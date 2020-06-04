@@ -1,0 +1,20 @@
+~/src/research/spmv/spade ~/scripts/spmv
+icc -Iutils.h -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -D VALUE_TYPE=double -D NUM_RUN=1000 -o main.o -c main.cpp
+icc -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -D VALUE_TYPE=double -D NUM_RUN=1000 -o spmv main.o
+./spmv ../data/test.mtx
+------------------------------------------------------
+64-bit Double Precision------------------------------------------------------
+--------------../data/test.mtx--------------
+symmetric = true
+ ( 40000, 40000 ) nnz = 199200
+cpu sequential time = 0.298 ms. Bandwidth = 14.9799 GB/s. GFlops = 1.33691 GFlops.
+
+Baseline 
+CSR SpMV time = 0.20635 ms. Bandwidth = 21.6332 GB/s. GFlops = 1.9307 GFlops.
+Check... PASS!
+------------------------------------------------------
+AVX 
+CSR SpMV time = 0.285267 ms. Bandwidth = 15.6485 GB/s. GFlops = 1.39659 GFlops.
+Check... PASS!
+------------------------------------------------------
+~/scripts/spmv
