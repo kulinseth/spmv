@@ -15,7 +15,7 @@ CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 \
 				 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=$(MKL)
 LIBS = -lm -lpthread 
 ifeq ($(CC), icc)
-	CFLAGS = -xCORE-AVX2 -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=1
+	CFLAGS = -xAVX -qopt-prefetch=3 -fopenmp -std=c++11 -O3 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=1
   LIBS += -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
 else
 	ifeq ($(MKL), 1)

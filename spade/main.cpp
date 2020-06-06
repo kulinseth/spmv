@@ -169,6 +169,7 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int m, int n,  ValueType  alpha
                                                    IndexType*  csr_column_index,  ValueType*  csr_value)
 {
     int err = ANONYMOUSLIB_SUCCESS;
+#if __AVX2__
 #if DEBUG
     print_csr_vals<IndexType, ValueType>(csr_row_pointer, csr_column_index, csr_value);
     std::cout << "m " << m << std::endl;
@@ -208,6 +209,7 @@ int SpadeSpmv<IndexType, ValueType>::spmv_avx256(int m, int n,  ValueType  alpha
 
       y[i] = m256_reduce_sum1(_y0)+temp;
     }
+#endif
 
     return err;
 }
@@ -400,9 +402,12 @@ int main(int argc, char* argv[])
     return 0;
   }
   cout << "--------------" << filename << "--------------" << endl;
-  outf << "Name,Baseline ms,Baseline BW, Baseline GFlops,SPADE ms, SPADE BW, SPADE GFLOPs,";
+  outf << "Name,Baseline ms,Baseline BW, Baseline GFlops";
+#if __AVX2__
+  outf << ",SPADE ms, SPADE BW, SPADE GFLOPs";
+#endif
 #if MKL
-  outf << "MKL ms, MKL BW, MKL GFLOPs";
+  outf << ",MKL ms, MKL BW, MKL GFLOPs";
 #endif
   outf << endl;
   std::ifstream in_file(filename);
@@ -616,8 +621,10 @@ int main(int argc, char* argv[])
      compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                    &SpadeSpmv<int, VALUE_TYPE>::spmv_baseline);
      cout << "Spade AVX baseline " << endl;
+#if __AVX2__
      compute_spmv(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha,
                    &SpadeSpmv<int, VALUE_TYPE>::spmv_avx256);
+#endif
 #if MKL
      cout << "MKL " << endl;
      compute_mkl(m, n, nnzA, csrRowPtrA, csrColIdxA, csrValA, x, y, y_ref, alpha);
