@@ -18,13 +18,15 @@
 #include <cmath>
 #include <sys/time.h>
 #include <dirent.h>
+#include <fstream>
+#include <string>
 #include "immintrin.h"
 
 #define ANONYMOUSLIB_CSR5_OMEGA   4
 #define ANONYMOUSLIB_CSR5_SIGMA   16
 #define ANONYMOUSLIB_X86_CACHELINE   64
 
-using namespace std;
+extern std::ofstream outf;
 
 #define ANONYMOUSLIB_SUCCESS                   0
 #define ANONYMOUSLIB_UNKOWN_FORMAT            -1
@@ -37,6 +39,26 @@ using namespace std;
 #define ANONYMOUSLIB_FORMAT_CSR5 1
 #define ANONYMOUSLIB_FORMAT_HYB5 2
 
+template<typename IndexType, typename ValueType>
+using Spmv = int (*)(int m, int n,  ValueType  alpha,
+                     ValueType *  x, ValueType  *y,  IndexType*  csr_row_pointer,
+                     IndexType*  csr_column_index,  ValueType*  csr_val);
+
+int compute_avx2(int m, int n, int nnzA,
+                   int *  csrRowPtrA,  int *  csrColIdxA,
+                   VALUE_TYPE *  csrValA,
+                   VALUE_TYPE *  x, VALUE_TYPE * y,
+                   VALUE_TYPE *  y_ref, VALUE_TYPE alpha);
+int compute_baseline(int m, int n, int nnzA,
+                   int *  csrRowPtrA,  int *  csrColIdxA,
+                   VALUE_TYPE *  csrValA,
+                   VALUE_TYPE *  x, VALUE_TYPE * y,
+                   VALUE_TYPE *  y_ref, VALUE_TYPE alpha);
+int compute_mkl(int m, int n, int nnzA,
+                   int *  csrRowPtrA,  int *  csrColIdxA,
+                   VALUE_TYPE *  csrValA,
+                   VALUE_TYPE *  x, VALUE_TYPE * y,
+                   VALUE_TYPE *  y_ref, VALUE_TYPE alpha);
 
 struct anonymouslib_timer {
     timeval t1, t2;
@@ -54,6 +76,16 @@ struct anonymouslib_timer {
         return elapsedTime;
     }
 };
+
+#if __AVX2__
+inline
+void print_val(__m256d val) {
+  double tmp[4];
+  _mm256_storeu_pd(&tmp[0], val);
+  printf("%lf, %lf, %lf, %lf\n", tmp[0], tmp[1], tmp[2], tmp[3]);
+}
+#endif
+
 
 template<typename iT>
 iT binary_search_right_boundary_kernel(const iT *d_row_pointer,
@@ -171,9 +203,9 @@ void print_tile_t(T *input, int m, int n)
     {
         for (int local_id = 0; local_id < m; local_id++)
         {
-            cout << input[local_id * n + i] << ", ";
+            std::cout << input[local_id * n + i] << ", ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 }
 
@@ -184,9 +216,9 @@ void print_tile(T *input, int m, int n)
     {
         for (int local_id = 0; local_id < n; local_id++)
         {
-            cout << input[i * n + local_id] << ", ";
+            std::cout << input[i * n + local_id] << ", ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 }
 
@@ -194,8 +226,8 @@ template<typename T>
 void print_1darray(T *input, int l)
 {
     for (int i = 0; i < l; i++)
-        cout << input[i] << ", ";
-    cout << endl;
+        std::cout << input[i] << ", ";
+    std::cout << std::endl;
 }
 
 

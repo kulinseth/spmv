@@ -4,14 +4,15 @@ DEPDIR := $(OBJDIR)/.deps
 MKLROOT ?= /opt/intel/mkl
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 INCLUDES = utils.h
-SRCS := main.cpp
+SRCS := main.cpp utils.cpp kernels/avx2.cpp kernels/baseline.cpp kernels/mkl.cpp
 OBJS := $(SRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
 
 VALUE_TYPE ?= double
 NUM_RUN ?= 10000
 MKL ?= 1
-CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++11 \
+PERF ?= 0
+CFLAGS = -march=native -O3 -mtune=native -Wno-unused-result -std=c++17 \
 				 -DVALUE_TYPE=$(VALUE_TYPE) -DNUM_RUN=$(NUM_RUN) -DMKL=$(MKL)
 LIBS = -lm -lpthread 
 ifeq ($(CC), icc)
@@ -29,6 +30,9 @@ ifeq ($(DEBUG), 1)
   #LIBS += -L/scratch/seth.k/tools/papi/lib -lpapi -lpfm
   #INCLUDES += -I/scratch/seth.k/tools/papi/include
 endif
+ifeq ($(PERF), 1)
+	LIBS += -L/scratch/seth.k/tools/papi/lib -lpapi -lpfm
+endif
 
 COMPILE.c = $(CC) $(DEPFLAGS) $(INCLUDES) $(CFLAGS) -c
 
@@ -36,10 +40,10 @@ COMPILE.c = $(CC) $(DEPFLAGS) $(INCLUDES) $(CFLAGS) -c
 	$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ -c $<
 
 spmv: $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+	$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ $^ $(LIBS)
 
 test:
-	./spmv ../results/test.exp tmp.csv
+	./spmv ../results/test.exp tmp.csv 
 
 cscope :
 	find  .  -name "*.[cphm]" -print -o -name "*.cc" -print > cscope.files
@@ -50,7 +54,7 @@ ctags:
 
 .PHONY:clean
 clean:
-	rm -f spmv *.o
+	rm -f spmv *.o kernels/*.o
 
 .PHONY: cleandep
 cleandep:
