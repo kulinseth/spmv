@@ -1,2 +1,9 @@
-../data/test.mtx
-
+#../data/test.mtx
+#../data/data/pdb1HYS/pdb1HYS.mtx
+#../data/data/atmosmodd/atmosmodd.mtx
+../data/data/Baumann/Baumann.mtx
+../data/data/cant/cant.mtx
+../data/data/consph/consph.mtx
+../data/data/denormal/denormal.mtx
+../data/data/dixmaanl/dixmaanl.mtx
+../data/data/ecology1/ecology1.mtx

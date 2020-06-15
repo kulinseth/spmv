@@ -39,11 +39,32 @@ extern std::ofstream outf;
 #define ANONYMOUSLIB_FORMAT_CSR5 1
 #define ANONYMOUSLIB_FORMAT_HYB5 2
 
-template<typename IndexType, typename ValueType>
-using Spmv = int (*)(int m, int n,  ValueType  alpha,
-                     ValueType *  x, ValueType  *y,  IndexType*  csr_row_pointer,
-                     IndexType*  csr_column_index,  ValueType*  csr_val);
+//template<typename IndexType, typename ValueType>
+//using Spmv = int (*)(int m, int n,  ValueType  alpha,
+                     //ValueType *  x, ValueType  *y,  IndexType*  csr_row_pointer,
+                     //IndexType*  csr_column_index,  ValueType*  csr_val);
+long long sum_i(int *arr, int n);
+float mean_i(int *arr, int n);
+double sum_f(float *arr, int n);
+float geo_mean(float *arr, int n);
+float mean_f(float *arr, int n);
+float sd_i(int *arr, int n, float mean_i);
+float vr_i(int *arr, int n, float mean_i);
+float vr_f(float *arr, int n, float mean_i);
+float sd_f(float *arr, int n, float mean_i);
+void my_swap(int* a, int* b);
+int partition (int arr[], int low, int high) ;
+void my_quickSort(int arr[], int low, int high) ;
+int count_nnz(FILE *f);
+long long count_diag_elems(int *row, int *col, VALUE_TYPE *val, int nnz, int N, int *nd);
+void quickSort(int arr[], int arr2[], VALUE_TYPE arr3[], int left, int right);
 
+void spmv_baseline(int m, int n,  VALUE_TYPE  alpha,
+                  VALUE_TYPE *  x, VALUE_TYPE  *y,  int*  csr_row_pointer,
+                  int*  csr_column_index,  VALUE_TYPE*  csr_value);
+int spmv_avx2(int m, int n,  VALUE_TYPE  alpha,
+                VALUE_TYPE * x, VALUE_TYPE  *y,  int*  csr_row_pointer,
+                int*  csr_column_index,  VALUE_TYPE*  csr_value);
 int compute_avx2(int m, int n, int nnzA,
                    int *  csrRowPtrA,  int *  csrColIdxA,
                    VALUE_TYPE *  csrValA,
@@ -54,6 +75,12 @@ int compute_baseline(int m, int n, int nnzA,
                    VALUE_TYPE *  csrValA,
                    VALUE_TYPE *  x, VALUE_TYPE * y,
                    VALUE_TYPE *  y_ref, VALUE_TYPE alpha);
+#if MKL
+#include <mkl.h>
+#include <mkl_spblas.h>
+void spmv_mkl(int m, int n,  VALUE_TYPE  alpha,
+             VALUE_TYPE *  x, VALUE_TYPE * y, sparse_matrix_t A, matrix_descr desr);
+#endif
 int compute_mkl(int m, int n, int nnzA,
                    int *  csrRowPtrA,  int *  csrColIdxA,
                    VALUE_TYPE *  csrValA,
@@ -134,6 +161,15 @@ inline float hsum_avx(__m256 in256)
 
     return sum;
 }
+
+inline double m256_reduce_sum1(__m256d a) {
+  double res;
+  a = _mm256_add_pd(a, _mm256_permute2f128_pd(a, a, 0x1));
+  _mm_store_sd(&res, _mm_hadd_pd( _mm256_castpd256_pd128(a), _mm256_castpd256_pd128(a)));
+  return res;
+}
+
+
 
 // exclusive scan using a single thread
 template<typename T>

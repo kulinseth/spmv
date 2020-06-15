@@ -3,10 +3,12 @@ OBJDIR := obj
 DEPDIR := $(OBJDIR)/.deps
 MKLROOT ?= /opt/intel/mkl
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
-INCLUDES = utils.h
-SRCS := main.cpp utils.cpp kernels/avx2.cpp kernels/baseline.cpp kernels/mkl.cpp
+INCLUDES = ./
+KERNEL_SRCS := kernels/avx2.cpp kernels/baseline.cpp kernels/mkl.cpp
+SRCS := main.cpp utils.cpp $(KERNEL_SRCS)
 OBJS := $(SRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
+ASMS = $(KERNEL_SRCS:.cpp=.s)
 
 VALUE_TYPE ?= double
 NUM_RUN ?= 10000
@@ -39,8 +41,11 @@ COMPILE.c = $(CC) $(DEPFLAGS) $(INCLUDES) $(CFLAGS) -c
 %.o: %.cpp
 	$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ -c $<
 
-spmv: $(OBJS)
-	$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ $^ $(LIBS)
+%.s: %.cpp
+	$(CC) $(CFLAGS) -I$(INCLUDES) -o $@ -S $< 
+
+spmv: $(OBJS) $(ASMS)
+	$(CC) -I$(INCLUDES) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
 test:
 	./spmv ../results/test.exp tmp.csv 
@@ -54,7 +59,7 @@ ctags:
 
 .PHONY:clean
 clean:
-	rm -f spmv *.o kernels/*.o
+	rm -f spmv *.o kernels/*.o kernels/*.s *.s
 
 .PHONY: cleandep
 cleandep:
