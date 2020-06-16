@@ -1191,8 +1191,7 @@ void spmv_compute_kernel(int Nthrds, int N_start, int N_step, int* vPack_Nblock,
     }
    
     // because the link is padded with cols 0; vals 0 at last. there may came across some errors with elements[0] 
-    for(int ii=0; ii<prefetch_distance; ii+=8)
-    {
+    for(int ii=0; ii<prefetch_distance; ii+=8) {
 
         while((csr_record[simd_seg_index]&0xfffffff8) == ((i+ii)&0xfffffff8))
         {
