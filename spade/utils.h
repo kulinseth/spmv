@@ -169,6 +169,12 @@ inline double m256_reduce_sum1(__m256d a) {
   return res;
 }
 
+inline double m128_reduce_sum(__m128d a) {
+  double res;
+  _mm_store_sd(&res, _mm_hadd_pd(a, a));
+  return res;
+}
+
 
 
 // exclusive scan using a single thread

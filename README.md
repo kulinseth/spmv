@@ -34,6 +34,14 @@ Testing :
 
 `spade/spmv ../data/test.mtx`
 `spade/spmv`  <= this tests the test.csv file which has a small sparse matrix
+
+For installing the perf install linux-tools:
+then you would have to change some kernel files to allow the symbols to be run.
+There were issues running the perf as root , so try running perf without sudo
+and it should work fine.
+
+`vim /proc/sys/kernel/perf_event_paranoid` make this -1
+`sudo sh -c " echo 0 > /proc/sys/kernel/kptr_restrict"`
 ## External Frameworks
 
 Following are the kernels which were benchmarked with:

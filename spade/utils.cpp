@@ -535,14 +535,6 @@ int compute_mkl(int m, int n, int nnzA,
   for (int i = 0; i < m; i++) {
       if (abs(y_ref[i] - y[i]) > 0.01 * abs(y_ref[i])) {
           error_count++;
-#if DEBUG
-            std::cout << "ROW [ " << i << " ], NNZ SPAN: "
-                 << csrRowPtrA[i] << " - "
-                 << csrRowPtrA[i+1]
-                 << " ref = " << y_ref[i]
-                 << ", calc = " << y[i]
-                 << std::endl;
-#endif
       }
   }
 
